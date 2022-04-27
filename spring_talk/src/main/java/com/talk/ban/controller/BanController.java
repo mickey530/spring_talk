@@ -1,4 +1,4 @@
-package com.talk.user.controller;
+package com.talk.ban.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,12 +8,12 @@ import lombok.extern.log4j.Log4j;
 
 @Controller
 @Log4j
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/ban")
+public class BanController {
 	
-	@GetMapping(value="/userInfo")
+	@GetMapping(value="/banInfo")
 	public String userInfo() {
-		return "user/userInfo";
+		return "ban/banInfo";
 	}
 	
 }

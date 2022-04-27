@@ -25,5 +25,7 @@
 	
 	<context:component-scan base-package="com.talk.user.controller" />
 	
-	
+	<mybatis-spring:scan base-package="com.talk.ban.mapper"></mybatis-spring:scan>
+	<mybatis-spring:scan base-package="com.talk.user.mapper"></mybatis-spring:scan>
+	<mybatis-spring:scan base-package="com.talk.follow.mapper"></mybatis-spring:scan>
 </beans:beans>
