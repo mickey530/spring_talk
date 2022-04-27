@@ -5,6 +5,7 @@
 ### Eclipse ###
 .metadata
 db.properties
+target/
 Servers/
 bin/
 tmp/
