@@ -4,6 +4,7 @@
 
 ### Eclipse ###
 .metadata
+pom.properties
 db.properties
 target/
 Servers/
