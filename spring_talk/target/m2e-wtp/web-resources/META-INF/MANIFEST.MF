@@ -1,5 +1,10 @@
 Manifest-Version: 1.0
+<<<<<<< HEAD
 Built-By: USER
 Build-Jdk: 17.0.2
+=======
+Built-By: user
+Build-Jdk: 11.0.14.1
+>>>>>>> hwawon
 Created-By: Maven Integration for Eclipse
 
