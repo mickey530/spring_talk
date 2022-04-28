@@ -1,4 +1,4 @@
-package com.talk.controller;
+package com.talk.Controller;
 
 import java.text.DateFormat;
 import java.util.Date;
