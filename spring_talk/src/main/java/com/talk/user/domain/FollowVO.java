@@ -1,4 +1,4 @@
-package com.talk.follow.domain;
+package com.talk.user.domain;
 
 import lombok.Data;
 

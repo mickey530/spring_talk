@@ -1,12 +1,12 @@
-package com.talk.ban.service;
+package com.talk.user.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.talk.ban.domain.BanVO;
-import com.talk.ban.mapper.BanMapper;
+import com.talk.user.domain.BanVO;
+import com.talk.user.mapper.BanMapper;
 
 // BanService 인터페이스 구현
 @Service // 빈 컨테이너에 등록(root-context.xml에서 컴포넌트 스캔까지 완료해야 등록됨)
@@ -28,13 +28,13 @@ public class BanServiceImpl implements BanService {
 	}
 
 	@Override
-	public List<com.talk.ban.domain.BanVO> selectAll() {
+	public List<com.talk.user.domain.BanVO> selectAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public com.talk.ban.domain.BanVO select(String user_id, String ban_id) {
+	public com.talk.user.domain.BanVO select(String user_id, String ban_id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -52,7 +52,7 @@ public class BanServiceImpl implements BanService {
 	}
 
 	@Override
-	public void insert(com.talk.ban.domain.BanVO vo) {
+	public void insert(com.talk.user.domain.BanVO vo) {
 		// TODO Auto-generated method stub
 		
 	}

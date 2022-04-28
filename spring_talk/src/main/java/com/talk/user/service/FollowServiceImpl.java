@@ -1,18 +1,18 @@
-package com.talk.follow.service;
+package com.talk.user.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.talk.follow.domain.FollowVO;
-import com.talk.follow.mapper.FollowMapper;
+import com.talk.user.domain.FollowVO;
 import com.talk.user.domain.UserVO;
+import com.talk.user.mapper.FollowMapper;
 import com.talk.user.mapper.UserMapper;
 
 // UserService 인터페이스 구현
 @Service // 빈 컨테이너에 등록(root-context.xml에서 컴포넌트 스캔까지 완료해야 등록됨)
-public class FollowServiceImpl implements UserService {
+public class FollowServiceImpl implements FollowService {
 
 	@Autowired
 	private FollowMapper Mapper;

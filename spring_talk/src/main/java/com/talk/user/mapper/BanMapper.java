@@ -1,13 +1,11 @@
-package com.talk.ban.mapper;
+package com.talk.user.mapper;
 
 import java.util.List;
 
-import com.talk.ban.domain.BanVO;
+import com.talk.user.domain.BanVO;
 import com.talk.user.domain.UserVO;
 
 public interface BanMapper {
-
-	// 버튼 추가를 위해 pageNum 대신 Criteria를 활용합니다.
 	
 	public void insert(BanVO vo);
 	

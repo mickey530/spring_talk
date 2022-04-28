@@ -1,4 +1,4 @@
-package com.talk.ban.domain;
+package com.talk.user.domain;
 
 import lombok.Data;
 

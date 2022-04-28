@@ -1,11 +1,11 @@
-package com.talk.follow.service;
+package com.talk.user.service;
 
 import java.util.List;
 
-import com.talk.follow.domain.FollowVO;
+import com.talk.user.domain.FollowVO;
 
 // 구현 클래스 UserServiceImpl의 뼈대가 됩니다.
-public interface UserService {
+public interface FollowService {
 
 	public void insert(FollowVO vo);
 	
