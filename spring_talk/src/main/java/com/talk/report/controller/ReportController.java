@@ -34,6 +34,7 @@ public class ReportController {
 	private ReportReplyService reportReplyService;
 	
 	
+	
 	// 게시글 신고하기 
 	@PostMapping(value="", consumes="application/json",	
 			produces = {MediaType.TEXT_PLAIN_VALUE})
@@ -64,13 +65,13 @@ public class ReportController {
 	
 	
 	// 신고게시글 목록
-	@GetMapping(value="/all/{reportNum}",
+	@GetMapping(value="/all/{report_post_num}",
 	produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<ReportPostVO>> list1 (@PathVariable("reportpostNum") Long reportpostNum){
+	public ResponseEntity<List<ReportPostVO>> list1 (@PathVariable("report_post_num") Long report_post_num){
 		ResponseEntity<List<ReportPostVO>> entity = null;		
 		try {
 			entity = new ResponseEntity<>(
-					reportPostService.listReport(reportpostNum), HttpStatus.OK);
+					reportPostService.listReport(report_post_num), HttpStatus.OK);
 		}catch(Exception e) {
 			e.printStackTrace();
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -78,13 +79,13 @@ public class ReportController {
 	return entity;
 	}
 	// 신고댓글 목록
-	@GetMapping(value="/all/{reportreplyNum}",
+	@GetMapping(value="/all/{report_reply_num}",
 	produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<ReportReplyVO>> list2 (@PathVariable("reportreplyNum") Long reportreplyNum){
+	public ResponseEntity<List<ReportReplyVO>> list2 (@PathVariable("report_reply_num") Long report_reply_num){
 		ResponseEntity<List<ReportReplyVO>> entity = null;		
 		try {
 			entity = new ResponseEntity<>(
-					reportReplyService.listReport(reportreplyNum), HttpStatus.OK);
+					reportReplyService.listReport(report_reply_num), HttpStatus.OK);
 		}catch(Exception e) {
 			e.printStackTrace();
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -95,12 +96,12 @@ public class ReportController {
 	
 	
 	// 게시글 신고 중 삭제
-	@DeleteMapping(value="/{reportpostNum}",
+	@DeleteMapping(value="/{report_post_num}",
 			produces= {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> remove1 (@PathVariable("reportpostNum") Long reportpostNum){
+	public ResponseEntity<String> remove1 (@PathVariable("report_post_num") Long report_post_num){
 	ResponseEntity<String> entity = null;	
 	try {
-		reportPostService.removeReport(reportpostNum);
+		reportPostService.removeReport(report_post_num);
 		entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	} catch(Exception e) {
 		entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -108,53 +109,16 @@ public class ReportController {
 		return entity;
 	}	
 	// 댓글 신고 중 삭제
-	@DeleteMapping(value="/{reportreplyNum}",
+	@DeleteMapping(value="/{report_reply_num}",
 			produces= {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> remove2 (@PathVariable("reportreplyNum") Long reportreplyNum){
-	ResponseEntity<String> entity = null;	
+	public ResponseEntity<String> remove2 (@PathVariable("report_reply_num") Long report_reply_num){
+	ResponseEntity<String> entity = null;
 	try {
-		reportReplyService.removeReport(reportreplyNum);
+		reportReplyService.removeReport(report_reply_num);
 		entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	} catch(Exception e) {
 		entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 		return entity;
-	}
-	
-	
-	
-	// 게시글 신고내용 및 아이디 수정
-	@RequestMapping(method = {RequestMethod.PUT, RequestMethod.PATCH},
-			value="/{reportpostNum}",
-			consumes="application/json",
-			produces= {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> modify1 (@RequestBody ReportPostVO vo, @PathVariable("reportpostNum") Long reportpostNum){
-	ResponseEntity<String> entity = null;
-	try {
-		vo.setReport(reportpostNum);
-		reportPostService.modifyReport(vo);
-		entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
-	}catch(Exception e) {
-		e.printStackTrace();
-		entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-	return entity;
-	}
-	// 댓글 신고내용 및 아이디 수정
-	@RequestMapping(method = {RequestMethod.PUT, RequestMethod.PATCH},
-			value="/{reportreplyNum}",
-			consumes="application/json",
-			produces= {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> modify2 (@RequestBody ReportReplyVO vo, @PathVariable("reportreplyNum") Long reportreplyNum){
-	ResponseEntity<String> entity = null;
-	try {
-		vo.setReport(reportreplyNum);
-		reportReplyService.modifyReport(vo);
-		entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
-	}catch(Exception e) {
-		e.printStackTrace();
-		entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-	return entity;
 	}
 }

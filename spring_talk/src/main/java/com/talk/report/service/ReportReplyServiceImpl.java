@@ -15,9 +15,9 @@ public class ReportReplyServiceImpl implements ReportReplyService{
 	private ReportReplyMapper mapper;
 
 	@Override
-	public List<ReportReplyVO> listReport(long reportreplyNum) {
+	public List<ReportReplyVO> listReport(long report_reply_num) {
 		// TODO Auto-generated method stub
-		return mapper.AllList(reportreplyNum);
+		return mapper.AllList(report_reply_num);
 	}
 
 	@Override
@@ -27,14 +27,8 @@ public class ReportReplyServiceImpl implements ReportReplyService{
 	}
 
 	@Override
-	public void modifyReport(ReportReplyVO vo) {
-		mapper.update(vo);
-		
-	}
-
-	@Override
-	public void removeReport(long reportreplyNum) {		
-		mapper.delete(reportreplyNum);	
+	public void removeReport(long report_reply_num) {		
+		mapper.delete(report_reply_num);	
 
 	}	
 }

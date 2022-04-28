@@ -6,12 +6,10 @@ import com.talk.report.domain.ReportReplyVO;
 
 public interface ReportReplyMapper {
 
-	public List<ReportReplyVO> AllList(long reportreplyNum);
+	public List<ReportReplyVO> AllList(long report_reply_num);
 	
 	public void insert(ReportReplyVO vo);
 	
-	public void update(ReportReplyVO vo);
-	
-	public void delete(long reportreplyNum);
+	public void delete(long report_reply_num);
 
 }

@@ -6,26 +6,20 @@
 	<mapper namespace="com.talk.report.mapper.ReportPostMapper">	
 		
 		<insert id="Insert">
-			INSERT INTO post_report (reportNum, reportpostNum, reportId , reason) 
+			INSERT INTO post_report (report_num, report_post_num, report_id, report_reason) 
 			VALUES
-			(reportpostNum.nextval, #{reportId}, #{reason})
+			(report_post_num.nextval, #{report_id}, #{report_reason})
 		</insert>
-		
-		<update id="Update">
-			UPDATE post_report 
-			SET 
-			reason=#{reason}, reportId=#{reportId}
-		</update>
 		
 		<delete id="Delete">
 			DELETE FROM post_report 
 			WHERE 
-			reportNum=#{reportpostNum}
+			report_post_num=#{report_post_num}
 		</delete>
 		
 		<select id="AllList" resultType="com.talk.report.domain.ReportPostVO">
 			SELECT * FROM post_report
-			ORDER BY reportpostNum DESC
+			ORDER BY report_post_num DESC
 		</select>
 				
 	</mapper>

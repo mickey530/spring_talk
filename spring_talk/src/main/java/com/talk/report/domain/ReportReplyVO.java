@@ -4,13 +4,9 @@ import lombok.Data;
 
 @Data
 public class ReportReplyVO {
-	private long reportNum;
-	private long reportreplyNum;
-	private String reportId;
-	private String reason;
-	
-	public void setReport(Long reportreplyNum2) {
-		// TODO Auto-generated method stub
-		
-	}
+	private long report_num;
+	private long report_reply_num;
+	private String report_id;
+	private String report_reason;
+
 }
