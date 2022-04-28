@@ -10,53 +10,49 @@ import com.talk.user.domain.UserVO;
 import com.talk.user.mapper.FollowMapper;
 import com.talk.user.mapper.UserMapper;
 
-// UserService 인터페이스 구현
-@Service // 빈 컨테이너에 등록(root-context.xml에서 컴포넌트 스캔까지 완료해야 등록됨)
 public class FollowServiceImpl implements FollowService {
 
 	@Autowired
-	private FollowMapper Mapper;
+	private FollowMapper FollowMapper;
 
 	@Override
-	public void insert(FollowVO vo) {
-		// TODO Auto-generated method stub
-		
+	public List<String> selectIdsByFollowed(String user_id) {
+		return FollowMapper.selectIdsByFollowed(user_id);
 	}
 
 	@Override
-	public List<FollowVO> selectIdsByFollowed(String user_id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<String> selectIdsByFollower(String user_id) {
+		return FollowMapper.selectIdsByFollower(user_id);
 	}
 
 	@Override
-	public List<FollowVO> selectIdsByFollower(String ban_id) {
-		// TODO Auto-generated method stub
-		return null;
+	public int countFollower(String user_id) {
+		return FollowMapper.countFollower(user_id);
+	}
+
+	@Override
+	public int countFollowed(String user_id) {
+		return FollowMapper.countFollowed(user_id);
 	}
 
 	@Override
 	public List<FollowVO> selectAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return FollowMapper.selectAll();
 	}
 
 	@Override
-	public FollowVO select(String user_id, String ban_id) {
-		// TODO Auto-generated method stub
-		return null;
+	public void insert(FollowVO vo) {
+		FollowMapper.insert(vo);
 	}
 
 	@Override
-	public void delete(String ban_id) {
-		// TODO Auto-generated method stub
-		
+	public void delete(FollowVO vo) {
+		FollowMapper.delete(vo);
 	}
 
-	@Override
 	public void update(FollowVO vo) {
-		// TODO Auto-generated method stub
-		
+		FollowMapper.update(vo);
 	}
-	
+
+
 }

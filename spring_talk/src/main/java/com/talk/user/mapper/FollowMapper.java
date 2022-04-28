@@ -7,21 +7,31 @@ import com.talk.user.domain.FollowVO;
 import com.talk.user.domain.UserVO;
 
 public interface FollowMapper {
-
-	// 버튼 추가를 위해 pageNum 대신 Criteria를 활용합니다.
 	
-	public void insert(FollowVO vo);
+	
 
-	public List<FollowVO> selectIdsByFollowed(String user_id);
+	//user_id가 팔로우한 사람들 조회
+	public List<String> selectIdsByFollowed(String user_id);
 
-	public List<FollowVO> selectIdsByFollower(String ban_id);
+	//user_id를 팔로우한 사람들 조회
+	public List<String> selectIdsByFollower(String user_id);
 
+	//user_id로 Follow 정보 조회
+	public int countFollower(String user_id);
+	
+	//user_id로 Follow 정보 조회
+	public int countFollowed(String user_id);
+	
+	//모든 사람들 조회
 	public List<FollowVO> selectAll();
 	
-	public FollowVO select(String user_id, String ban_id);
+	//넣고
+	public void insert(FollowVO vo);
 	
-	public void delete(String ban_id);
+	//빼고
+	public void delete(FollowVO vo);
 	
+	//고치고
 	public void update(FollowVO vo);
 	
 	

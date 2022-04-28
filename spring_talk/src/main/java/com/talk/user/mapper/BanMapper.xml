@@ -1,10 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- 위쪽에는 마이바티스에서 사용할 xml파일임을 명시
-아래쪽 mapper태그의 namespace에 어떤 인터페이스와 연동할지 패키지부터 다 적음 -->
 <mapper namespace="com.talk.user.mapper.BanMapper">
 	
+	<select id="ban" resultType="int">
+		select count(ban_id) from ban where user_id = #{user_id} 
+	</select>
+	
+	<select id="baned" resultType="int">
+		select count(ban_id) from ban where ban_id = #{user_id} 
+	</select>
+	
+	<select id="isBaned" resultType="boolean">
+	
+		select if(count(*) = 1,1,0) from ban
+			where (
+				ban_id = #{baned_user_id} and
+				user_id = #{ban_user_id}
+			)
+	</select>
+	
+	<select id="isBan" resultType="boolean">
+	
+		select if(count(*) = 1,1,0) from ban
+			where (
+				ban_id = #{ban_user_id} and
+				user_id = #{baned_user_id}
+			)
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ban (user_id, ban_id)
+			VALUES(
+				user_id = #{ban_user_id}, 
+				ban_id = #{baned_user_id}
+			)
+	</insert>
+	
+	<delete id="delete">
+	
+		DELETE FROM ban
+		 WHERE (
+			 user_id = #{ban_user_id},
+			 ban_id = #{baned_user_id}
+		 )
+	</delete>
+	
+	<update id="update">
+		UPDATE ban 
+			SET 
+			user_id = #{ban_user_id}, 
+			ban_id = #{baned_user_id},
+				WHERE(
+					user_id = #{ban_user_id}, 
+					ban_id = #{baned_user_id}
+				)
+	</update>
 </mapper>
 
 

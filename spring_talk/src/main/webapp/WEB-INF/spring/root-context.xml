@@ -37,30 +37,7 @@
 	
 	<context:component-scan base-package="com.talk.report.service" />	
 	
-	
-	
 	<mybatis-spring:scan base-package="com.talk.user.mapper"/>	
 	
 	<context:component-scan base-package="com.talk.user.service" />	
-	
-	
-	
-	
-	
-	
-	<mybatis-spring:scan base-package="com.talk.ban.mapper"/>	
-	
-	<context:component-scan base-package="com.talk.ban.service" />	
-	
-	
-	
-	
-	
-	
-	<mybatis-spring:scan base-package="com.talk.follow.mapper"/>	
-	
-	<context:component-scan base-package="com.talk.follow.service" />	
-	
-	
-	
 </beans>

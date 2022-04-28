@@ -1,10 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- 위쪽에는 마이바티스에서 사용할 xml파일임을 명시
-아래쪽 mapper태그의 namespace에 어떤 인터페이스와 연동할지 패키지부터 다 적음 -->
-<mapper namespace="com.talk.user.mapper.FollowMapper">
+<mapper namespace="com.talk.user.mapper.UserMapper">
+
 	
+	<select id="getUser" resultType="com.talk.user.domain.UserVO">
+		SELECT * FROM user_info
+			WHERE user_num = #{user_num}
+	</select>
+	
+	<select id="getAllUsers" resultType="com.talk.user.domain.UserVO">
+		SELECT * FROM user_info order by user_num DESC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_info (user_num, user_id, user_pw, user_name, last_name, user_age, phone_num)
+			VALUES
+		(user_num.nextval, #{user_id}, #{user_pw}, #{user_name}, #{last_name}, #{user_age}, #{phone_num})
+	</insert>
+	
+	<delete id="delete">
+	
+		DELETE FROM user_info WHERE user_num=#{user_num}
+	</delete>
+	
+	<update id="update">
+		UPDATE user_info 
+			SET 
+		user_id = #{user_id}, 
+		user_pw = #{user_pw}, 
+		user_name = #{user_name}, 
+		last_name = #{last_name}, 
+		user_age = #{user_age}, 
+		phone_num = #{phone_num}
+			WHERE 
+		user_num=#{user_num}
+	</update>
 </mapper>
 
 
