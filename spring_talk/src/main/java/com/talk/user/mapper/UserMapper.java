@@ -1,9 +1,5 @@
 package com.talk.user.mapper;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.talk.user.domain.UserVO;
 
 public interface UserMapper {
