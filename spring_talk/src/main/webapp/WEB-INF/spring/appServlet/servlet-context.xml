@@ -23,6 +23,12 @@
 	
 	<context:component-scan base-package="com.talk.controller" />
 	
+	<context:component-scan base-package="com.talk.user.controller" />
 	
+	<context:component-scan base-package="com.talk.reply.controller" />
+	
+	<context:component-scan base-package="com.talk.post.controller" />
+
+	<context:component-scan base-package="com.talk.repoprt.controller" />
 	
 </beans:beans>

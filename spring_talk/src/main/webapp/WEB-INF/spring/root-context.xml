@@ -32,4 +32,14 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>	
+	
+	<mybatis-spring:scan base-package="com.talk.user.mapper"/>
+	<mybatis-spring:scan base-package="com.talk.post.mapper"/>
+	<mybatis-spring:scan base-package="com.talk.reply.mapper"/>
+	<mybatis-spring:scan base-package="com.talk.report.mapper"/>
+	
+	<context:component-scan base-package="com.talk.user.service" />	
+	<context:component-scan base-package="com.talk.post.service" />	
+	<context:component-scan base-package="com.talk.reply.service" />	
+	<context:component-scan base-package="com.talk.report.service" />		
 </beans>
