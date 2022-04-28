@@ -1,1 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC	 "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	
+	<mapper namespace="com.talk.report.mapper.ReportPostMapper">	
+		
+		<insert id="Insert">
+			INSERT INTO post_report (reportNum, reportpostNum, reportId , reason) 
+			VALUES
+			(reportpostNum.nextval, #{reportId}, #{reason})
+		</insert>
+		
+		<update id="Update">
+			UPDATE post_report 
+			SET 
+			reason=#{reason}, reportId=#{reportId}
+		</update>
+		
+		<delete id="Delete">
+			DELETE FROM post_report 
+			WHERE 
+			reportNum=#{reportpostNum}
+		</delete>
+		
+		<select id="AllList" resultType="com.talk.report.domain.ReportPostVO">
+			SELECT * FROM post_report
+			ORDER BY reportpostNum DESC
+		</select>
+				
+	</mapper>

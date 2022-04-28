@@ -7,6 +7,10 @@ public class ReportPostVO {
 	private long reportNum;
 	private long reportpostNum;
 	private String reportId;
-	private String reportedId;
 	private String reason;
+	
+	public void setReport(Long reportpostNum2) {
+		// TODO Auto-generated method stub
+		
+	}
 }

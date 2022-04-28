@@ -7,6 +7,10 @@ public class ReportReplyVO {
 	private long reportNum;
 	private long reportreplyNum;
 	private String reportId;
-	private String reportedId;
 	private String reason;
+	
+	public void setReport(Long reportreplyNum2) {
+		// TODO Auto-generated method stub
+		
+	}
 }
