@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="post/insert" method="post">
+	<form action="/post/insert" method="post">
 		작성자 : <input type="text" name="writer">
 		제목 : <input type="text" name="title">
 		내용 : <input type="text" name="content">
