@@ -46,19 +46,19 @@ public class ReportController {
 		}
 		return entity;
 	}
-	// 댓글 신고하기
-	@PostMapping(value="", consumes="application/json",	
-			produces = {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> register2 (@RequestBody ReportReplyVO vo){
-		ResponseEntity<String> entity = null;
-		try {
-			reportReplyService.addReport(vo);	
-			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);			
-		}catch(Exception e) {
-			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-		}
-		return entity;
-	}
+//	// 댓글 신고하기
+//	@PostMapping(value="", consumes="application/json",	
+//			produces = {MediaType.TEXT_PLAIN_VALUE})
+//	public ResponseEntity<String> register2 (@RequestBody ReportReplyVO vo){
+//		ResponseEntity<String> entity = null;
+//		try {
+//			reportReplyService.addReport(vo);	
+//			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);			
+//		}catch(Exception e) {
+//			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//		}
+//		return entity;
+//	}
 	
 	
 	
