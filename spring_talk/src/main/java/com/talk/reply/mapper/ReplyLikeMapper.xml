@@ -4,15 +4,15 @@
 	
 	
 	<mapper namespace="com.talk.reply.mapper.ReplyLikeMapper">
-	
-	<select id="getReplyLikeUserList" resultType="com.talk.reply.domain.ReplyLikeVO">
-		SELECT u.* FROM user_info u WHERE u.user_id in(
-			SELECT r.user_id FROM reply_like r WHERE r.reply_num = #{reply_num})
-	</select>
-	
-	<select id="getReplyList" resultType="com.talk.reply.domain.ReplyLikeVO">
-	 SELECT * FROM reply_like
-	 	WHERE reply_num = #{reply_num}
-	</select>
+
+		<select id="getReplyLikeUserList" resultType="com.talk.reply.domain.ReplyLikeVO">
+			SELECT u.* FROM user_info u WHERE u.user_id in(
+				SELECT r.user_id FROM reply_like r WHERE r.reply_num = #{reply_num})
+		</select>
+		
+		<select id="getReplyList" resultType="com.talk.reply.domain.ReplyLikeVO">
+		 SELECT * FROM reply_like
+		 	WHERE reply_num = #{reply_num}
+		</select>
 	
 	</mapper>

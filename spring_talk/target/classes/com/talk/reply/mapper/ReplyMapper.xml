@@ -4,6 +4,7 @@
 	
 	
 	<mapper namespace="com.talk.reply.mapper.ReplyMapper">
+
 		<select id="getList" resultType="com.talk.reply.domain.ReplyVO">
 			SELECT * FROM reply
 				WHERE board_num = #{board_num}
@@ -28,9 +29,5 @@
 			DELETE FROM reply
 				WHERE reply_num = #{reply_num}	
 		</delete>
-	
-	
-		</mapper>
-	
-	
-	
+
+	</mapper>
