@@ -37,7 +37,7 @@ public class ReportController {
 	// 게시글 신고하기 
 	@PostMapping(value="", consumes="application/json",	
 			produces = {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> register (@RequestBody ReportPostVO vo){
+	public ResponseEntity<String> register1 (@RequestBody ReportPostVO vo){
 		ResponseEntity<String> entity = null;
 		try {
 			reportPostService.addReport(vo);	
@@ -66,7 +66,7 @@ public class ReportController {
 	// 신고게시글 목록
 	@GetMapping(value="/all/{reportNum}",
 	produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<ReportPostVO>> list (@PathVariable("reportpostNum") Long reportpostNum){
+	public ResponseEntity<List<ReportPostVO>> list1 (@PathVariable("reportpostNum") Long reportpostNum){
 		ResponseEntity<List<ReportPostVO>> entity = null;		
 		try {
 			entity = new ResponseEntity<>(
@@ -128,7 +128,7 @@ public class ReportController {
 			value="/{reportpostNum}",
 			consumes="application/json",
 			produces= {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> modify1 (@RequestBody ReportPostVO vo,@PathVariable("reportNum") Long reportpostNum){
+	public ResponseEntity<String> modify1 (@RequestBody ReportPostVO vo, @PathVariable("reportNum") Long reportpostNum){
 	ResponseEntity<String> entity = null;
 	try {
 		vo.setReport(reportpostNum);
@@ -145,7 +145,7 @@ public class ReportController {
 			value="/{reportreplyNum}",
 			consumes="application/json",
 			produces= {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> modify2 (@RequestBody ReportReplyVO vo,@PathVariable("reportreplyNum") Long reportreplyNum){
+	public ResponseEntity<String> modify2 (@RequestBody ReportReplyVO vo, @PathVariable("reportreplyNum") Long reportreplyNum){
 	ResponseEntity<String> entity = null;
 	try {
 		vo.setReport(reportreplyNum);
