@@ -128,7 +128,7 @@ public class ReportController {
 			value="/{reportpostNum}",
 			consumes="application/json",
 			produces= {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> modify1 (@RequestBody ReportPostVO vo, @PathVariable("reportNum") Long reportpostNum){
+	public ResponseEntity<String> modify1 (@RequestBody ReportPostVO vo, @PathVariable("reportpostNum") Long reportpostNum){
 	ResponseEntity<String> entity = null;
 	try {
 		vo.setReport(reportpostNum);
