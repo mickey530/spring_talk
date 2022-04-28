@@ -1,5 +1,5 @@
 package com.talk.reply.mapper;
 
-public interface Reply_AtMapper {
+public interface ReplyLikeMapper {
 
 }
