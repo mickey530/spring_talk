@@ -104,21 +104,21 @@ public class ReplyController {
 }
 	
 	// 좋아요 누른사람 리싀트
-	@GetMapping(value="/all/{board_num}",produces = {MediaType.APPLICATION_XML_VALUE,
-													MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<ReplyVO>> replyLikeList(@PathVariable("reply_num")Long reply_num){
-		
-		ResponseEntity<List<ReplyVO>> entity = null;
-		
-		try {
-			entity = new ResponseEntity<>(LikeService.ReplyList(reply_num), HttpStatus.OK);
-		}catch(Exception e) {
-			e.printStackTrace();
-			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		return entity;
-	
-	}
+//	@GetMapping(value="/all/{board_num}",produces = {MediaType.APPLICATION_XML_VALUE,
+//													MediaType.APPLICATION_JSON_UTF8_VALUE})
+//	public ResponseEntity<List<ReplyVO>> replyLikeList(@PathVariable("reply_num")Long reply_num){
+//		
+//		ResponseEntity<List<ReplyVO>> entity = null;
+//		
+//		try {
+//			entity = new ResponseEntity<>(LikeService.ReplyList(reply_num), HttpStatus.OK);
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}
+//		return entity;
+//	
+//	}
 	
 	
 	
