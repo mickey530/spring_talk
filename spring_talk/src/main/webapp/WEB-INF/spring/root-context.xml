@@ -38,16 +38,8 @@
 	<mybatis-spring:scan base-package="com.talk.reply.mapper"/>
 	<mybatis-spring:scan base-package="com.talk.report.mapper"/>
 	
-<<<<<<< HEAD
 	<context:component-scan base-package="com.talk.user.service" />	
 	<context:component-scan base-package="com.talk.post.service" />	
 	<context:component-scan base-package="com.talk.reply.service" />	
 	<context:component-scan base-package="com.talk.report.service" />		
-=======
-	<context:component-scan base-package="com.talk.report.service" />	
-	
-	<mybatis-spring:scan base-package="com.talk.user.mapper"/>	
-	
-	<context:component-scan base-package="com.talk.user.service" />	
->>>>>>> 1a89a15adb42ccfeabf443a440d154c752e2ec28
 </beans>

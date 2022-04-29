@@ -11,10 +11,8 @@
 	Hello world!  
 </h1>
 
-<P>  The time on the server is ${serverTime}. </P>
 
-
-<table border="1" class="table table">
+<table border="1" class="table">
 			<thead>
 				<tr>
 					<th>유저번호</th>
@@ -24,24 +22,21 @@
 					<th>성</th>
 					<th>나이</th>
 					<th>전화번호</th>
-					<th>밴 당한 횟수</th>
-					<th>팔로워 수</th>
-					<th>팔로우 한 수</th>
 				</tr>
 			</thead>	
 			<tbody>
+			
+			<c:forEach var = "userInfo" items="${userInfoList}">
 					<tr>
-						<td>${userInfo.user_num }</td>
-						<td>${userInfo.user_id }</td>
-						<td>${userInfo.user_pw }</td>
-						<td>${userInfo.user_name}</td>
-						<td>${userInfo.last_name }</td>
-						<td>${userInfo.user_age }</td>
-						<td>${userInfo.phone_num }</td>
-						<td>${baned }</td>
-						<td>${follower }</td>
-						<td>${followed}</td>
+						<td><p><c:out value="${userInfo.user_name}"/></p></td>
+						<td><p><c:out value="${userInfo.user_id}"/></p></td>
+						<td><p><c:out value="${userInfo.user_pw}"/></p></td>
+						<td><p><c:out value="${userInfo.user_name}"/></p></td>
+						<td><p><c:out value="${userInfo.last_name}"/></p></td>
+						<td><p><c:out value="${userInfo.user_age}"/></p></td>
+						<td><p><c:out value="${userInfo.phone_num}"/></p></td>
 					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
 

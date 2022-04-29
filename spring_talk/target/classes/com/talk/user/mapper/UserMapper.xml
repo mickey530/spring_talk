@@ -5,8 +5,7 @@
 
 	
 	<select id="getUser" resultType="com.talk.user.domain.UserVO">
-		SELECT * FROM user_info
-			WHERE user_num = ${uno}
+		SELECT * FROM user_info WHERE (user_num = ${uno})
 	</select>
 	
 	<select id="getAllUsers" resultType="com.talk.user.domain.UserVO">
@@ -14,9 +13,7 @@
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO user_info (user_num, user_id, user_pw, user_name, last_name, user_age, phone_num)
-			VALUES
-		(user_num.nextval, #{user_id}, #{user_pw}, #{user_name}, #{last_name}, #{user_age}, #{phone_num})
+		INSERT INTO user_info (user_num, user_id, user_pw, user_name, last_name, user_age, phone_num) VALUES (user_num.nextval, #{user_id}, #{user_pw}, #{user_name}, #{last_name}, #{user_age}, #{phone_num})
 	</insert>
 	
 	<delete id="delete">
@@ -25,16 +22,7 @@
 	</delete>
 	
 	<update id="update">
-		UPDATE user_info 
-			SET 
-		user_id = #{user_id}, 
-		user_pw = #{user_pw}, 
-		user_name = #{user_name}, 
-		last_name = #{last_name}, 
-		user_age = #{user_age}, 
-		phone_num = #{phone_num}
-			WHERE 
-		user_num=#{user_num}
+		UPDATE user_info SET user_id = #{user_id}, user_pw = #{user_pw}, user_name = #{user_name}, last_name = #{last_name}, user_age = #{user_age}, phone_num = #{phone_num} WHERE user_num=#{user_num}
 	</update>
 </mapper>
 
