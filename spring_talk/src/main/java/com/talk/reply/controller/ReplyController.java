@@ -53,15 +53,15 @@ public class ReplyController {
 	}
 	
 	// select
-	@GetMapping(value="/all/{board_num}",produces= {MediaType.APPLICATION_XML_VALUE,
+	@GetMapping(value="/all/{post_num}",produces= {MediaType.APPLICATION_XML_VALUE,
 													MediaType.APPLICATION_JSON_UTF8_VALUE})
 	
-	public ResponseEntity<List<ReplyVO>>list(@PathVariable("board_num")Long board_num){
+	public ResponseEntity<List<ReplyVO>>list(@PathVariable("post_num")Long post_num){
 		
 		ResponseEntity<List<ReplyVO>> entity= null;
 		
 		try {
-			entity = new ResponseEntity<>(service.listReply(board_num),HttpStatus.OK);
+			entity = new ResponseEntity<>(service.listReply(post_num),HttpStatus.OK);
 		}catch(Exception e) {
 			e.printStackTrace();
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -104,7 +104,7 @@ public class ReplyController {
 }
 	
 	// 좋아요 누른사람 리싀트
-//	@GetMapping(value="/all/{board_num}",produces = {MediaType.APPLICATION_XML_VALUE,
+//	@GetMapping(value="/all/{post_num}",produces = {MediaType.APPLICATION_XML_VALUE,
 //													MediaType.APPLICATION_JSON_UTF8_VALUE})
 //	public ResponseEntity<List<ReplyVO>> replyLikeList(@PathVariable("reply_num")Long reply_num){
 //		

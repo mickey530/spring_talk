@@ -7,15 +7,15 @@
 
 		<select id="getList" resultType="com.talk.reply.domain.ReplyVO">
 			SELECT * FROM reply
-				WHERE board_num = #{board_num}
+				WHERE post_num = #{post_num}
 				ORDER BY reply_num DESC		
 		</select>
 		
 		<insert id="create">
 			INSERT INTO reply
-			(reply_num, board_num, reply_content, reply_id)
+			(reply_num, post_num, reply_content, reply_id)
 				VALUES
-			(reply_num.nextval, #{board_num}, #{reply_content}, #{reply_id})	
+			(reply_num.nextval, #{post_num}, #{reply_content}, #{reply_id})	
 		</insert>
 		
 		<update id="update">
@@ -32,7 +32,7 @@
 		
 		<delete id="deleteAll">
 			DELETE FROM reply
-				WHERE board_num = #{board_num}	
+				WHERE post_num = #{post_num}	
 		</delete>
 
 	</mapper>
