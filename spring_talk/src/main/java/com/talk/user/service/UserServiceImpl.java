@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.talk.user.domain.UserVO;
 import com.talk.user.mapper.UserMapper;
 
+@Service
 public class UserServiceImpl implements UserService {
 
 	@Autowired
@@ -30,22 +31,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void delete(long bno) {
-		// mapper를 이용해 구현
-		UserMapper.delete(bno);
+	public void delete(long uno) {
+		UserMapper.delete(uno);
 	}
 
 	@Override
 	public void update(UserVO vo) {
 		UserMapper.update(vo);
 	}
-
-
-	
-	
-	
-	
-	
-	
 	
 }

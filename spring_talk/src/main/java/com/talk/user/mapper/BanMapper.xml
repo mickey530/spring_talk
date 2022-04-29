@@ -4,11 +4,11 @@
 <mapper namespace="com.talk.user.mapper.BanMapper">
 	
 	<select id="ban" resultType="int">
-		select count(ban_id) from ban where user_id = #{user_id} 
+		select count(*) from ban where user_id = #{user_id} 
 	</select>
 	
 	<select id="baned" resultType="int">
-		select count(ban_id) from ban where ban_id = #{user_id} 
+		select count(*) from ban where user_id = #{user_id} 
 	</select>
 	
 	<select id="isBaned" resultType="boolean">

@@ -10,6 +10,7 @@ import com.talk.user.domain.UserVO;
 import com.talk.user.mapper.FollowMapper;
 import com.talk.user.mapper.UserMapper;
 
+@Service
 public class FollowServiceImpl implements FollowService {
 
 	@Autowired
