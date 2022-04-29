@@ -2,10 +2,13 @@ package com.talk.user.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.talk.user.domain.UserVO;
 
-// 구현 클래스 UserServiceImpl의 뼈대가 됩니다.
 public interface UserService {
+
+	public List<UserVO> selectAll();
 	
 	public UserVO select(long user_num);
 	
@@ -13,8 +16,8 @@ public interface UserService {
 
 	public void delete(long user_num);
 	
-	public void update(UserVO vo);	
-	
+	public void update(UserVO vo);
+
 }
 
 
