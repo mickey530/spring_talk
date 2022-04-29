@@ -1,4 +1,4 @@
-package com.ict.controller;
+
 
 import static org.junit.Assert.fail;
 
@@ -12,7 +12,7 @@ import org.junit.Test;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
-public class test {
+public class OjdbcConnectionTest {
 
 	static {
 		try {
@@ -25,21 +25,21 @@ public class test {
 	@Test
 	public void testConnection() {
 		try(Connection con = DriverManager.getConnection(
-					"jdbc:oracle:thin:@localhost:1521/XEPDB1",
+					"jdbc:log4jdbc:oracle:thin:@localhost:1521/XEPDB1",
 					"springprj",
 					"springprj"
 				)){
+			
+			PreparedStatement prps= con.prepareStatement("select * from user_info");
+			
+			ResultSet sr =prps.executeQuery();
+			
+			while(sr.next()) {
 
-			PreparedStatement prps= con.prepareStatement("select * from reply");
+				log.info(sr.getObject(1));
 
+			}
 
-            ResultSet sr =prps.executeQuery();
-
-            while(sr.next()) {
-
-                log.info(sr.getObject(1));
-
-            }
 			log.info(con);
 		} catch (Exception e) {
 			fail(e.getMessage());

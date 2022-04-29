@@ -15,4 +15,6 @@ public List<ReplyVO>listReply(Long board_num); // 불러오기
 	
 	public void removeReply(Long reply_num); 
 
+	public void removeAllReply(Long post_num); 
+
 }

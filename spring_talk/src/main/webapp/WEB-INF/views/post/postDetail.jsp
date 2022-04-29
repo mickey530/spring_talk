@@ -63,10 +63,10 @@
 	<script type="text/javascript">
 	
 	/* 댓글 불러오는 로직 */
-	let bno = ${post.post_num};
+	let post_num = ${post.post_num};
 
 	 function getAllList(){
-		$.getJSON("/replies/all/" + bno, function(data){
+		$.getJSON("/replies/all/" + post_num, function(data){
 
 			var str = "";
 			console.log(data);
@@ -90,8 +90,8 @@
 	 }
 	 
 	 $("#replyAddBtn").on("click", function(){
-			var replyer = $("#newReplyWriter").val();
-			var reply = $("#newReplyText").val();
+			var reply_id = $("#newReplyWriter").val();
+			var reply_content = $("#newReplyText").val();
 			
 			$.ajax({
 				type : 'post',
@@ -102,9 +102,9 @@
 				},
 				dataType : 'text',
 				data : JSON.stringify({
-					board_num : bno,
-					reply_id : replyer,
-					reply_content : reply
+					post_num : post_num,
+					reply_id : reply_id,
+					reply_content : reply_content
 				}),
 				success : function(result){
 					if(result == 'OK'){
