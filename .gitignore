@@ -4,7 +4,7 @@
 
 ### Eclipse ###
 .metadata
-.classpath
+db.properties
 Servers/
 bin/
 tmp/
@@ -130,3 +130,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,eclipse
+spring_talk/target/classes/log4jdbc.log4j2.properties
+spring_talk/src/main/webapp/META-INF/MANIFEST.MF
