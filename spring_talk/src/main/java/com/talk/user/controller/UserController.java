@@ -9,11 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.talk.user.domain.UserVO;
-import com.talk.user.service.BanService;
 import com.talk.user.service.BanServiceImpl;
-import com.talk.user.service.FollowService;
+import com.talk.post.service.TagService;
 import com.talk.user.service.FollowServiceImpl;
-import com.talk.user.service.UserService;
 import com.talk.user.service.UserServiceImpl;
 
 import lombok.extern.log4j.Log4j;
@@ -47,14 +45,10 @@ public class UserController {
 		}
 		return "user/userInfo";
 	}
-
-	
 	@GetMapping(value="/getAllUsers")
 	public String getAllUsers(Model model) {
 		List<UserVO> user_info_list = userService.selectAll();
 		model.addAttribute("userInfo",user_info_list);
 		return "user/getAllUsers";
 	}
-
-	
 }

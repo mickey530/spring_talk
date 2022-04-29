@@ -8,6 +8,7 @@ import com.talk.user.domain.UserVO;
 public interface BanMapper {
 
 	/*
+	 * 
 	 * 특정 유저의 밴당한 횟수
 	 * 특정 유저의 밴한 횟수
 	 * A 유저가 B 유저를 밴 했는지

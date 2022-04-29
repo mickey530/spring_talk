@@ -8,7 +8,7 @@
 	</select>
 	
 	<select id="baned" resultType="int">
-		select count(*) from ban where ban_id = #{user_id} 
+		select count(*) from ban where user_id = #{user_id} 
 	</select>
 	
 	<select id="isBaned" resultType="boolean">
