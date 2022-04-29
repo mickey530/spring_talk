@@ -29,5 +29,10 @@
 			DELETE FROM reply
 				WHERE reply_num = #{reply_num}	
 		</delete>
+		
+		<delete id="deleteAll">
+			DELETE FROM reply
+				WHERE board_num = #{board_num}	
+		</delete>
 
 	</mapper>

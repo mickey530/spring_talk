@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.talk.post.domain.PostVO;
 import com.talk.post.service.PostAtService;
@@ -16,6 +15,7 @@ import com.talk.post.service.PostLikeService;
 import com.talk.post.service.PostService;
 import com.talk.post.service.PostTagService;
 import com.talk.post.service.TagService;
+import com.talk.reply.service.ReplyService;
 
 import lombok.extern.log4j.Log4j;
 
@@ -39,6 +39,8 @@ public class PostController {
 	@Autowired
 	private TagService tag;	
 	
+	@Autowired
+	private ReplyService replyService;
 	
 	
 	@GetMapping("/insert")
@@ -59,22 +61,25 @@ public class PostController {
 		return "post/postDetail";
 	}
 	
-	@DeleteMapping("delete/{post_num}")
+	@GetMapping("delete/{post_num}")
 	public String delete(@PathVariable long post_num) {
+		replyService.removeAllReply(post_num);
 		service.delete(post_num);
+		log.info(post_num + "번 게시글 삭제되었습니다.");
 		return ""; // 나중에 마이룸으로 리다이렉트 예정
 	}
 	
-	@PostMapping("updateForm/{post_num}")
-	public String updateForm(@PathVariable long post_num) {
-		service.select(post_num);
+	@GetMapping("updateForm/{post_num}")
+	public String updateForm(@PathVariable long post_num, Model model) {
+		PostVO post = service.select(post_num);
+		model.addAttribute("post", post);
 		return "post/updateForm";
 	}
 	
-	@PostMapping("update/{post_num}")
-	public String update(@PathVariable long post_num, PostVO vo) {
+	@PostMapping("update")
+	public String update(long post_num, PostVO vo) {
 		service.update(vo);
-		return "post/detail";
+		return "redirect:detail/" + post_num;
 	}
 			
 			

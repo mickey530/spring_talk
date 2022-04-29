@@ -35,6 +35,11 @@ public class ReplyServiceImpl implements ReplyService {
 		mapper.delete(reply_num);
 		
 	}
+
+	@Override
+	public void removeAllReply(Long post_num) {
+		mapper.deleteAll(post_num);
+	}
 	
 	
 	

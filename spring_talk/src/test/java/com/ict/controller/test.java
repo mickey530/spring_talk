@@ -29,7 +29,7 @@ public class test {
 					"springprj",
 					"springprj"
 				)){
-			PreparedStatement prps= con.prepareStatement("select * from follow");
+			PreparedStatement prps= con.prepareStatement("select * from user_info");
 
             ResultSet sr =prps.executeQuery();
 

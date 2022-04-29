@@ -20,7 +20,7 @@
 	<update id="update">
 		UPDATE post 
 			SET 
-		title=#{title}, content=#{content}, updatedate=SYSDATE 
+		title=#{title}, content=#{content}, m_date=SYSDATE 
 			WHERE 
 		post_num=#{post_num}
 	</update>
