@@ -7,6 +7,35 @@
 <title>Insert title here</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<style>
+*{margin: 0;padding: 0;list-style: none;;}
+
+#modDiv{width: 100%;max-width: 600px;
+margin: 0 auto;
+padding:10px;
+box-sizing: border-box;
+background-color: blanchedalmond;}
+
+.btn_content{width: 100%;
+border-radius: 5px;
+background-color: #fff;;}
+
+.btn_content button{
+display: block;	
+width: 100%;
+background-color: blueviolet;
+border: 0;
+padding: 10px;
+border-bottom: 1px solid #ddd;
+background-color: transparent;}
+
+.btn_content button:last-child{border-bottom: 0;}
+
+
+.btn_content button:hover{background-color: #484848; color: #fff;}
+
+    
+</style>
 </head>
 <body>
 <div class="container">
@@ -34,25 +63,28 @@
 		</div>
 		<button id="replyAddBtn">ADD REPLY</button>
 	</div>
+	<hr/>
 
+	
+	
+	<!-- 모달창 -->
+	<div id="modDiv"  style="display:none;">
+		<div class ="modal-title">
+		</div>
+		<div>
+			<input type="text" id="reply">
+		</div>
+		<div class="btn_content">
+			<button type="button" id="reReplyBtn">답글달기</button>
+			<button type="button" id="replyModBtn">수정</button>
+			<button type="button" id="replyDelBtn">삭제</button>
+			<button type="button" id="closeBtn">닫기</button>	
+		</div>
+	</div>
+	
+	
+	
 </div>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	<!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>	

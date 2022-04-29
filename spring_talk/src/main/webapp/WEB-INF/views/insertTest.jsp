@@ -19,7 +19,7 @@ box-sizing: border-box;
 background-color: blanchedalmond;}
 
 .btn_content{width: 100%;
- border-radius: 5px;
+border-radius: 5px;
 background-color: #fff;;}
 
 .btn_content button{
