@@ -43,35 +43,35 @@ public class PostController {
 	
 	@GetMapping("/insert")
 	public String insert() {
-		return "post/postForm";
+		return "post/insertForm";
 	}
 	
 	@PostMapping("/insert")
 	public String insert(PostVO vo) {
 		service.insert(vo);
-		return "post/postForm"; // 나중에 뉴스피드로 리다이렉트 예정
+		return "post/postDetail"; // 나중에 뉴스피드로 리다이렉트 예정
 	}
 	
-	@GetMapping("/detail{post_num}")
+	@GetMapping("/detail/{post_num}")
 	public String detail(@PathVariable long post_num, Model model) {
 		PostVO post = service.select(post_num);
 		model.addAttribute("post", post);
-		return "post/detail";
+		return "post/postDetail";
 	}
 	
-	@DeleteMapping("delete{post_num}")
+	@DeleteMapping("delete/{post_num}")
 	public String delete(@PathVariable long post_num) {
 		service.delete(post_num);
 		return ""; // 나중에 마이룸으로 리다이렉트 예정
 	}
 	
-	@PostMapping("updateForm{post_num}")
+	@PostMapping("updateForm/{post_num}")
 	public String updateForm(@PathVariable long post_num) {
 		service.select(post_num);
 		return "post/updateForm";
 	}
 	
-	@PostMapping("update{post_num}")
+	@PostMapping("update/{post_num}")
 	public String update(@PathVariable long post_num, PostVO vo) {
 		service.update(vo);
 		return "post/detail";
