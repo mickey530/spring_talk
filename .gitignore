@@ -4,6 +4,7 @@
 
 ### Eclipse ###
 .metadata
+.classpath
 pom.properties
 db.properties
 target/
