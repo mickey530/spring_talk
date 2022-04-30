@@ -3,6 +3,23 @@
 	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 	
-	<mapper namespace="com.talk.report.mapper.ReportPostMapper">
-
+	<mapper namespace="com.talk.report.mapper.ReportPostMapper">	
+		
+		<insert id="Insert">
+			INSERT INTO post_report (report_num, report_post_num, report_id, report_reason) 
+			VALUES
+			(report_post_num.nextval, #{report_id}, #{report_reason})
+		</insert>
+		
+		<delete id="Delete">
+			DELETE FROM post_report 
+			WHERE 
+			report_post_num=#{report_post_num}
+		</delete>
+		
+		<select id="AllList" resultType="com.talk.report.domain.ReportPostVO">
+			SELECT * FROM post_report
+			ORDER BY report_post_num DESC
+		</select>
+				
 	</mapper>

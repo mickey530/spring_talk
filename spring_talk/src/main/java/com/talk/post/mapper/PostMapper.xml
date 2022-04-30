@@ -2,8 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.talk.post.PostMapper">
+<mapper namespace="com.talk.post.mapper.PostMapper">
+	<insert id="insert">
+		INSERT INTO post (post_num, title, content, writer)
+			VALUES
+		(post_num.nextval, #{title}, #{content}, #{writer})
+	</insert>
+
+	<select id="select" resultType="com.talk.post.domain.PostVO">
+		SELECT * FROM post WHERE post_num=#{post_num}
+	</select>
+
+	<delete id="delete">
+		DELETE FROM post WHERE post_num=#{post_num}
+	</delete>
 	
+	<update id="update">
+		UPDATE post 
+			SET 
+		title=#{title}, content=#{content}, m_date=SYSDATE 
+			WHERE 
+		post_num=#{post_num}
+	</update>
 </mapper>
 
 

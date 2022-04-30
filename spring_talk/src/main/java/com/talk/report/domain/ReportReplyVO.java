@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class ReportReplyVO {
-	private long reportNum;
-	private long reportreplyNum;
-	private String reportId;
-	private String reportedId;
-	private String reason;
+	private long report_num;
+	private long report_reply_num;
+	private String report_id;
+	private String report_reason;
+
 }
