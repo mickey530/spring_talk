@@ -15,6 +15,8 @@ public interface ReplyMapper {
 	
 	public void delete(Long reply_num); // 지우기
 
+	public void deleteAll(Long reply_num); // 지우기
+
 }
 	
 	

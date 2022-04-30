@@ -8,7 +8,7 @@ import lombok.Data;
 public class ReplyVO {
 	private Long reply_num;
 	private Long parent_num;
-	private Long board_num;
+	private Long post_num;
 	private String reply_id;
 	private String reply_content;
 	private Date write_date;

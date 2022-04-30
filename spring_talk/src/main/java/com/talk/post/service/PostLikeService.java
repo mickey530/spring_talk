@@ -1,5 +1,7 @@
 package com.talk.post.service;
 
-public interface PostLikeService {
+import com.talk.post.domain.PostLikeVO;
 
+public interface PostLikeService {
+	public void like(PostLikeVO postLikeVO);
 }

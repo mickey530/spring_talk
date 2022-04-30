@@ -4,9 +4,5 @@
 
 <mapper namespace="com.talk.gall.mapper.gall_dog_mapper">
 	<!-- 쿼리문 선언 select / delete / update 단계 -->
+
 </mapper>
-
-
-
-
-
