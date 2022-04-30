@@ -42,8 +42,4 @@
 	<context:component-scan base-package="com.talk.post.service" />	
 	<context:component-scan base-package="com.talk.reply.service" />	
 	<context:component-scan base-package="com.talk.report.service" />		
-<<<<<<< HEAD
 </beans>
-=======
-</beans>
->>>>>>> d77fd83c1ad0ff82742492d4e6d727e9f695ee5e
