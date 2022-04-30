@@ -24,25 +24,31 @@ public class OjdbcConnectionTest {
 
 	@Test
 	public void testConnection() {
-		try(Connection con = DriverManager.getConnection(
-					"jdbc:log4jdbc:oracle:thin:@localhost:1521/XEPDB1",
-					"springprj",
-					"springprj"
-				)){
-			
-			PreparedStatement prps= con.prepareStatement("select * from user_info");
-			
-			ResultSet sr =prps.executeQuery();
-			
-			while(sr.next()) {
+        try(Connection con = DriverManager.getConnection(
+                    "jdbc:log4jdbc:oracle:thin:@localhost:1521/XEPDB1",
+                    "springprj",
+                    "springprj"
+                )){
 
-				log.info(sr.getObject(1));
+            PreparedStatement prps= con.prepareStatement("select * from user_info");
 
-			}
+            ResultSet sr =prps.executeQuery();
 
-			log.info(con);
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-	}	
+            while(sr.next()) {
+
+                sr.getObject(1);
+                sr.getObject(2);
+                sr.getObject(3);
+                sr.getObject(4);
+                sr.getObject(5);
+                sr.getObject(6);
+                sr.getObject(7);
+
+            }
+
+            log.info(con);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
 }

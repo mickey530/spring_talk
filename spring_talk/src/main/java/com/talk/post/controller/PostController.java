@@ -89,11 +89,11 @@ public class PostController {
 		return "redirect:detail/" + post_num;
 	}
 
-	// 비동기 좋아요
-
-	// insert
+	// LikeService 비동기
+	
+	// 좋아요
 	@PostMapping(value="/like", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity <String> register(@RequestBody PostLikeVO vo){
+	public ResponseEntity <String> like(@RequestBody PostLikeVO vo){
 		ResponseEntity<String> entity= null;
 		try {
 			likeService.like(vo);
@@ -103,6 +103,20 @@ public class PostController {
 		}
 		return entity;
 	}
+	
+	// 좋아요 취소
+	@PostMapping(value="/unlike", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity <String> unlike(@RequestBody PostLikeVO vo){
+		ResponseEntity<String> entity= null;
+		try {
+			likeService.unlike(vo);
+			entity = new ResponseEntity<String>("OK", HttpStatus.OK);
+		}catch(Exception e) {
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
+	
 	
 }
 
