@@ -1,5 +1,7 @@
 package com.talk.post.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,11 @@ public class PostServiceImpl implements PostService{
 	@Override
 	public void update(PostVO vo) {
 		postMapper.update(vo);
+	}
+
+	@Override
+	public List<PostVO> getAllPost(int page_num) {
+		return postMapper.getAllPost(page_num);
 	}
 
 }

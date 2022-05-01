@@ -1,5 +1,7 @@
 package com.talk.post.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -89,6 +91,29 @@ public class PostController {
 		return "redirect:detail/" + post_num;
 	}
 
+	@GetMapping("newsfeed")
+	public String postList(Model model){
+		List<PostVO> postList = service.getAllPost(1);
+		model.addAttribute("postList", postList);
+		return "post/newsfeed";
+	}
+	
+	@GetMapping(value="/newsfeed/{page_num}", produces= {MediaType.APPLICATION_XML_VALUE,
+														MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<List<PostVO>>list(@PathVariable("page_num")int page_num){
+	
+	ResponseEntity<List<PostVO>> entity= null;
+	
+	try {
+		entity = new ResponseEntity<>(service.getAllPost(page_num),HttpStatus.OK);
+	}catch(Exception e) {
+		e.printStackTrace();
+		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+		return entity;
+	}
+	
+	
 	// LikeService 비동기
 	
 	// 좋아요

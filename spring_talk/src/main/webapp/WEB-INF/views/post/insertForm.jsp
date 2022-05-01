@@ -8,9 +8,9 @@
 </head>
 <body>
 	<form action="/post/insert" method="post">
-		작성자 : <input type="text" name="writer">
-		제목 : <input type="text" name="title">
-		내용 : <input type="text" name="content">
+		<input type="text" name="writer" placeholder="작성자"><br/>
+		<input type="text" name="title" placeholder="제목"><br/>
+		<textarea name="content" placeholder="내용"></textarea><br/>
 		<input type="submit" value="글쓰기">
 	</form>
 </body>

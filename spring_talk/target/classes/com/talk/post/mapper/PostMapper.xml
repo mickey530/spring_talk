@@ -24,6 +24,14 @@
 			WHERE 
 		post_num=#{post_num}
 	</update>
+	
+	<select id="getAllPost" resultType="com.talk.post.domain.PostVO">
+		<![CDATA[
+		SELECT * FROM
+			(SELECT /*+ INDEX_DESC(post pk_post_post_num) */ rownum rn, post.* FROM post WHERE rownum <= #{page_num}*10)
+		WHERE rn > (#{page_num}-1)*10
+		]]>
+	</select>
 </mapper>
 
 
