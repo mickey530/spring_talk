@@ -1,8 +1,15 @@
 package com.talk.gall.mapper;
 
-public interface gall_dog_mapper {	
-	public int select();
-	public int insert();
-	public int delete();
-	public int update();
+import com.talk.post.domain.PostVO;
+
+	public interface gall_dog_mapper {	
+	public void insert(PostVO vo);
+		
+	public PostVO select(long post_num);
+		
+	public void delete(long post_num);
+		
+	public void update(PostVO vo);
 }
+
+
