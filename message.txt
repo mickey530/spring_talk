@@ -1,0 +1,132 @@
+-- 유저 관련 테이블 -----------------------------------------------------------------------------------
+CREATE TABLE user_info(
+    user_num number (10) constraint pk_user_info_user_num primary key,
+    user_id varchar2 (20) unique,
+    user_pw varchar2 (20),
+    user_name varchar2 (10),
+    last_name varchar2 (10),
+    user_age number (3),
+    phone_num varchar2(15)
+); 
+    
+CREATE TABLE follow(
+    follower varchar2(20),
+    followed varchar2(20),
+    favorite char(1)  default 'N' check(favorite in ('Y','N'))
+); 
+
+ALTER TABLE follow ADD CONSTRAINT fk_follow_follower foreign KEY(follower) references user_info (user_id);
+ALTER TABLE follow ADD CONSTRAINT fk_follow_followed foreign KEY(followed) references user_info (user_id);
+
+
+CREATE TABLE ban(
+    user_id varchar2(20),
+    ban_id varchar2(20)
+); 
+
+ALTER TABLE ban ADD CONSTRAINT fk_ban_user_id foreign KEY(user_id) references user_info (user_id);
+ALTER TABLE ban ADD CONSTRAINT fk_ban_ban foreign KEY(ban_id) references user_info (user_id);
+
+
+
+-- 포스트 관련 테이블 ---------------------------------------------------------------------------------    
+CREATE TABLE post(
+    post_num number(10, 0) CONSTRAINT pk_post_post_num PRIMARY KEY,
+    title varchar2(20) NOT NULL,
+    content varchar2 (140) NOT NULL,
+    writer varchar2 (20) NOT NULL,
+    w_date DATE DEFAULT sysdate,
+    m_date DATE DEFAULT sysdate,
+    CONSTRAINT fk_post_writer FOREIGN KEY (writer) REFERENCES user_info(user_id)
+);
+
+CREATE TABLE post_like(
+    post_num number(10, 0) NOT NULL,
+    user_id varchar2 (20) NOT NULL,
+    like_date DATE DEFAULT sysdate,
+    CONSTRAINT fk_post_like_post_num FOREIGN KEY (post_num) REFERENCES post(post_num),
+    CONSTRAINT fk_post_like_user_id FOREIGN KEY (user_id) REFERENCES user_info(user_id)
+);
+    
+CREATE TABLE post_at(
+    post_num number(10, 0) NOT NULL,
+    tag_id varchar2 (20),
+    CONSTRAINT fk_post_at_post_num FOREIGN KEY (post_num) REFERENCES post(post_num),
+    CONSTRAINT fk_post_at_tag_id FOREIGN KEY (tag_id) REFERENCES user_info (user_id)
+);
+    
+CREATE TABLE tag_list(
+    tag_num number(5, 0)  CONSTRAINT pk_tag_list_tag_num PRIMARY KEY,
+    tag varchar2 (10) NOT NULL
+);
+
+CREATE TABLE post_tag(
+    post_num number(10, 0) NOT NULL,
+    tag_num number(5, 0) NOT NULL,
+    CONSTRAINT fk_post_tag_post_num FOREIGN KEY (post_num) REFERENCES post(post_num),
+    CONSTRAINT fk_post_tag_tag_num FOREIGN KEY (tag_num) REFERENCES tag_list(tag_num)
+);
+
+
+-- 댓글 관련 테이블 -----------------------------------------------------------------------------------    
+CREATE TABLE reply(
+	reply_num number(10,0) ,
+	parent_num number(10,0) default null,
+	board_num number(10,0), 
+	reply_id varchar2(20),
+	reply_content varchar2(50) not null,
+	write_date date default sysdate,
+	update_date date default sysdate
+);
+    
+    
+alter table reply add constraint pk_reply_reply_num primary key(reply_num);
+alter table reply add constraint fk_reply_board_num foreign key(board_num) references post(post_num);
+alter table reply add constraint fk_reply_reply_id foreign key(reply_id) references user_info(user_id);
+
+CREATE TABLE reply_like (
+	reply_num number(10,0),
+	user_id varchar2(20)
+);
+alter table reply_like add constraint fk_reply_like_reply_num foreign key(reply_num) references reply(reply_num);
+alter table reply_like add constraint fk_reply_like_user_id foreign key(user_id) references user_info(user_id);
+    
+    
+
+CREATE TABLE reply_at(
+	reply_num number(10,0),
+	user_id varchar2(20)
+);
+
+alter table reply_at add constraint fk_reply_at_reply_num foreign key(reply_num) references reply(reply_num);
+alter table reply_at add constraint fk_reply_at_user_id foreign key(user_id) references user_info(user_id);
+
+
+-- 신고 관련 테이블 -----------------------------------------------------------------------------------
+CREATE TABLE post_report( 
+    report_num NUMBER constraint pk_post_report_report_num primary key,
+    report_post_num NUMBER,
+    report_id varchar2(20) not null,
+    report_reason VARCHAR2(500)
+);
+ALTER TABLE post_report ADD CONSTRAINT fk_post_report_report_id foreign KEY(report_id) references user_info (user_id);
+
+CREATE TABLE reply_report( 
+    report_num NUMBER constraint pk_reply_report_report_num primary key,
+    report_reply_num NUMBER,
+    report_id varchar2(20) not null,
+    report_reason VARCHAR2(500)
+);
+
+ALTER TABLE reply_report ADD CONSTRAINT fk_reply_report_report_id foreign KEY(report_id) references user_info (user_id);
+
+-- auto_increament 용 시퀀스 추가 -----------------------------------------------------------------------------------
+CREATE SEQUENCE user_num;
+CREATE SEQUENCE post_num;
+CREATE SEQUENCE tag_num;
+CREATE SEQUENCE reply_num;
+CREATE SEQUENCE report_post_num;
+CREATE SEQUENCE report_reply_num;
+
+
+

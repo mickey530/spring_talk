@@ -3,13 +3,13 @@ package com.talk.gall.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.talk.gall.mapper.gall_dog_mapper;
+import com.talk.gall.mapper.GallDogMapper;
 
 @Service
-public class gall_dog_serviceImpl implements gall_dog_service {
+public class GallDogServiceImpl implements GallDogService {
 
 	@Autowired
-	gall_dog_mapper mapper;
+	GallDogMapper mapper;
 	
 	@Override
 	public int select() {
