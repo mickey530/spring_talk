@@ -24,7 +24,3 @@ public interface BanService {
 
 	public void update(BanVO vo);
 }
-
-
-
-

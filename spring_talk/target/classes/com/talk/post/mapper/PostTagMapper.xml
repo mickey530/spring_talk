@@ -5,8 +5,3 @@
 <mapper namespace="com.talk.post.mapper.PostTagMapper">
 	
 </mapper>
-
-
-
-
-

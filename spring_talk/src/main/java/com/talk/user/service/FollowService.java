@@ -34,5 +34,3 @@ public interface FollowService {
 	//고치고
 	public void update(FollowVO vo);;
 }
-
-

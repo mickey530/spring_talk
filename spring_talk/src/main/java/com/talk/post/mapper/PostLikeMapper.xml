@@ -9,8 +9,3 @@
 		(#{post_num}, #{user_id} )
 	</insert>
 </mapper>
-
-
-
-
-

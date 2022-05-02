@@ -36,7 +36,3 @@ public interface BanMapper {
 	public void update(BanVO vo);
 	
 }
-
-
-
-

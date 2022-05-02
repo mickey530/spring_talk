@@ -25,8 +25,3 @@
 		post_num=#{post_num}
 	</update>
 </mapper>
-
-
-
-
-

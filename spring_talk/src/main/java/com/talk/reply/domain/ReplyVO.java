@@ -13,10 +13,4 @@ public class ReplyVO {
 	private String reply_content;
 	private Date write_date;
 	private Date update_date;
-	
-	
-	
-	
-	
-
 }

@@ -19,7 +19,3 @@ public interface UserService {
 	public void update(UserVO vo);
 
 }
-
-
-
-

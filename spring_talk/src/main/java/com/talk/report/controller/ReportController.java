@@ -34,7 +34,7 @@ public class ReportController {
 	private ReportReplyService reportReplyService;	
 	
 	// 게시글 신고하기 
-	@PostMapping(value="", consumes="application/json",	
+	@PostMapping(value="/insert/{report_post_num}", consumes="application/json",	
 			produces = {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> register1 (@RequestBody ReportPostVO vo){
 		ResponseEntity<String> entity = null;
@@ -46,19 +46,21 @@ public class ReportController {
 		}
 		return entity;
 	}
-//	// 댓글 신고하기
-//	@PostMapping(value="", consumes="application/json",	
-//			produces = {MediaType.TEXT_PLAIN_VALUE})
-//	public ResponseEntity<String> register2 (@RequestBody ReportReplyVO vo){
-//		ResponseEntity<String> entity = null;
-//		try {
-//			reportReplyService.addReport(vo);	
-//			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);			
-//		}catch(Exception e) {
-//			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//		}
-//		return entity;
-//	}
+
+	
+	// 댓글 신고하기
+	@PostMapping(value="/insert/{report_reply_num}", consumes="application/json",	
+			produces = {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity<String> register2 (@RequestBody ReportReplyVO vo){
+		ResponseEntity<String> entity = null;
+		try {
+			reportReplyService.addReport(vo);	
+			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);			
+		}catch(Exception e) {
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
 	
 	
 	
@@ -94,7 +96,7 @@ public class ReportController {
 	
 	
 	// 게시글 신고 중 삭제
-	@DeleteMapping(value="/{report_post_num}",
+	@DeleteMapping(value="/delete/{report_post_num}",
 			produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> remove1 (@PathVariable("report_post_num") Long report_post_num){
 	ResponseEntity<String> entity = null;	
@@ -107,7 +109,7 @@ public class ReportController {
 		return entity;
 	}	
 	// 댓글 신고 중 삭제
-	@DeleteMapping(value="/{report_reply_num}",
+	@DeleteMapping(value="/delete/{report_reply_num}",
 			produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> remove2 (@PathVariable("report_reply_num") Long report_reply_num){
 	ResponseEntity<String> entity = null;

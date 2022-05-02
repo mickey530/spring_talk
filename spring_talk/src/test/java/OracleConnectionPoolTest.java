@@ -1,5 +1,3 @@
-
-
 import static org.junit.Assert.fail;
 
 import java.sql.Connection;
@@ -58,8 +56,3 @@ public class OracleConnectionPoolTest {
 	
 	
 }
-
-
-
-
-

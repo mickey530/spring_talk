@@ -36,7 +36,3 @@ public interface FollowMapper {
 	
 	
 }
-
-
-
-
