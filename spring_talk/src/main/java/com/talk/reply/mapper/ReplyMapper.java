@@ -18,6 +18,3 @@ public interface ReplyMapper {
 	public void deleteAll(Long reply_num); // 지우기
 
 }
-	
-	
-	

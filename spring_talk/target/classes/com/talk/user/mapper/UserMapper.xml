@@ -25,8 +25,3 @@
 		UPDATE user_info SET user_id = #{user_id}, user_pw = #{user_pw}, user_name = #{user_name}, last_name = #{last_name}, user_age = #{user_age}, phone_num = #{phone_num} WHERE user_num=#{user_num}
 	</update>
 </mapper>
-
-
-
-
-
