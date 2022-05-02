@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
 
 import com.talk.report.domain.ReportPostVO;
 import com.talk.report.domain.ReportReplyVO;
@@ -64,7 +64,7 @@ public class ReportController {
 	}
 	
 	
-	
+	/*
 	// 신고게시글 목록
 	@GetMapping(value="/all/{report_post_num}",
 	produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE})
@@ -93,7 +93,16 @@ public class ReportController {
 		}
 	return entity;
 	}
+	*/
+		@GetMapping(value="/reportPostList")
+		public String reportPost() {
+			return "report/reportPostList";
+		}	
 	
+		@GetMapping(value="/reportReplyList")
+		public String reportReply() {
+			return "report/reportReplyList";
+		}
 	
 	
 	// 게시글 신고 중 삭제
