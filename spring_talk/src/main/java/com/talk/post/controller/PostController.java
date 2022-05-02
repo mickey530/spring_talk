@@ -1,5 +1,7 @@
 package com.talk.post.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -89,11 +91,42 @@ public class PostController {
 		return "redirect:detail/" + post_num;
 	}
 
-	// 비동기 좋아요
-
-	// insert
+	// 뉴스피드
+	@GetMapping("newsfeed")
+	public String postList(Model model){
+		List<PostVO> postList = service.getAllPost(1);
+		model.addAttribute("postList", postList);
+		return "post/newsfeed";
+	}
+	// 특정 유저 게시글 뉴스피드 형식으로 불러오기
+	@GetMapping("newsfeed")
+	public String userPostList(String user_id, Model model){
+		List<PostVO> postList = service.getUserPost(user_id, 1);
+		model.addAttribute("postList", postList);
+		return "post/newsfeed";
+	}
+	
+	@GetMapping(value="/newsfeed/{page_num}", produces= {MediaType.APPLICATION_XML_VALUE,
+														MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<List<PostVO>>list(@PathVariable("page_num")int page_num){
+	
+	ResponseEntity<List<PostVO>> entity= null;
+	
+	try {
+		entity = new ResponseEntity<>(service.getAllPost(page_num),HttpStatus.OK);
+	}catch(Exception e) {
+		e.printStackTrace();
+		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+		return entity;
+	}
+	
+	
+	// LikeService 비동기
+	
+	// 좋아요
 	@PostMapping(value="/like", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity <String> register(@RequestBody PostLikeVO vo){
+	public ResponseEntity <String> like(@RequestBody PostLikeVO vo){
 		ResponseEntity<String> entity= null;
 		try {
 			likeService.like(vo);
@@ -103,5 +136,20 @@ public class PostController {
 		}
 		return entity;
 	}
+
+	// 좋아요 취소
+	@PostMapping(value="/unlike", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity <String> unlike(@RequestBody PostLikeVO vo){
+		ResponseEntity<String> entity= null;
+		try {
+			likeService.unlike(vo);
+			entity = new ResponseEntity<String>("OK", HttpStatus.OK);
+		}catch(Exception e) {
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
+	
 	
 }
+

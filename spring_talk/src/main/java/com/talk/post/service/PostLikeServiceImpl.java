@@ -16,5 +16,10 @@ public class PostLikeServiceImpl implements PostLikeService{
 	public void like(PostLikeVO vo) {
 		postLikeMapper.like(vo);
 	}
+	
+	@Override
+	public void unlike(PostLikeVO vo) {
+		postLikeMapper.unlike(vo);
+	}
 
 }

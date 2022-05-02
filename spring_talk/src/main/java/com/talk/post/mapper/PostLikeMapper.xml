@@ -6,6 +6,12 @@
 	<insert id="like">
 		INSERT INTO post_like (post_num , user_id)
 			VALUES
-		(#{post_num}, #{user_id} )
+		(#{post_num}, #{user_id})
 	</insert>
+	<delete id="unlike">
+		DELETE FROM post_like
+			WHERE
+		post_num = #{post_num} AND user_id = #{user_id}
+	</delete>
+	
 </mapper>
