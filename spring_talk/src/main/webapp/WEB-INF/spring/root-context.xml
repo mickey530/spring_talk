@@ -17,12 +17,13 @@
 	명칭으로만 가져올 수 있도록 처리-->
 	<context:property-placeholder location="classpath:db.properties"/>
 	
+ 	
 	<context:annotation-config></context:annotation-config>
 
 	<context:component-scan base-package="com.ict.service"></context:component-scan>
 	<context:component-scan base-package="com.ict.aop"></context:component-scan>
 		
-	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy> 
 	
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
@@ -53,15 +54,19 @@
 	<context:component-scan base-package="com.talk.post.service" />	
 	<context:component-scan base-package="com.talk.reply.service" />	
 	<context:component-scan base-package="com.talk.report.service" />	
-	
+
+
+ 	
 	
 	<bean id="transactionManager"
 		class ="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
-	<!-- 어노테이션을 거는것만으로 트랜잭선 작동하도록 도와줌 -->
+
 	<tx:annotation-driven/>
+	
+	
 	
 	
 		

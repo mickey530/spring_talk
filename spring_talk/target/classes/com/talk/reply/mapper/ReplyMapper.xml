@@ -34,5 +34,11 @@
 			DELETE FROM reply
 				WHERE post_num = #{post_num}	
 		</delete>
+		
+		<select id ="getPost_num" resultType="long">
+			SELECT 	post_num FROM reply
+				WHERE reply_num = #{reply_num}		
+		</select>
+		
 
 	</mapper>

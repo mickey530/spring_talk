@@ -99,8 +99,8 @@ public class PostController {
 		return "post/newsfeed";
 	}
 	// 특정 유저 게시글 뉴스피드 형식으로 불러오기
-	@GetMapping("newsfeed")
-	public String userPostList(String user_id, Model model){
+	@GetMapping("newsfeed/{user_id}")
+	public String userPostList(@PathVariable String user_id, Model model){
 		List<PostVO> postList = service.getUserPost(user_id, 1);
 		model.addAttribute("postList", postList);
 		return "post/newsfeed";

@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.talk.post.mapper.PostMapper;
 import com.talk.reply.domain.ReplyVO;
 import com.talk.reply.mapper.ReplyMapper;
 
@@ -12,6 +14,9 @@ import com.talk.reply.mapper.ReplyMapper;
 public class ReplyServiceImpl implements ReplyService {
 	@Autowired
 	private ReplyMapper mapper;
+	
+	@Autowired
+	private PostMapper postmapper;
 
 	@Override
 	public List<ReplyVO> listReply(Long board_num) {		
@@ -29,10 +34,13 @@ public class ReplyServiceImpl implements ReplyService {
 		mapper.update(vo);
 		
 	}
-
+	
+	@Transactional
 	@Override
 	public void removeReply(Long reply_num) {
+		Long post_num = mapper.getPost_num(reply_num);
 		mapper.delete(reply_num);
+		postmapper.updateReplyCount(reply_num, -1);
 		
 	}
 

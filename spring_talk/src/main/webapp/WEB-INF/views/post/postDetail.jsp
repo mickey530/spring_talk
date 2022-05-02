@@ -5,7 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<!-- 부트스트랩 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<!-- 번들 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <style>
 *{margin: 0;padding: 0;list-style: none;;}
@@ -68,7 +70,7 @@ background-color: transparent;}
 	
 	
 	<!-- 모달창 -->
-	<div id="modDiv"  style="display:none;">
+	<div id="modDiv" style="display:none;">
 		<div class ="modal-title">
 		</div>
 		<div>
@@ -105,9 +107,22 @@ background-color: transparent;}
 			
 			$(data).each(
 				function() {
-					str += "<p data-reply_num='" + this.reply_num + "' class='replyLi'>"
-						+ this.reply_id + " : " + this.reply_content
-						+ "</p>";
+					// 시간
+					let timestamp = this.update_date;
+					let date = new Date(timestamp);
+					
+					let formattedTime = " 게시일 : " + date.getFullYear()
+										+ "/" + (date.getMonth()+1)
+										+ "/" + date.getDate()
+										+ "-" + date.getHours()
+										+":" + date.getMinutes()
+										+":" + date.getSeconds()
+										
+					str += "<div class='replyLi' data-rno='" + this.reply_num + "'><strong>@"
+						+ this.reply_id+ "</strong> - " + formattedTime + "<br>"
+						+ "<div class='reply'>" + this.reply_content + "</div>"
+						+ "<button type='button' class='btn btn-info'>수정/삭제</button>"
+						+ "</div>";
 				});
 			
 			$("#replies").html(str);			
@@ -149,6 +164,76 @@ background-color: transparent;}
 			});
 			
 		});
+	 
+	// 이벤트 위임
+	 $("#replies").on("click", ".replyLi button", function(){
+		let replytag=$(this).parent();
+	//	console.log(replytag);
+		
+		let reply_num = replytag.attr("data-reply_num");
+	//	console.log(reply_num);
+		
+		let reply_content = $(this).siblings(".reply").text();
+		
+		$(".modal-title").html(reply_num);
+		$("#reply").val(reply_content);
+		$("#modDiv").show("slow");
+	 });
+	
+	 // 닫기
+	 $("#closeBtn").on("click", function(){
+		 $("#modDiv").hide("slow");
+	 });
+	 
+	 // 삭제
+	 $("#replyDelBtn").on("click", function(){
+		let reply_num = $(".modal-title").html();
+		$.ajax({
+			type : 'delete',
+			url : '/replies/' + reply_num,
+			header : {
+				"X-HTTP-Method-Override" : "DELETE"
+			},
+			
+			dataType : 'text',
+			success : function(result){
+				console.log("result: " + result);
+				if(result == 'SUCCESS'){
+					alert("삭제 되었습니다.");
+					$("#modDiv").hide("slow");
+					getAllList();
+				}
+			}
+		});
+	 });
+	 
+	 // 수정버튼
+	 $("#replyModBtn").on("click", function(){
+		let reply_num = $(".modal-title").html();
+		let reply_content = $("#reply").val();
+		
+		$.ajax({
+			type : 'patch', 
+			url : '/replies/' + reply_num,
+			header : {
+				"Content-Type" : "application/json",
+				"X-HTTP-Method-Override" : "PATCH" 
+			},	
+			contentType:"application/json", // json 자료를 추가로 입력받기 때문에
+			data: JSON.stringify({reply_content:reply_content}),
+			dataType : 'text',
+			success : function(result){
+				console.log("result: " + result);
+				if(result == 'SUCCESS'){
+					alert("수정되었습니다.");
+					$("#modDiv").hide("slow");
+					getAllList(); //수정된 댓글 반영한 새 댓글목록 갱신
+				}
+			}
+		});
+	 });
+	 
+	 
 	 </script>
 
 </body>
