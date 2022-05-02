@@ -4,37 +4,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.talk.gall.mapper.GallDogMapper;
+import com.talk.post.domain.PostVO;
+import com.talk.post.mapper.PostMapper;
+
+import oracle.jdbc.proxy.annotation.Post;
 
 @Service
-public class GallDogServiceImpl implements GallDogService {
+public class GallDogServiceImpl implements GallDogMapper {
 
 	@Autowired
-	GallDogMapper mapper;
+	private PostMapper postMapper;
 	
 	@Override
-	public int select() {
-		// TODO Auto-generated method stub
-		return mapper.select();
+	public void insert(PostVO vo) {
+		postMapper.insert(vo);
 	}
 
 	@Override
-	public int insert() {
-		// TODO Auto-generated method stub
-		return mapper.insert();
+	public PostVO select(long post_num) {
+		return postMapper.select(post_num);
 	}
 
 	@Override
-	public int delete() {
-		// TODO Auto-generated method stub
-		return mapper.delete();
+	public void delete(long post_num) {
+		postMapper.delete(post_num);
 	}
 
 	@Override
-	public int update() {
-		// TODO Auto-generated method stub
-		return mapper.update();
+	public void update(PostVO vo) {
+		postMapper.update(vo);
+		
+		// 0502수정 했습니다.
+		
 	}
-	
-	// 
-	
+
 }
