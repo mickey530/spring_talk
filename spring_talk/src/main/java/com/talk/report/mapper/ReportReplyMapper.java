@@ -6,7 +6,7 @@ import com.talk.report.domain.ReportReplyVO;
 
 public interface ReportReplyMapper {
 
-	public List<ReportReplyVO> AllList(long report_reply_num);
+	public List<ReportReplyVO> allList(long report_reply_num);
 	
 	public void insert(ReportReplyVO vo);
 	
