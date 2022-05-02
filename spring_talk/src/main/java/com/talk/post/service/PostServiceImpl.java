@@ -39,4 +39,9 @@ public class PostServiceImpl implements PostService{
 		return postMapper.getAllPost(page_num);
 	}
 
+	@Override
+	public List<PostVO> getUserPost(String user_id, int page_num) {
+		return postMapper.getUserPost(user_id, page_num);
+	}
+
 }

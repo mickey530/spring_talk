@@ -91,9 +91,17 @@ public class PostController {
 		return "redirect:detail/" + post_num;
 	}
 
+	// 뉴스피드
 	@GetMapping("newsfeed")
 	public String postList(Model model){
 		List<PostVO> postList = service.getAllPost(1);
+		model.addAttribute("postList", postList);
+		return "post/newsfeed";
+	}
+	// 특정 유저 게시글 뉴스피드 형식으로 불러오기
+	@GetMapping("newsfeed")
+	public String userPostList(String user_id, Model model){
+		List<PostVO> postList = service.getUserPost(user_id, 1);
 		model.addAttribute("postList", postList);
 		return "post/newsfeed";
 	}

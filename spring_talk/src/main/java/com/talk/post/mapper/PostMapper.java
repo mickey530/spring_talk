@@ -15,4 +15,7 @@ public interface PostMapper {
 	public void update(PostVO vo);
 	
 	public List<PostVO> getAllPost(int page_num);
+	
+	public List<PostVO> getUserPost(String user_id, int page_num);
+
 }
