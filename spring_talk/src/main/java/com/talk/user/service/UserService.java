@@ -12,10 +12,16 @@ public interface UserService {
 	
 	public UserVO select(long user_num);
 	
+	public UserVO loginCheck(String uid, String upw);
+
+	public UserVO selectById(String uid);
+	
 	public void insert(UserVO vo);
 
 	public void delete(long user_num);
 	
 	public void update(UserVO vo);
+	
+	public long getLastNum();
 
 }
