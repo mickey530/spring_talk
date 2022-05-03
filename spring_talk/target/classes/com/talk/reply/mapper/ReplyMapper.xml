@@ -21,7 +21,7 @@
 		<update id="update">
 			UPDATE reply
 				SET
-			reply_cintent = #{reply_content}, update_date = SYSDATE
+			reply_content = #{reply_content}, update_date = SYSDATE
 			WHERE reply_num = #{reply_num}
 		</update>
 		

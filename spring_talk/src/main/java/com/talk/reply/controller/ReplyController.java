@@ -91,7 +91,9 @@ public class ReplyController {
 	public ResponseEntity<String>modify(@RequestBody ReplyVO vo, @PathVariable("reply_num")Long reply_num){
 		ResponseEntity<String> entity = null;
 		try {
+			log.info("rno 세팅 전 vo : " + vo);
 			vo.setReply_num(reply_num);
+			log.info("rno 세팅 후 vo : " + vo);
 			service.modifyReply(vo);
 			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 		}catch(Exception e) {
