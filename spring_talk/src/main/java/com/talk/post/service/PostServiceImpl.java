@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostVO;
+import com.talk.post.domain.UserCriteria;
 import com.talk.post.mapper.PostMapper;
 
 @Service
@@ -41,8 +42,8 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public List<PostVO> getUserPost(String writer, Criteria cri) {
-		return postMapper.getUserPost(writer, cri);
+	public List<PostVO> getUserPost(UserCriteria cri) {
+		return postMapper.getUserPost(cri);
 	}
 
 }

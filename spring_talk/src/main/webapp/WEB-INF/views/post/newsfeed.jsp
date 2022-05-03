@@ -91,7 +91,6 @@ summary > p {
 						+ "</p>";
 
 				});
-			console.log("뭐여ㅕ")
 			$(".post").html(post);			
 		});
 	 }
