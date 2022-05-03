@@ -2,6 +2,7 @@ package com.talk.post.service;
 
 import java.util.List;
 
+import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostVO;
 
 public interface PostService {
@@ -15,7 +16,7 @@ public interface PostService {
 	public void update(PostVO vo);
 
 	
-	public List<PostVO> getAllPost(int page_num);
+	public List<PostVO> getAllPost(Criteria cri);
 	
-	public List<PostVO> getUserPost(String user_id, int page_num);
+	public List<PostVO> getUserPost(String writer, Criteria cri);
 }
