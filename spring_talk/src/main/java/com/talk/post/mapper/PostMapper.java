@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostVO;
 
 public interface PostMapper {
@@ -16,12 +17,11 @@ public interface PostMapper {
 	
 	public void update(PostVO vo);
 	
-	public List<PostVO> getAllPost(int page_num);
+	public List<PostVO> getAllPost(Criteria cri);
 	
-	public List<PostVO> getUserPost(String user_id, int page_num);
+	public List<PostVO> getUserPost(String writer, Criteria cri);
 	
 	public void updateReplyCount(@Param("post_num") Long post_bno,
 								@Param("amount") int amount);
 	
-
 }

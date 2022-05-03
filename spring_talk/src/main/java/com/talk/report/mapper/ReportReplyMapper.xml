@@ -5,19 +5,19 @@
 	
 	<mapper namespace="com.talk.report.mapper.ReportReplyMapper">
 		
-		<insert id="Insert">
-			INSERT INTO reply_report (report_num, report_reply_num, report_id , report_reason) 
+		<insert id="insert">
+			INSERT INTO reply_report (report_reply_num, report_id , report_reason) 
 			VALUES
 			(report_reply_num.nextval, #{report_id}, #{report_reason})
 		</insert>
 		
-		<delete id="Delete">
+		<delete id="delete">
 			DELETE FROM reply_report 
 			WHERE 
 			report_reply_num=#{report_reply_num}
 		</delete>
 	
-		<select id="ALlList" resultType="com.talk.report.domain.ReportReplyVO">
+		<select id="allList" resultType="com.talk.report.domain.ReportReplyVO">
 			SELECT * FROM reply_report
 			ORDER BY report_reply_num DESC
 		

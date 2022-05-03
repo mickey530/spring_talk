@@ -2,6 +2,7 @@ package com.talk.post.controller;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostLikeVO;
 import com.talk.post.domain.PostVO;
 import com.talk.post.service.PostAtService;
@@ -35,22 +38,16 @@ public class PostController {
 	
 	@Autowired
 	private PostService service;
-	
 	@Autowired
 	private PostAtService atService;
-	
 	@Autowired
 	private PostLikeService likeService;
-	
 	@Autowired
 	private PostTagService postTag;
-	
 	@Autowired
 	private TagService tag;	
-	
 	@Autowired
 	private ReplyService replyService;
-	
 	
 	@GetMapping("/insert")
 	public String insert() {
@@ -91,35 +88,54 @@ public class PostController {
 		return "redirect:detail/" + post_num;
 	}
 
-	// 뉴스피드
-	@GetMapping("newsfeed")
-	public String postList(Model model){
-		List<PostVO> postList = service.getAllPost(1);
-		model.addAttribute("postList", postList);
-		return "post/newsfeed";
-	}
-	// 특정 유저 게시글 뉴스피드 형식으로 불러오기
-	@GetMapping("newsfeed/{user_id}")
-	public String userPostList(@PathVariable String user_id, Model model){
-		List<PostVO> postList = service.getUserPost(user_id, 1);
-		model.addAttribute("postList", postList);
+	// 뉴스피드 기본주소
+	@GetMapping(value="/newsfeed")
+	public String postList(){
 		return "post/newsfeed";
 	}
 	
-	@GetMapping(value="/newsfeed/{page_num}", produces= {MediaType.APPLICATION_XML_VALUE,
-														MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<PostVO>>list(@PathVariable("page_num")int page_num){
+	// 뉴스피드 비동기 로드
+	@GetMapping(value="/newsfeed", produces= {
+//			아래꺼 있으면 xml 형식으로 떠서 걍 지워버림
+//			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<List<PostVO>>list(Criteria cri){
 	
 	ResponseEntity<List<PostVO>> entity= null;
 	
 	try {
-		entity = new ResponseEntity<>(service.getAllPost(page_num),HttpStatus.OK);
+		entity = new ResponseEntity<>(service.getAllPost(cri),HttpStatus.OK);
 	}catch(Exception e) {
 		e.printStackTrace();
 		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 		return entity;
 	}
+	
+	
+	// 특정 유저 게시글 뉴스피드 형식으로 불러오기 기본주소
+	@GetMapping(value="/userfeed/{writer}")
+	public String userPostList(@PathVariable("writer") String writer){
+		return "post/userfeed";
+	}
+	
+	// 비동기 유저 피드
+	@GetMapping(value="/userfeed/{writer}", produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<List<PostVO>>list(@PathVariable("writer")String writer, @Param("page_num") Criteria cri){
+	
+	ResponseEntity<List<PostVO>> entity= null;
+	
+	try {
+		System.out.println("도전");
+		entity = new ResponseEntity<>(service.getUserPost(writer, cri),HttpStatus.OK);
+		System.out.println("성공");
+	} catch(Exception e) {
+		e.printStackTrace();
+		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+		return entity;
+	}
+
 	
 	
 	// LikeService 비동기

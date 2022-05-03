@@ -62,7 +62,7 @@ summary > p {
  --%>
 
 <div class="post">
-
+${writer }
 </div>
 
 <button id="more" onclick="more()">more</button>
@@ -76,11 +76,12 @@ summary > p {
 	
 	/* 게시글 불러오는 로직 */
 	let page_num = 0;
+	let writer = '${writer}';
 	var post = "";
 
 	 function more(){
 		page_num += 1;
-		$.getJSON("/post/newsfeed?page_num=" + page_num, function(data){
+		$.getJSON("/post/userfeed/" + writer+ "?page_num=" + page_num, function(data){
 
 			console.log(data);
 			
