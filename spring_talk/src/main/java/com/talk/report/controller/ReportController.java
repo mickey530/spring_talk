@@ -121,8 +121,8 @@ public class ReportController {
 	
 	// 신고게시글 목록
 	@GetMapping("/postlist")
-	public String postList(Model model){
-		List<ReportPostVO> postList = reportPostService.listReport(0);
+	public String postList(long report_post_num,Model model){
+		List<ReportPostVO> postList = reportPostService.listReport(report_post_num);
 		model.addAttribute("postList", postList);
 		return "report/reportPostList";
 	}	
@@ -139,7 +139,7 @@ public class ReportController {
 	
 	
 	// 게시글 신고 중 삭제
-	@DeleteMapping(value="/delete/{report_post_num}",
+	@DeleteMapping(value="/deletepost/{report_post_num}",
 			produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> remove1 (@PathVariable("report_post_num") Long report_post_num){
 	ResponseEntity<String> entity = null;	
@@ -153,7 +153,7 @@ public class ReportController {
 	}
 	
 	// 댓글 신고 중 삭제
-	@DeleteMapping(value="/delete/{report_reply_num}",
+	@DeleteMapping(value="/deletereply/{report_reply_num}",
 			produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> remove2 (@PathVariable("report_reply_num") Long report_reply_num){
 	ResponseEntity<String> entity = null;

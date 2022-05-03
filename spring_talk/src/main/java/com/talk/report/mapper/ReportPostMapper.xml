@@ -20,6 +20,6 @@
 		<select id="allList" resultType="com.talk.report.domain.ReportPostVO">
 			SELECT * FROM post_report
 			ORDER BY report_post_num DESC
-		</select>
+		</select>	
 		
 	</mapper>
