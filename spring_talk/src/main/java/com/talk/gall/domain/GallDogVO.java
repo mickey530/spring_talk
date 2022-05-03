@@ -1,13 +1,17 @@
 package com.talk.gall.domain;
 
+import java.sql.Date;
+
 import lombok.Data;
 
 @Data
 public class GallDogVO {
 	
-	private long report_num;
-	private long report_reply_num;
-	private String report_id;
-	private String report_reason;
+	private long board_num;
+	private String board_title;
+	private String board_content;
+	private String writer;
+	private Date w_date;
+	private Date m_date;
 
 }
