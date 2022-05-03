@@ -17,18 +17,16 @@ import lombok.extern.log4j.Log4j;
 
 @Log4j
 @RestController
-@RequestMapping("/gall_dog")
+@RequestMapping("/galldog")
 public class GallDogController {
 	@Autowired
 	GallDogService service;
 	
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String gall_dog( Model model) {
+	public String galldog( Model model) {
 
-		service.delete();
-		service.insert();
-		model.addAttribute(service.select());
-		return "gall_dog";
-	}
+		return "galldog";
+	
+}
 }
