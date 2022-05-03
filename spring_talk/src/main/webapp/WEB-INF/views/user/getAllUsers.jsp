@@ -4,11 +4,13 @@
 <%@ page session="false" %>
 <html>
 <head>
-	<title>Home</title>
+	<title>
+Get All Users</title>
 </head>
 <body>
 <h1>
-	Hello world!  
+
+Get All Users
 </h1>
 
 
@@ -22,19 +24,25 @@
 					<th>성</th>
 					<th>나이</th>
 					<th>전화번호</th>
+					<th>밴 당한 횟수</th>
+					<th>팔로워 수</th>
+					<th>팔로우 한 수</th>
 				</tr>
 			</thead>	
 			<tbody>
 			
 			<c:forEach var = "userInfo" items="${userInfoList}">
 					<tr>
-						<td><p><c:out value="${userInfo.user_name}"/></p></td>
+						<td><p><c:out value="${userInfo.user_num}"/></p></td>
 						<td><p><c:out value="${userInfo.user_id}"/></p></td>
 						<td><p><c:out value="${userInfo.user_pw}"/></p></td>
 						<td><p><c:out value="${userInfo.user_name}"/></p></td>
-						<td><p><c:out value="${userInfo.last_name}"/></p></td>
+						<td><p><c:out value="${userInfo.last_name}"/></p></td>	
 						<td><p><c:out value="${userInfo.user_age}"/></p></td>
 						<td><p><c:out value="${userInfo.phone_num}"/></p></td>
+						<td><p><c:out value="${ban_service.baned(userInfo.user_id)}"/></p></td>
+						<td><p><c:out value="${follow_service.countFollowed(userInfo.user_id)}"/></p></td>
+						<td><p><c:out value="${follow_service.countFollower(userInfo.user_id)}"/></p></td>
 					</tr>
 				</c:forEach>
 			</tbody>

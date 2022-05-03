@@ -2,29 +2,27 @@ package com.talk.user.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.talk.user.domain.UserVO;
 
 public interface UserMapper {
+
+	public UserVO getUser(@Param("uno") long uno);
 	
-	/*
-	 * 
-	 * 유저 조회
-	 * 유저 정보 변경
-	 * 유저 삭제
-	 * 유저 추가
+	public UserVO getUserById(@Param("uid") String uid);
 	
-	
-	*/
-	
-	public UserVO getUser(long uno);
+	public UserVO loginCheck(@Param("uid") String uid, @Param("upw") String upw);
 	
 	public List<UserVO> getAllUsers();
 	
 	public void insert(UserVO vo);
 	
-	public void delete(long uno);
+	public void delete(@Param("user_num") long uno);
 	
 	public void update(UserVO vo);
+	
+	public long lastUserNum();
 
 	
 	

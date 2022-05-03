@@ -2,9 +2,7 @@ package com.talk.user.mapper;
 
 import java.util.List;
 
-import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
-import com.talk.user.domain.UserVO;
 
 public interface FollowMapper {
 	

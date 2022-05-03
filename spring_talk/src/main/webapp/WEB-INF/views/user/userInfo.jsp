@@ -8,10 +8,8 @@
 </head>
 <body>
 <h1>
-	Hello world!  
+	${lastUserNum }
 </h1>
-
-<P>  The time on the server is ${serverTime}. </P>
 
 
 <table border="1" class="table table">
@@ -44,6 +42,20 @@
 					</tr>
 			</tbody>
 		</table>
+		
+		<!-- 
+		
 
+						${userInfo.user_num }
+						${userInfo.user_id }
+						${userInfo.user_pw }
+						${userInfo.user_name}
+						${userInfo.last_name }
+						${userInfo.user_age }
+						${userInfo.phone_num }
+						
+		 -->
+
+		<button onclick="location.href='/user/update'">회원정보 수정</button>
 </body>
 </html>
