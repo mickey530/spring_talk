@@ -40,7 +40,7 @@ public class GallDogController {
 	public String detail(@PathVariable long board_num, Model model) {
 		GallDogVO gall = service.select(board_num);
 		model.addAttribute("gall", gall);
-		return "gall/postDetail";
+		return "gall/gallDetail";
 	}
 	
 	@GetMapping("delete/{board_num}")
