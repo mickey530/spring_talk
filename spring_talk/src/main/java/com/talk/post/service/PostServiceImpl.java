@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostVO;
 import com.talk.post.mapper.PostMapper;
 
@@ -35,13 +36,13 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public List<PostVO> getAllPost(int page_num) {
-		return postMapper.getAllPost(page_num);
+	public List<PostVO> getAllPost(Criteria cri) {
+		return postMapper.getAllPost(cri);
 	}
 
 	@Override
-	public List<PostVO> getUserPost(String user_id, int page_num) {
-		return postMapper.getUserPost(user_id, page_num);
+	public List<PostVO> getUserPost(String writer, Criteria cri) {
+		return postMapper.getUserPost(writer, cri);
 	}
 
 }
