@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostLikeVO;
 import com.talk.post.domain.PostVO;
+import com.talk.post.domain.UserCriteria;
 import com.talk.post.service.PostAtService;
 import com.talk.post.service.PostLikeService;
 import com.talk.post.service.PostService;
@@ -113,29 +114,30 @@ public class PostController {
 	}
 	
 	
-	// 특정 유저 게시글 뉴스피드 형식으로 불러오기 기본주소
+	// 유저피드 기본주소
 	@GetMapping(value="/userfeed/{writer}")
-	public String userPostList(@PathVariable("writer") String writer){
+	public String UserPostList(@PathVariable("writer")String writer, Model model){
+		model.addAttribute("writer", writer);
 		return "post/userfeed";
 	}
 	
-	// 비동기 유저 피드
-	@GetMapping(value="/userfeed/{writer}", produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<PostVO>>list(@PathVariable("writer")String writer, @Param("page_num") Criteria cri){
-	
+	// 유저피드 비동기 로드
+	@GetMapping(value="/userfeed/{writer}", produces= {
+//			아래꺼 있으면 xml 형식으로 떠서 걍 지워버림
+//			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<List<PostVO>>list(@PathVariable("writer")String writer, UserCriteria cri, Model model){
+	model.addAttribute("writer", writer);
 	ResponseEntity<List<PostVO>> entity= null;
 	
 	try {
-		System.out.println("도전");
-		entity = new ResponseEntity<>(service.getUserPost(writer, cri),HttpStatus.OK);
-		System.out.println("성공");
-	} catch(Exception e) {
+		entity = new ResponseEntity<>(service.getUserPost(cri),HttpStatus.OK);
+	}catch(Exception e) {
 		e.printStackTrace();
 		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 		return entity;
 	}
-
 	
 	
 	// LikeService 비동기

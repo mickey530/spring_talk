@@ -81,7 +81,7 @@ ${writer }
 
 	 function more(){
 		page_num += 1;
-		$.getJSON("/post/userfeed/" + writer+ "?page_num=" + page_num, function(data){
+		$.getJSON("/post/userfeed/" + writer + "?page_num=" + page_num, function(data){
 
 			console.log(data);
 			
@@ -92,7 +92,6 @@ ${writer }
 						+ "</p>";
 
 				});
-			console.log("뭐여ㅕ")
 			$(".post").html(post);			
 		});
 	 }
