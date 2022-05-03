@@ -118,9 +118,9 @@ background-color: transparent;}
 										+":" + date.getMinutes()
 										+":" + date.getSeconds()
 										
-					str += "<div class='replyLi' data-rno='" + this.reply_num + "'><strong>@"
-						+ this.reply_id+ "</strong> - " + formattedTime + "<br>"
-						+ "<div class='reply'>" + this.reply_content + "</div>"
+					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong>@"
+						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
+						+ "<div class='reply_content'>" + this.reply_content + "</div>"
 						+ "<button type='button' class='btn btn-info'>수정/삭제</button>"
 						+ "</div>";
 				});
@@ -166,14 +166,14 @@ background-color: transparent;}
 		});
 	 
 	// 이벤트 위임
-	 $("#replies").on("click", ".replyLi button", function(){
+	 $("#replies").on("click", " button", function(){
 		let replytag=$(this).parent();
-	//	console.log(replytag);
+	 console.log(replytag);
 		
 		let reply_num = replytag.attr("data-reply_num");
-	//	console.log(reply_num);
+		console.log(reply_num);
 		
-		let reply_content = $(this).siblings(".reply").text();
+		let reply_content = $(this).siblings(".reply_content").text();
 		
 		$(".modal-title").html(reply_num);
 		$("#reply").val(reply_content);

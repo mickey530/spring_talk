@@ -40,7 +40,7 @@ public class ReplyServiceImpl implements ReplyService {
 	public void removeReply(Long reply_num) {
 		Long post_num = mapper.getPost_num(reply_num);
 		mapper.delete(reply_num);
-		postmapper.updateReplyCount(reply_num, -1);
+		postmapper.updateReplyCount(post_num, -1);
 		
 	}
 
