@@ -17,7 +17,7 @@ public class ReportPostServiceImpl implements ReportPostService{
 	@Override
 	public List<ReportPostVO> listReport(long report_post_num) {
 		// TODO Auto-generated method stub
-		return mapper.AllList(report_post_num);
+		return mapper.allList(report_post_num);
 	}
 
 	@Override
