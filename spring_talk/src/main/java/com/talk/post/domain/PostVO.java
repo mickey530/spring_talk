@@ -12,4 +12,5 @@ public class PostVO {
 	private String writer;
 	private Date w_date;
 	private Date m_date;
+	private int replycount;
 }

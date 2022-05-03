@@ -40,4 +40,10 @@
 		WHERE rn > (#{page_num}-1)*10
 		]]>
 	</select>
+	
+	<update id="updateReplyCount">
+		UPDATE post
+			SET
+		replycount = replycount + #{amount} WHERE post_num = #{post_num}
+	</update>
 </mapper>

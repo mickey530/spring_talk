@@ -3,14 +3,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
 <!-- 부트스트랩 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <!-- 번들 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 <style>
-*{margin: 0;padding: 0;list-style: none;;}
+    *{margin: 0;padding: 0;list-style: none;;}
 
 #modDiv{width: 100%;max-width: 600px;
 margin: 0 auto;
@@ -40,37 +40,28 @@ background-color: transparent;}
 </style>
 </head>
 <body>
-<div class="container">
-<div>
-	<h2>게시글</h2>
-	작성자 : ${post.writer }<br/>
-	제목 : ${post.title }<br/>
-	내용 : ${post.content }<br/>
-</div>
-
-<hr/>
-<h2>댓글</h2>
+<!-- jquery  cdn 가져오기 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	
-	<hr/>
-
-	<div id="replies"></div>
 	
-	<!-- 댓글 작성란 -->
+	<h2>Ajax 댓글 등록 테스트</h2>
+	<!-- 댓글 추가될 공간 -->
+	<ul id ="replies">
+	
+	</ul>
+	<!-- 댓글 작성 공간 -->
 	<div>
 		<div>
-			REPLYER <input type="text" id="newReplyWriter"> 
+			댓글 글쓴이 <input type="text" name="replyer" id="newReplyWriter">
 		</div>
 		<div>
-			REPLY TEXT <input type="text" id="newReplyText">
+			댓글 내용 <input type="text" name="reply" id="newReplyText">
 		</div>
-		<button id="replyAddBtn">ADD REPLY</button>
+		<button id="replyAddBtn"> 댓글 추가 </button>
 	</div>
-	<hr/>
-
 	
-	
-	<!-- 모달창 -->
-	<div id="modDiv" style="display:none;">
+	<!-- 모달 창 -->
+	<div id="modDiv"  style="display:none;">
 		<div class ="modal-title">
 		</div>
 		<div>
@@ -84,96 +75,68 @@ background-color: transparent;}
 		</div>
 	</div>
 	
-	
-	
-</div>
-	
-	<!-- jquery cdn 코드 -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>	
-	
 
+	<script>
+	let board_num = 1; //1번글
 	
-	
-	<script type="text/javascript">
-	
-	/* 댓글 불러오는 로직 */
-	let post_num = ${post.post_num};
-
-	 function getAllList(){
-		$.getJSON("/replies/all/" + post_num, function(data){
-
-			var str = "";
+	// 댓글 전체 가져오기
+	function getAllList(){
+		$.getJSON("/replies/all/" + board_num, function(data){
+			
+			let str ="";
+			
 			console.log(data);
 			
-			$(data).each(
-				function() {
-					// 시간
-					let timestamp = this.update_date;
-					let date = new Date(timestamp);
-					
-					let formattedTime = " 게시일 : " + date.getFullYear()
-										+ "/" + (date.getMonth()+1)
-										+ "/" + date.getDate()
-										+ "-" + date.getHours()
-										+":" + date.getMinutes()
-										+":" + date.getSeconds()
-										
-					str += "<div class='replyLi' data-rno='" + this.reply_num + "'><strong>@"
-						+ this.reply_id+ "</strong> - " + formattedTime + "<br>"
-						+ "<div class='reply'>" + this.reply_content + "</div>"
-						+ "<button type='button' class='btn btn-info'>수정/삭제</button>"
-						+ "</div>";
-				});
-			
-			$("#replies").html(str);			
-		});
-	 }
-	 getAllList();
-	 
-	 /* 댓글 작성 후 댓글작성란 비우는 로직 */
-	 function refresh(){
-		 $("#newReplyWriter").val("");
-		 $("#newReplyText").val("");	 
-	 }
-	 
-	 $("#replyAddBtn").on("click", function(){
-			var reply_id = $("#newReplyWriter").val();
-			var reply_content = $("#newReplyText").val();
-			
-			$.ajax({
-				type : 'post',
-				url : '/replies',
-				headers : {
-					"Content-Type" : "application/json",
-					"X-HTTP-Method-Override" : "POST"
-				},
-				dataType : 'text',
-				data : JSON.stringify({
-					post_num : post_num,
-					reply_id : reply_id,
-					reply_content : reply_content
-				}),
-				success : function(result){
-					if(result == 'OK'){
-						alert("등록되었습니다.");
-						getAllList();
-						refresh();
-					}
-				}
-				/* error도 설정 가능 */
+			$(data).each(function(){
+				str += "<li data-reply_num='" + this.reply_num + "' class='replyLi'>"
+					+ this.reply_num + ":" + this.reply_content
+					+ "<button>수정/삭제</button></li>";
 			});
-			
+			console.log(str);
+			$("#replies").html(str);
 		});
+	}
+	getAllList();
+	
+	 // 댓글 작성
+	$("#replyAddBtn").on("click",function(){
+		var replyer = $("#newReplyWriter").val();
+		var reply = $("#newReplyText").val();
+		
+		$.ajax({
+			type : 'post',
+			url : '/replies',
+			headers:{
+				"Content-Type" : "application/json",
+		    	"X-Http-Method-Override" : "POST"
+			},
+			 dataType : 'text',
+			    data : JSON.stringify({
+					board_num : board_num,
+					reply_id : replyer,
+					reply_content : reply
+			    }),
+			 success : function(result){
+			    	if(result == 'SUCCESS'){
+			 
+			    		alert("등록 되었습니다.");
+			    		getAllList(); 
+			    		var replyer = $("#newReplyWriter").val("");
+			    		var reply = $("#newReplyText").val("");
+			    	}
+			 }
+		});
+	});
 	 
-	// 이벤트 위임
-	 $("#replies").on("click", ".replyLi button", function(){
+	 // 이벤트 위임
+	 $("replies").on("click", ".replyLi button", function(){
 		let replytag=$(this).parent();
-	//	console.log(replytag);
+		console.log(replytag);
 		
 		let reply_num = replytag.attr("data-reply_num");
-	//	console.log(reply_num);
+		console.log(reply_num);
 		
-		let reply_content = $(this).siblings(".reply").text();
+		let reply_content = replytag.text();
 		
 		$(".modal-title").html(reply_num);
 		$("#reply").val(reply_content);
@@ -232,9 +195,11 @@ background-color: transparent;}
 			}
 		});
 	 });
-	 
-	 
-	 </script>
+	
+	
+	</script>
+	
+	
 
 </body>
 </html>

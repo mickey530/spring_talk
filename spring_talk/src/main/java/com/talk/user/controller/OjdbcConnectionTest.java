@@ -1,4 +1,4 @@
-package com.ict.controller;
+package com.talk.user.controller;
 
 import static org.junit.Assert.fail;
 
@@ -12,7 +12,7 @@ import org.junit.Test;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
-public class test {
+public class OjdbcConnectionTest {
 
 	static {
 		try {
@@ -29,9 +29,8 @@ public class test {
 					"springprj",
 					"springprj"
 				)){
-
-			PreparedStatement prps= con.prepareStatement("select * from reply");
-
+			
+			PreparedStatement prps= con.prepareStatement("select * from user_info");
 
             ResultSet sr =prps.executeQuery();
 
