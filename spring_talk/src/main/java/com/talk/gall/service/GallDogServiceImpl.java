@@ -6,9 +6,6 @@ import org.springframework.stereotype.Service;
 import com.talk.gall.domain.GallDogVO;
 import com.talk.gall.mapper.GallDogMapper;
 
-
-import oracle.jdbc.proxy.annotation.Post;
-
 @Service
 public class GallDogServiceImpl implements GallDogService {
 

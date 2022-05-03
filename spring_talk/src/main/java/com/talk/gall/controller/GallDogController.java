@@ -1,26 +1,25 @@
 package com.talk.gall.controller;
 
-import java.util.Locale;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import com.talk.gall.domain.GallDogVO;
+import com.talk.gall.service.GallDogService;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.talk.gall.domain.GallDogVO;
-import com.talk.gall.service.GallDogService;
-import com.talk.post.domain.PostVO;
 
-import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j;
 
-@Log
-@RestController
+@Controller
+@Log4j
 @RequestMapping("/galldog")
 public class GallDogController {
+	
 	@Autowired
 	GallDogService service;
 	
