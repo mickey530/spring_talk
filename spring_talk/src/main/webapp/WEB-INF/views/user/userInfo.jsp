@@ -1,18 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
 <html>
 <head>
 	<title>Home</title>
 </head>
 <body>
-<h1>
-	${lastUserNum }
-</h1>
 
 
-<table border="1" class="table table">
+<table border="1" class="table">
 			<thead>
 				<tr>
 					<th>유저번호</th>
@@ -55,7 +51,26 @@
 						${userInfo.phone_num }
 						
 		 -->
+		 
+		 
+		<!-- 본인 -->
+		<c:if test="${userInfo.user_id eq sid }">
+		
 
-		<button onclick="location.href='/user/update'">회원정보 수정</button>
+			<button onclick="location.href='/user/logout'">로그아웃</button>
+			<button onclick="location.href='/user/delete'">탈퇴</button>
+			<button onclick="location.href='/user/getAllUsers'">전체 회원 조회</button>
+			<button onclick="location.href='/user/update'">회원정보 수정</button>
+			<button onclick="location.href='/user/userInfo/${user_id}'">회원정보 확인</button>
+		</c:if>
+		
+		<!-- 타인 -->
+		<c:if test="${userInfo.user_id ne sid }">
+			<button onclick="location.href='/user/follow'">팔로우</button>
+			<button onclick="location.href='/user/unfollow'">언팔</button>
+			<button onclick="location.href='/user/ban'">밴</button>
+			<button onclick="location.href='/user/unban'">언밴</button>
+			<button onclick="location.href='/user/getAllUsers'">전체 회원 조회</button>
+		</c:if>
 </body>
 </html>

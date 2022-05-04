@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,20 +40,24 @@ public class UserController {
 	@Autowired
 	private FollowServiceImpl followService;
 	
+	//user단
+	
 	@GetMapping(value={ "/", ""})
 	public String userHome(Model model,
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("session user_id : " + session.getAttribute("user_id"));
-		System.out.println("session user_name : " + session.getAttribute("user_name"));
+			HttpSession session) {
+		log.info("session user_id : " + session.getAttribute("user_id"));
+		log.info("session user_name : " + session.getAttribute("user_name"));
 
+		model.addAttribute("sid",session.getAttribute("user_id"));
 		model.addAttribute("user_id",session.getAttribute("user_id"));
 		model.addAttribute("user_name",session.getAttribute("user_name"));
 		return "user/userHome";
 	}
 
-	
 	@GetMapping(value={ "/userInfo/{uid}", "/userInfo"})
-	public String userInfo(@PathVariable (value = "uid", required = false) String uid , Model model) {
+	public String userInfo(@PathVariable (value = "uid", required = false) String uid , 
+			Model model,
+			HttpSession session) {
 
 		if(uid == null ) {
 			return "redirect:/user/getAllUsers";
@@ -60,6 +66,7 @@ public class UserController {
 		UserVO user_info = userService.selectById(uid);
 		String user_id = user_info.getUser_id();
 		model.addAttribute("userInfo",user_info);
+		model.addAttribute("sid",session.getAttribute("user_id"));
 		model.addAttribute("baned",banService.baned(user_id));
 		model.addAttribute("follower",followService.countFollower(user_id));
 		model.addAttribute("followed",followService.countFollowed(user_id));
@@ -78,32 +85,37 @@ public class UserController {
 		return "user/getAllUsers";
 	}
 	
-	
 	@GetMapping(value="/update")
 	public String update(Model model,
 			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
 		String uid = (String)session.getAttribute("user_id");
 		
-		System.out.println("session user_id : " + uid);
-		
 		UserVO user = userService.selectById(uid);
-		
-		System.out.println("selectById 통과 ");
 		
 		model.addAttribute("userInfo",user);
 
-		System.out.println("addAttribute 통과 ");
 		return "/user/updateForm";
 	}
 	
-	
 	@GetMapping(value="/updateUser")
-	public String updateUser(UserVO vo, Model model,
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-		session.setAttribute("user_name", vo.getUser_name()); 
+	public String updateUser(
+				UserVO vo, 
+				Model model,
+				HttpSession session)
+			throws DataIntegrityViolationException
+	{
 		
-		userService.update(vo);
+		try {
+			userService.update(vo);
+			session.setAttribute("user_name", vo.getUser_name()); 
+			return "redirect:/user/";
+    	} catch(DataIntegrityViolationException e) {
+    		System.out.println("DuplicateKeyException");
+    	} catch(Exception e) {
+    		System.out.println("Another Exception : " + e); 
+    	}
+		
 		return "redirect:/user/";
 	}
 	
@@ -115,10 +127,7 @@ public class UserController {
 	@GetMapping(value="/deleteUser")
 	public String deleteUser(
 			String uid, String upw,
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-
-		System.out.println("check value : ID = " + uid);
-		System.out.println("check value : PW = " + upw);
+			HttpSession session) {
 		
 		UserVO userInfo = userService.loginCheck(uid, upw); 
 		// 이 값이 null이면 아이디나 비밀번호가 맞지 않다는 것이므로 회원탈퇴 처리하지 않음
@@ -132,7 +141,7 @@ public class UserController {
 			session.invalidate();
 			return "redirect:/user/";
 		}
-		else {//실패시 실패했다는 메시지를 띄우는 곳으로 이동
+		else {//실패시 실패했다는 메시지를 띄우도록
 			return "redirect:/user/";
 		}
 		
@@ -145,20 +154,29 @@ public class UserController {
 	
 	@GetMapping(value="/insertUser")
 	public String insertUser(UserVO vo,
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+			HttpSession session, HttpServletRequest request, HttpServletResponse response)
+	throws DataIntegrityViolationException{
 		
-		userService.insert(vo);
-		//같은 값을 넣으려하면 오류 발생
-		//수정 필요함
+		System.out.println("user_id : " + vo.getUser_id()); 
+		System.out.println("user_name : " + vo.getUser_name()); 
+		
+		
+		try {
+			userService.insert(vo);
+			session.setAttribute("user_id", vo.getUser_id()); 
+			session.setAttribute("user_name", vo.getUser_name()); 
+			return "redirect:/user/userInfo/" + vo.getUser_id();
+    	} catch(DataIntegrityViolationException e) {
+    		System.out.println("DuplicateKeyException");
+    	} catch(Exception e) {
+    		System.out.println("Another Exception : " + e); 
+    	}
 
-		session.setAttribute("user_id", vo.getUser_id()); 
-		session.setAttribute("user_name", vo.getUser_name()); 
+		return "redirect:/user/";
 		
 
-		return "redirect:/user/userInfo/"+vo.getUser_id();
 	}
 
-	
 	@GetMapping(value="/loginForm")
 	public String login() {
 		return "/user/loginForm";
@@ -170,9 +188,6 @@ public class UserController {
 			Model model, 
 			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 
-		System.out.println("check value : ID = " + uid);
-		System.out.println("check value : PW = " + upw);
-		
 		UserVO userInfo = userService.loginCheck(uid, upw);
 		
 
@@ -187,12 +202,35 @@ public class UserController {
 	}
 	
 	@GetMapping(value="/logout")
-	public String loout(
+	public String logout(
 			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 
 
 		session.invalidate(); 
 
 		return "redirect:/user/";
+	}
+
+	
+	//팔로우, 밴 단
+	@GetMapping(value="/follow")
+	public String follow() {
+		System.out.println("follow");
+		return "/#";
+	}
+	@GetMapping(value="/unfollow")
+	public String unfollow() {
+		System.out.println("unfollow");
+		return "/#";
+	}
+	@GetMapping(value="/ban")
+	public String ban() {
+		System.out.println("ban");
+		return "/#";
+	}
+	@GetMapping(value="/unban")
+	public String unban() {
+		System.out.println("unban");
+		return "/#";
 	}
 }

@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
 <html>
 <head>
 	<title>
@@ -10,6 +9,7 @@ Get All Users</title>
 <body>
 <h1>
 
+				세션 : ${sessionScope.user_id }<br>
 Get All Users
 </h1>
 
@@ -32,7 +32,8 @@ Get All Users
 			<tbody>
 			
 			<c:forEach var = "userInfo" items="${userInfoList}">
-					<tr>
+					<tr onclick="location.href='/user/userInfo/${userInfo.user_id}'">
+							
 						<td><p><c:out value="${userInfo.user_num}"/></p></td>
 						<td><p><c:out value="${userInfo.user_id}"/></p></td>
 						<td><p><c:out value="${userInfo.user_pw}"/></p></td>
@@ -43,6 +44,7 @@ Get All Users
 						<td><p><c:out value="${ban_service.baned(userInfo.user_id)}"/></p></td>
 						<td><p><c:out value="${follow_service.countFollowed(userInfo.user_id)}"/></p></td>
 						<td><p><c:out value="${follow_service.countFollower(userInfo.user_id)}"/></p></td>
+					
 					</tr>
 				</c:forEach>
 			</tbody>
