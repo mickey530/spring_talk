@@ -32,7 +32,7 @@
 		        <tr>
 		          <th>신고번호</th>
 		          <th>신고자</th>
-		          <th>신고 사유</th>
+		          <th><a href="/report/reportPostDetail"></a>신고 사유</th>
 		        </tr>
 		      </thead>
 		      <tbody>
@@ -56,11 +56,16 @@
 		</div>
 		<div>
 			<button type="button" id="deleteBtn">삭제</button>
+			<button type="button" id="closeBtn">닫기</button>	
 		</div>
 	 </div><!-- container -->
 	 
-	 <!-- jquery cdn 가져오기 -->
-	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	 
+	 
+	 
+	 
+		<!-- jquery cdn 가져오기 -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	 
 	 	<script> 
 		// 모달 창 닫기 이벤트
@@ -68,27 +73,6 @@
 			$("#modDiv").hide("slow");// #modDiv를 닫습니다
 		});
 	 
-	 
-		// 삭제로직
-		$("#deleteBtn").on("click", function(){
-			let rpn = $(".modal-title").html(rpn);		
-			
-			$.ajax({
-				type : 'delete',
-				url : '/report/deletepost/' + rpn,
-				header : {
-					"X-HTTP-Method-Override" : "DELETE"
-				},
-				dataType : 'number',
-				success : function(result) {
-					console.log("result : " + result);
-					if(result == 'SUCCESS'){
-						alert("삭제 되었습니다.");
-						$("#modDiv").hide("slow");
-					}
-				}
-			});
-		});
 	 	</script> 
 </body>
 </html>
