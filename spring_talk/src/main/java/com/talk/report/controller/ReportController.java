@@ -46,6 +46,7 @@ public class ReportController {
 		}
 		return entity;
 	}
+
 	
 	// 댓글 신고하기
 	@PostMapping(value="/insert/{report_reply_num}", consumes="application/json",	
@@ -75,7 +76,7 @@ public class ReportController {
 	// 댓글 신고하기
 	@GetMapping("/reply")
 	public String replyForm() {
-		return "report/reportPostForm";
+		return "report/reportReplyForm";
 	}
 	@PostMapping("/reply")
 	public String replyForm(ReportReplyVO vo) {
@@ -119,14 +120,14 @@ public class ReportController {
 	*/
 	
 	// 신고게시글 목록
-	@GetMapping("/postlist")
-	public String postList(long report_post_num,Model model){
-		List<ReportPostVO> postList = reportPostService.listReport(report_post_num);
+	@GetMapping("/reportPostList")
+	public String postList(Model model){
+		List<ReportPostVO> postList = reportPostService.listReport(0);
 		model.addAttribute("postList", postList);
 		return "report/reportPostList";
 	}	
 	// 신고댓글 목록
-	@GetMapping("/replylist")
+	@GetMapping("/reportReplyList")
 	public String replyList(Model model){
 		List<ReportReplyVO> replyList = reportReplyService.listReport(0);
 		model.addAttribute("replyList", replyList);
@@ -164,4 +165,23 @@ public class ReportController {
 	}
 		return entity;
 	}
+	
+	
+	
+	
+	// 신고 게시글 상세
+	@GetMapping("/reportPostDetail/{report_post_num}")
+	public String reportPostDetail(@PathVariable("report_post_num") Long report_post_num, Model model) {
+		ReportPostVO postDetail = reportPostService.select(0);
+		model.addAttribute("postDetail", postDetail);
+		return "report/reportPostDetail";
+	}
+	
+	// 신고 댓글 상세
+		@GetMapping("/reportPostDetail/{report_reply_num}")
+		public String reportReplyDetail(@PathVariable("report_reply_num") Long report_reply_num, Model model) {
+			ReportReplyVO replyDetail = reportReplyService.select(0);
+			model.addAttribute("replyDetail", replyDetail);
+			return "report/reportReplyDetail";
+		}
 }

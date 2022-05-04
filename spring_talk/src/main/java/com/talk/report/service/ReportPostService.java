@@ -11,5 +11,7 @@ public interface ReportPostService {
 	public void addReport(ReportPostVO vo);
 	
 	public void removeReport(long report_post_num);
+	
+	public ReportPostVO select(long report_post_num);
 }
   
