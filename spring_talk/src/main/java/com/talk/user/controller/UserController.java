@@ -10,17 +10,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.talk.user.domain.BanVO;
+import com.talk.user.domain.FollowVO;
 import com.talk.user.domain.UserVO;
 import com.talk.user.service.BanServiceImpl;
 import com.talk.post.service.TagService;
+import com.talk.reply.domain.ReplyVO;
 import com.talk.user.service.FollowServiceImpl;
 import com.talk.user.service.UserServiceImpl;
 
@@ -43,33 +49,20 @@ public class UserController {
 	//user단
 	
 	@GetMapping(value={ "/", ""})
-	public String userHome(Model model,
-			HttpSession session) {
-		log.info("session user_id : " + session.getAttribute("user_id"));
-		log.info("session user_name : " + session.getAttribute("user_name"));
-
-		model.addAttribute("sid",session.getAttribute("user_id"));
-		model.addAttribute("user_id",session.getAttribute("user_id"));
-		model.addAttribute("user_name",session.getAttribute("user_name"));
+	public String userHome() {
 		return "user/userHome";
 	}
 
 	@GetMapping(value={ "/userInfo/{uid}", "/userInfo"})
 	public String userInfo(@PathVariable (value = "uid", required = false) String uid , 
-			Model model,
-			HttpSession session) {
+			Model model) {
 
 		if(uid == null ) {
 			return "redirect:/user/getAllUsers";
 		}
 
 		UserVO user_info = userService.selectById(uid);
-		String user_id = user_info.getUser_id();
 		model.addAttribute("userInfo",user_info);
-		model.addAttribute("sid",session.getAttribute("user_id"));
-		model.addAttribute("baned",banService.baned(user_id));
-		model.addAttribute("follower",followService.countFollower(user_id));
-		model.addAttribute("followed",followService.countFollowed(user_id));
 			
 
 		return "user/userInfo";
@@ -108,6 +101,7 @@ public class UserController {
 		
 		try {
 			userService.update(vo);
+			session.setAttribute("user_id", vo.getUser_id());
 			session.setAttribute("user_name", vo.getUser_name()); 
 			return "redirect:/user/";
     	} catch(DataIntegrityViolationException e) {
@@ -154,8 +148,7 @@ public class UserController {
 	
 	@GetMapping(value="/insertUser")
 	public String insertUser(UserVO vo,
-			HttpSession session, HttpServletRequest request, HttpServletResponse response)
-	throws DataIntegrityViolationException{
+			HttpSession session) throws DataIntegrityViolationException{
 		
 		System.out.println("user_id : " + vo.getUser_id()); 
 		System.out.println("user_name : " + vo.getUser_name()); 
@@ -185,8 +178,7 @@ public class UserController {
 	@GetMapping(value="/login")
 	public String loginUser(
 			String uid, String upw,
-			Model model, 
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+			HttpSession session) {
 
 		UserVO userInfo = userService.loginCheck(uid, upw);
 		
@@ -202,8 +194,7 @@ public class UserController {
 	}
 	
 	@GetMapping(value="/logout")
-	public String logout(
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+	public String logout(HttpSession session) {
 
 
 		session.invalidate(); 
@@ -213,24 +204,115 @@ public class UserController {
 
 	
 	//팔로우, 밴 단
-	@GetMapping(value="/follow")
-	public String follow() {
-		System.out.println("follow");
-		return "/#";
+
+
+	// select follow
+	@GetMapping(value="/getFollower/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<Integer> followerList(@PathVariable("user_id")String user_id){
+		
+		ResponseEntity<Integer> entity= null;
+		
+		try {
+			entity = new ResponseEntity<>(followService.countFollower(user_id),HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("followerList : "+ entity);
+		return entity;
 	}
-	@GetMapping(value="/unfollow")
-	public String unfollow() {
-		System.out.println("unfollow");
-		return "/#";
+
+	// select follow
+	@GetMapping(value="/getFollow/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<Integer>followedList(@PathVariable("user_id")String user_id){
+		
+		ResponseEntity<Integer> entity= null;
+		
+		try {
+			entity = new ResponseEntity<>(followService.countFollowed(user_id),HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("followedList : "+ entity);
+		return entity;
 	}
-	@GetMapping(value="/ban")
-	public String ban() {
-		System.out.println("ban");
-		return "/#";
+	
+	//  select ban
+	@GetMapping(value="/getBan/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<Integer> banList(@PathVariable("user_id")String user_id){
+		
+		ResponseEntity<Integer> entity= null;
+		
+		try {
+			entity = new ResponseEntity<>(banService.ban(user_id),HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("banList : "+ entity);
+		return entity;
 	}
-	@GetMapping(value="/unban")
-	public String unban() {
-		System.out.println("unban");
-		return "/#";
+	
+	//  select ban
+	@GetMapping(value="/getBaned/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<Integer> banedList(@PathVariable("user_id")String user_id){
+		
+		ResponseEntity<Integer> entity= null;
+		
+		try {
+			entity = new ResponseEntity<>(banService.baned(user_id),HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("banedList : "+ entity);
+		return entity;
+	}
+	
+	// insert follow
+	@PostMapping(value="/follow/{user_id}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity <String> insertFollow(@RequestBody FollowVO vo){
+		ResponseEntity<String> entity= null;
+		try {
+			followService.insert(vo);
+			entity = new ResponseEntity<String>("OK", HttpStatus.OK);
+		}catch(Exception e) {
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
+	
+	// insert ban
+	@PostMapping(value="/ban/{user_id}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity <String> insertBan(@RequestBody BanVO vo){
+		ResponseEntity<String> entity= null;
+		System.out.println("insertBan : " + vo.getUser_id());
+		System.out.println(vo.toString());
+		try {
+			banService.insert(vo);
+			entity = new ResponseEntity<String>("BAN SUCCESS", HttpStatus.OK);
+		} catch(DataIntegrityViolationException e) {
+			try {
+				banService.delete(vo);
+				entity = new ResponseEntity<String>("UNBAN SUCCESS", HttpStatus.OK);
+			} catch(DataIntegrityViolationException DVE) {
+				System.out.println("DataIntegrityViolationException : " + DVE);
+				entity = new ResponseEntity<String>(DVE.getMessage(), HttpStatus.BAD_REQUEST);
+			}
+    	}catch(Exception e) {
+			System.out.println("Exception : " + e);
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		System.out.println(entity);
+		return entity;
 	}
 }
