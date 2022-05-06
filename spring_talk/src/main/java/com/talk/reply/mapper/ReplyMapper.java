@@ -18,4 +18,6 @@ public interface ReplyMapper {
 	public void deleteAll(Long reply_num); // 지우기
 
 	public Long getPost_num(Long reply_num); // 댓글 번호를 통해 글 번호유추하기
+	
+	
 }

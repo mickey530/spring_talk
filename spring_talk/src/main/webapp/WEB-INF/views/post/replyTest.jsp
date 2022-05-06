@@ -9,10 +9,9 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <!-- 번들 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<!-- http://localhost:8181/post/detail/test/2 -->
 <style>
 *{margin: 0;padding: 0;list-style: none;;}
-
-#reply{display:none};
 
 #modDiv{width: 100%;max-width: 600px;
 margin: 0 auto;
@@ -95,10 +94,6 @@ background-color: transparent;}
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
 	
-$("#btn").click(function(){
-	$("#reply").stop().show();
-})
-	
 	/* 댓글 불러오는 로직 */
 	let post_num = ${post.post_num};
 
@@ -124,16 +119,9 @@ $("#btn").click(function(){
 					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong>@"
 						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
 						+ "<div class='reply_content'>" + this.reply_content + "</div>"
-						+ "<input type='text' id='reply'>"
 						+ "<button type='button' class='btn btn-info'>수정/삭제</button>"
+						
 						+ "</div>";
-					+ "<button type='button' class='replyModBtn btn-info'>저장</button>"
-						
-						
-						
-						
-						
-						
 				});
 		
 			$("#replies").html(str);			
@@ -176,19 +164,26 @@ $("#btn").click(function(){
 			
 		});
 	 
+	// 선택한 댓글 외부에서 사용 ///////////////////
+	 	let select = "";
+	 	
 	// 이벤트 위임
 	 $("#replies").on("click", " button", function(){
 		let replytag=$(this).parent();
-	 console.log(replytag);
+	 	console.log(replytag);
 		
 		let reply_num = replytag.attr("data-reply_num");
 		console.log(reply_num);
 		
 		let reply_content = $(this).siblings(".reply_content").text();
+		console.log(reply_content);
 		
 		$(".modal-title").html(reply_num);
 		$("#reply").val(reply_content);
 		$("#modDiv").show("slow");
+		
+		// select 에 저장 //////////////////////
+		select = $(this).siblings(".reply_content");
 	 });
 	
 	 // 닫기
@@ -219,11 +214,15 @@ $("#btn").click(function(){
 	 });
 	 
 	 // 수정버튼
-	 
+	 $("#btn").click(function(){
+			let input = "<input type='text' class='reply' value='"+ select.html() +"'>"
+			select.html(input);
+		})
+		
+	 // 수정사항 저장 버튼
 	 $("#replyModBtn").on("click", function(){
 		let reply_num = $(".modal-title").html();
-		let reply_content = $("#reply").val();
-		
+		let reply_content = $(".reply").val();
 		$.ajax({
 			type : 'patch', 
 			url : '/replies/' + reply_num,
@@ -244,14 +243,6 @@ $("#btn").click(function(){
 			}
 		});
 	 });
-	 
-	 
-	 
-	 
-	 
-	 // 답글달기
-	 <div class ="collapse" id="reply"
-	 
 	 
 	 
 	 </script>
