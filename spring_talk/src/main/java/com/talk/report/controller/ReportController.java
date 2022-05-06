@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.talk.post.domain.PostVO;
+import com.talk.post.service.PostService;
+import com.talk.reply.domain.ReplyVO;
+import com.talk.reply.service.ReplyService;
 import com.talk.report.domain.ReportPostVO;
 import com.talk.report.domain.ReportReplyVO;
 import com.talk.report.service.ReportPostService;
@@ -31,6 +35,12 @@ public class ReportController {
 	
 	@Autowired
 	private ReportReplyService reportReplyService;	
+	
+	@Autowired
+	private PostService postService;
+	
+	@Autowired
+	private ReplyService replyService;
 	
 	/*
 	// 게시글 신고하기 
@@ -137,7 +147,7 @@ public class ReportController {
 	
 	
 	
-	
+	/*
 	// 게시글 신고 중 삭제
 	@DeleteMapping(value="/deletepost/{report_post_num}",
 			produces= {MediaType.TEXT_PLAIN_VALUE})
@@ -165,23 +175,41 @@ public class ReportController {
 	}
 		return entity;
 	}
+	*/
+	
+	// 게시글 신고 목록 중 삭제
+	@GetMapping("/reportPostDelete/{report_post_num}")
+	public String postDelete(@PathVariable long report_post_num) {
+		reportPostService.removeReport(report_post_num);
+		return "redirect:/report/reportPostList";
+	}
+	
+	// 댓글 신고 목록 중 삭제
+	@GetMapping("/reportReplyDelete/{report_reply_num}")
+	public String replyDelete(@PathVariable long report_reply_num) {
+		reportReplyService.removeReport(report_reply_num);
+		return "redirect:/report/reportReplyList";
+	}
+
 	
 	
 	
 	
 	// 신고 게시글 상세
 	@GetMapping("/reportPostDetail/{report_post_num}")
-	public String reportPostDetail(@PathVariable("report_post_num") Long report_post_num, Model model) {
-		ReportPostVO postDetail = reportPostService.select(0);
-		model.addAttribute("postDetail", postDetail);
+	public String reportPostDetail(@PathVariable Long report_post_num, Model model) {
+		ReportPostVO post = reportPostService.select(report_post_num);
+		model.addAttribute("post", post);
 		return "report/reportPostDetail";
 	}
 	
 	// 신고 댓글 상세
-		@GetMapping("/reportPostDetail/{report_reply_num}")
-		public String reportReplyDetail(@PathVariable("report_reply_num") Long report_reply_num, Model model) {
-			ReportReplyVO replyDetail = reportReplyService.select(0);
-			model.addAttribute("replyDetail", replyDetail);
-			return "report/reportReplyDetail";
-		}
+	@GetMapping("/reportReplyDetail/{report_reply_num}")
+	public String reportReplyDetail(@PathVariable Long report_reply_num, Long board_num, Model model) {
+		ReportReplyVO reply = reportReplyService.select(report_reply_num);
+		model.addAttribute("reply", reply);
+		ReplyVO replyvo = (ReplyVO) replyService.listReply(board_num);
+		model.addAttribute("replyvo", replyvo);		
+		return "report/reportReplyDetail";
+	}
 }
