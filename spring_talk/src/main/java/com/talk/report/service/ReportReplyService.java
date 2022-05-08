@@ -11,6 +11,8 @@ public interface ReportReplyService {
 	public void addReport(ReportReplyVO vo);
 	
 	public void removeReport(long report_reply_num);
+	
+	public ReportReplyVO select(long report_reply_num);
 }
 	
 

@@ -12,4 +12,6 @@ public interface ReportPostMapper {
 	
 	public void delete(long report_post_num);
 	
+	public ReportPostVO select(long report_post_num);
+	
 }

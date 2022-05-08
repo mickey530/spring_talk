@@ -31,4 +31,10 @@ public class ReportPostServiceImpl implements ReportPostService{
 		mapper.delete(report_post_num);
 		
 	}
+
+	@Override
+	public ReportPostVO select(long report_post_num) {
+		// TODO Auto-generated method stub
+		return mapper.select(report_post_num);
+	}
 }

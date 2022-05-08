@@ -13,13 +13,15 @@
 		
 		<delete id="delete">
 			DELETE FROM reply_report 
-			WHERE 
-			report_reply_num=#{report_reply_num}
+			WHERE report_reply_num = #{report_reply_num}
 		</delete>
 	
 		<select id="allList" resultType="com.talk.report.domain.ReportReplyVO">
 			SELECT * FROM reply_report
-			ORDER BY report_reply_num DESC
+			ORDER BY report_reply_num DESC		
+		</select>
 		
+		<select id="select" resultType="com.talk.report.domain.ReportReplyVO">
+			SELECT * FROM reply_report WHERE report_reply_num = #{report_reply_num}
 		</select>
 	</mapper>
