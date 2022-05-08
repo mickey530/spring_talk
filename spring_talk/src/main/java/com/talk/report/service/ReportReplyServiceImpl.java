@@ -30,5 +30,11 @@ public class ReportReplyServiceImpl implements ReportReplyService{
 	public void removeReport(long report_reply_num) {		
 		mapper.delete(report_reply_num);	
 
+	}
+
+	@Override
+	public ReportReplyVO select(long report_reply_num) {
+		// TODO Auto-generated method stub
+		return mapper.select(report_reply_num);
 	}	
 }
