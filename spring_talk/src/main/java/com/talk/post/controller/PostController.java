@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostLikeVO;
+import com.talk.post.domain.PostTagVO;
 import com.talk.post.domain.PostVO;
 import com.talk.post.domain.UserCriteria;
 import com.talk.post.service.PostAtService;
@@ -44,9 +45,9 @@ public class PostController {
 	@Autowired
 	private PostLikeService likeService;
 	@Autowired
-	private PostTagService postTag;
+	private PostTagService postTagService;
 	@Autowired
-	private TagService tag;	
+	private TagService tagService;	
 	@Autowired
 	private ReplyService replyService;
 	
@@ -57,6 +58,7 @@ public class PostController {
 	
 	@PostMapping("/insert")
 	public String insert(PostVO vo) {
+		System.out.println();
 		service.insert(vo);
 		return "post/postDetail"; // 나중에 뉴스피드로 리다이렉트 예정
 	}
@@ -73,7 +75,7 @@ public class PostController {
 		replyService.removeAllReply(post_num);
 		service.delete(post_num);
 		log.info(post_num + "번 게시글 삭제되었습니다.");
-		return ""; // 나중에 마이룸으로 리다이렉트 예정
+		return "post/newsfeed"; // 나중에 마이룸으로 리다이렉트 예정
 	}
 	
 	@GetMapping("updateForm/{post_num}")
@@ -168,6 +170,46 @@ public class PostController {
 		return entity;
 	}
 	
+	// 이미 좋아요 눌렀는지 확인
+	@GetMapping(value="/islike", produces= {
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<PostLikeVO> isLike(PostLikeVO vo){
 	
+		ResponseEntity<PostLikeVO> entity= null;
+	
+	try {
+		entity = new ResponseEntity<>(likeService.islike(vo),HttpStatus.OK);
+		System.out.println(likeService.islike(vo));
+	}catch(Exception e) {
+		e.printStackTrace();
+		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+		return entity;
+	}
+//	// 포스트-태그 리스트 불러오기
+//	@GetMapping(value="/getTag/{post_num}",produces= {MediaType.APPLICATION_XML_VALUE,
+//													MediaType.APPLICATION_JSON_UTF8_VALUE})
+//	
+//	public ResponseEntity<List<PostTagVO>>list(@PathVariable("post_num")Long post_num){
+//		
+//		ResponseEntity<List<PostTagVO>> entity= null;
+//		
+//		try {
+//			entity = new ResponseEntity<>(postTagService.postTagList(post_num),HttpStatus.OK);
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}
+//		return entity;
+//}
+	
+	
+	
+	// 태그 리스트에 태그 추가
+	@GetMapping("/test")
+	public String test() {
+		return "post/test";
+	}
 }
 

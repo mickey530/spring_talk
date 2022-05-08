@@ -8,7 +8,7 @@
 </head>
 <body>
 	<form action="/post/insert" method="post">
-		<input type="text" name="writer" placeholder="작성자"><br/>
+		<input type="hidden" name="writer" value="${sessionScope.user_id }"><br/>
 		<input type="text" name="title" placeholder="제목"><br/>
 		<textarea name="content" placeholder="내용"></textarea><br/>
 		<input type="submit" value="글쓰기">

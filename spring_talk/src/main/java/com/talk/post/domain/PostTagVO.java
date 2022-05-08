@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class PostTagVO {
 	private int post_num;
-	private int tag_num;
+	private String tag;
 }

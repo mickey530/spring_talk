@@ -3,6 +3,7 @@ package com.talk.post.service;
 import java.util.List;
 
 import com.talk.post.domain.Criteria;
+import com.talk.post.domain.PostTagVO;
 import com.talk.post.domain.PostVO;
 import com.talk.post.domain.UserCriteria;
 

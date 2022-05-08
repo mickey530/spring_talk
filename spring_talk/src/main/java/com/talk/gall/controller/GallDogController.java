@@ -26,7 +26,7 @@ public class GallDogController {
 
 	@GetMapping("/insert")
 	public String insert() {
-		return "galldog/insertForm";
+		return "gall/insertForm";
 	}
 	
 	@PostMapping("/insert")

@@ -6,5 +6,6 @@ public interface PostLikeMapper {
 	
 	public void like(PostLikeVO vo);
 	public void unlike(PostLikeVO vo);
+	public PostLikeVO islike(PostLikeVO vo);
 
 }
