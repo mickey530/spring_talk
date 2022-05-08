@@ -2,6 +2,7 @@ package com.talk.report.mapper;
 
 import java.util.List;
 
+
 import com.talk.report.domain.ReportReplyVO;
 
 public interface ReportReplyMapper {
@@ -11,5 +12,7 @@ public interface ReportReplyMapper {
 	public void insert(ReportReplyVO vo);
 	
 	public void delete(long report_reply_num);
+	
+	public ReportReplyVO select(long report_reply_num);
 
 }
