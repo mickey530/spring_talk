@@ -7,4 +7,5 @@ public class BanVO {
 	
 	private String user_id;
 	private String ban_id;
+	
 }

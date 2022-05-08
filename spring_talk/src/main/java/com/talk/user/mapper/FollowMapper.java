@@ -9,10 +9,10 @@ public interface FollowMapper {
 	
 
 	//user_id가 팔로우한 사람들 조회
-	public List<String> selectIdsByFollowed(String user_id);
+	public List<FollowVO> selectIdsByFollowed(String user_id);
 
 	//user_id를 팔로우한 사람들 조회
-	public List<String> selectIdsByFollower(String user_id);
+	public List<FollowVO> selectIdsByFollower(String user_id);
 
 	//user_id로 Follow 정보 조회
 	public int countFollower(String user_id);

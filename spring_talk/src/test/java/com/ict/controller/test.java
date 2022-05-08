@@ -21,28 +21,33 @@ public class test {
 			e.printStackTrace();
 		}
 	}
-
 	@Test
-	public void testConnection() {
-		try(Connection con = DriverManager.getConnection(
-					"jdbc:oracle:thin:@localhost:1521/XEPDB1",
-					"springprj",
-					"springprj"
-				)){
+    public void testConnection() {
+        try(Connection con = DriverManager.getConnection(
+                    "jdbc:log4jdbc:oracle:thin:@localhost:1521/XEPDB1",
+                    "springprj",
+                    "springprj"
+                )){
 
-			PreparedStatement prps= con.prepareStatement("select * from reply");
-
+            PreparedStatement prps= con.prepareStatement("select * from reply");
 
             ResultSet sr =prps.executeQuery();
 
             while(sr.next()) {
 
-                log.info(sr.getObject(1));
+                sr.getObject(1);
+                sr.getObject(2);
+                sr.getObject(3);
+                sr.getObject(4);
+                sr.getObject(5);
+                sr.getObject(6);
+                sr.getObject(7);
 
             }
-			log.info(con);
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-	}	
+
+            log.info(con);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
 }

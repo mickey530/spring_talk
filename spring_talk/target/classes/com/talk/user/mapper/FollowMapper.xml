@@ -4,15 +4,15 @@
 <mapper namespace="com.talk.user.mapper.FollowMapper">
 	
 	 
-	<select id="selectIdsByFollowed" resultType="String">
+	<select id="selectIdsByFollowed" resultType="com.talk.user.domain.FollowVO">
 		
-		SELECT followed FROM follow
+		SELECT * FROM follow
 			WHERE follower = #{user_id}
 	</select>
 	 
-	<select id="selectIdsByFollower" resultType="String">
+	<select id="selectIdsByFollower" resultType="com.talk.user.domain.FollowVO">
 		
-		SELECT follower FROM follow
+		SELECT * FROM follow
 			WHERE followed = #{user_id}
 	</select>
 	 

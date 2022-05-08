@@ -3,26 +3,35 @@
 	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.talk.user.mapper.BanMapper">
 	
+	
+	<select id="banList" resultType="com.talk.user.domain.BanVO">
+		select * from ban where user_id = #{user_id} 
+	</select>
+	
+	<select id="banedList" resultType="com.talk.user.domain.BanVO">
+		select * from ban where user_id = #{user_id} 
+	</select>
+	
 	<select id="ban" resultType="int">
 		select count(*) from ban where user_id = #{user_id} 
 	</select>
 	
 	<select id="baned" resultType="int">
-		select count(*) from ban where user_id = #{user_id} 
+		select count(*) from ban where ban_id = #{user_id} 
 	</select>
 	
-	<select id="isBaned" resultType="boolean">
+	<select id="isBaned" resultType="int">
 	
-		select if(count(*) = 1,1,0) from ban
+		select count(*) from ban
 			where (
 				ban_id = #{baned_user_id} and
 				user_id = #{ban_user_id}
 			)
 	</select>
 	
-	<select id="isBan" resultType="boolean">
+	<select id="isBan" resultType="int">
 	
-		select if(count(*) = 1,1,0) from ban
+		select count(*) from ban
 			where (
 				ban_id = #{ban_user_id} and
 				user_id = #{baned_user_id}
@@ -30,10 +39,9 @@
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO ban (user_id, ban_id)
+		INSERT INTO ban 
 			VALUES(
-				user_id = #{ban_user_id}, 
-				ban_id = #{baned_user_id}
+				#{user_id}, #{ban_id}
 			)
 	</insert>
 	
@@ -41,10 +49,12 @@
 	
 		DELETE FROM ban
 		 WHERE (
-			 user_id = #{ban_user_id},
-			 ban_id = #{baned_user_id}
+			 user_id = #{user_id} and
+			 ban_id = #{ban_id}
 		 )
 	</delete>
+	<!-- 
+	
 	
 	<update id="update">
 		UPDATE ban 
@@ -56,4 +66,5 @@
 					ban_id = #{baned_user_id}
 				)
 	</update>
+	 -->
 </mapper>
