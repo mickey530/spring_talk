@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC	 "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	
+	<mapper namespace="com.talk.reply.mapper.ReplyMapper">
+
+		<select id="getList" resultType="com.talk.reply.domain.ReplyVO">
+			SELECT * FROM reply
+				WHERE post_num = #{post_num}
+				ORDER BY reply_num DESC		
+		</select>
+		
+		<insert id="create">
+			INSERT INTO reply
+			(reply_num, post_num, reply_content, reply_id)
+				VALUES
+			(reply_num.nextval, #{post_num}, #{reply_content}, #{reply_id})	
+		</insert>
+		
+		<update id="update">
+			UPDATE reply
+				SET
+			reply_content = #{reply_content}, update_date = SYSDATE
+			WHERE reply_num = #{reply_num}
+		</update>
+		
+		<delete id="delete">
+			DELETE FROM reply
+				WHERE reply_num = #{reply_num}	
+		</delete>
+		
+		<delete id="deleteAll">
+			DELETE FROM reply
+				WHERE post_num = #{post_num}	
+		</delete>
+		
+		<select id ="getPost_num" resultType="long">
+			SELECT 	post_num FROM reply
+				WHERE reply_num = #{reply_num}		
+		</select>
+		
+
+	</mapper>
