@@ -7,12 +7,13 @@ import com.talk.report.domain.ReportReplyVO;
 
 public interface ReportReplyMapper {
 
-	public List<ReportReplyVO> allList(long report_reply_num);
+	public List<ReportReplyVO> allList(long report_reply_date);
 	
 	public void insert(ReportReplyVO vo);
 	
-	public void delete(long report_reply_num);
+	public void delete(long report_rnum);
 	
-	public ReportReplyVO select(long report_reply_num);
+	public ReportReplyVO select(long report_rnum);
 
+	
 }
