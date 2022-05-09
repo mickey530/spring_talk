@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +11,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <style>
 *{margin: 0;padding: 0;list-style: none;;}
+
+#reply{display:none};
 
 #modDiv{width: 100%;max-width: 600px;
 margin: 0 auto;
@@ -45,21 +45,12 @@ background-color: transparent;}
 <div class="container">
 <div>
 	<h2>게시글</h2>
-	<p>작성자 : ${post.writer }</p>
-	<p>제목 : ${post.title }</p>
-	<p id="content">내용 : ${post.content }</p>
-	<div>
-		<c:if test="${sessionScope.user_id ne 'null'}">
-			<button class="btn btn-outline-danger" id="postLike">좋아요</button>
-		</c:if>
-		
-		<a href="/post/updateForm/${post.post_num}" class="btn btn-success">수정</a>
-		<a href="/post/delete/${post.post_num}" class="btn btn-danger">삭제</a>
-	</div>
+	작성자 : ${post.writer }<br/>
+	제목 : ${post.title }<br/>
+	내용 : ${post.content }<br/>
 </div>
 
 <hr/>
-세션 : <button onclick="isLike()">${sessionScope.user_id }</button>
 <h2>댓글</h2>
 	
 	<hr/>
@@ -104,6 +95,10 @@ background-color: transparent;}
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
 	
+$("#btn").click(function(){
+	$("#reply").stop().show();
+})
+	
 	/* 댓글 불러오는 로직 */
 	let post_num = ${post.post_num};
 
@@ -129,8 +124,8 @@ background-color: transparent;}
 					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong>@"
 						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
 						+ "<div class='reply_content'>" + this.reply_content + "</div>"
+						+ "<input type='text' id='reply'>"
 						+ "<button type='button' class='btn btn-info'>수정/삭제</button>"
-						
 						+ "</div>";
 				});
 		
@@ -174,26 +169,19 @@ background-color: transparent;}
 			
 		});
 	 
-	// 선택한 댓글 외부에서 사용 ///////////////////
-	 	let select = "";
-	 	
 	// 이벤트 위임
 	 $("#replies").on("click", " button", function(){
 		let replytag=$(this).parent();
-	 	console.log(replytag);
+	 console.log(replytag);
 		
 		let reply_num = replytag.attr("data-reply_num");
 		console.log(reply_num);
 		
 		let reply_content = $(this).siblings(".reply_content").text();
-		console.log(reply_content);
 		
 		$(".modal-title").html(reply_num);
 		$("#reply").val(reply_content);
 		$("#modDiv").show("slow");
-		
-		// select 에 저장 //////////////////////
-		select = $(this).siblings(".reply_content");
 	 });
 	
 	 // 닫기
@@ -224,15 +212,10 @@ background-color: transparent;}
 	 });
 	 
 	 // 수정버튼
-	 $("#btn").click(function(){
-			let input = "<input type='text' class='reply' value='"+ select.html() +"'>"
-			select.html(input);
-		})
-		
-	 // 수정사항 저장 버튼
 	 $("#replyModBtn").on("click", function(){
 		let reply_num = $(".modal-title").html();
-		let reply_content = $(".reply").val();
+		let reply_content = $("#reply").val();
+		
 		$.ajax({
 			type : 'patch', 
 			url : '/replies/' + reply_num,
@@ -256,76 +239,6 @@ background-color: transparent;}
 	 
 	 
 	 </script>
-	 
-	 <script type="text/javascript">
-	// html 안에 'content'라는 아이디를 content 라는 변수로 정의한다.
-	var content = document.getElementById('content').innerHTML;
-	console.log(content)
-	var splitedArray = content.split(' '); // 공백을 기준으로 문자열을 자른다.
-	var linkedContent = '';
-	for(var word in splitedArray)
-	{
-	  word = splitedArray[word];
-	   if(word.indexOf('#') == 0) // # 문자를 찾는다.
-	   {
-	      word = '<a href=\#>'+word+'</a>'; 
-	   }
-	   linkedContent += word+' ';
-	}
-	document.getElementById('content').innerHTML = linkedContent;
-
-	// 좋아요 유무 확인
-	let user_id = '${sessionScope.user_id}';
-	
-	 function isLike(){
-		$.getJSON("/post/islike?post_num=" + post_num + "&user_id=" + user_id,
-			
-			function(data){
-
-			if(data != null){
-				$("#postLike").html("liked")
-				$("#postLike").addClass("liked")
-			}
-			
-		});
-	 } isLike()
-	
-	 /* $("#postLike").toggleClass("liked"); */
-	 
-	 
-	 
-	 
-	 
-
-	// 좋아요 버튼 클릭 시 
-	 $("#postLike").on("click", function(){
-			
-
-			
-			$.ajax({
-				type : 'post',
-				url : '/post/like',
-				headers : {
-					"Content-Type" : "application/json",
-					"X-HTTP-Method-Override" : "POST"
-				},
-				dataType : 'text',
-				data : JSON.stringify({
-					post_num : post_num,
-					user_id : '${sessionScope.user_id}'
-				}),
-				success : function(result){
-					if(result == 'OK'){
-						/* alert("좋아요!"); */
-					}
-				}
-				/* error도 설정 가능 */
-			});
-			$("#postLike").toggleClass("liked");
-
-		});
-	
-</script>
 
 </body>
 </html>
