@@ -1,0 +1,5 @@
+INDEX VERSION 1.131+/Users/user/talk_prj/.metadata/.plugins/org.eclipse.jdt.core
+1532180904.index
+2681114154.index
+1865797976.index
+4008566294.index

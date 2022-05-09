@@ -1,0 +1,3 @@
+INDEX VERSION 1.131
+/Users/user/talk_prj/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/4007319408.index
+/spring_talk/src/main/java

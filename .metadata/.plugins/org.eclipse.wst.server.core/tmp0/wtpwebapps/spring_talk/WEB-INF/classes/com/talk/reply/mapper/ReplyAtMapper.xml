@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC	 "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	
+	<mapper namespace="com.talk.reply.mapper.ReplyAtMapper">
+		<select id="getReplyList" resultType="com.talk.reply.domain.ReplyAtVO">
+			SELECT * FROM reply_at
+			 WHERE reply_num = #{reply_num}
+			 ORDER BY reply_num DESC
+		</select>
+		
+		
+		<!--보류-->
+		<select id="getReplyUserList" resultType="com.talk.reply.domain.ReplyAtVO">
+			SELECT * FROM u.*from user_info u where u.user_id in(
+			SELECT r.user_id from reply_at r where r.reply_num = #{reply_num})
+		</select>
+	</mapper>

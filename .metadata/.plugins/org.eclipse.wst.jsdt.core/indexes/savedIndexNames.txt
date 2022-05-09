@@ -1,0 +1,2 @@
+INDEX VERSION 1.4+/Users/user/talk_prj/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+1532180904.index
