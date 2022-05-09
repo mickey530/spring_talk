@@ -13,7 +13,12 @@
 <style>
 *{margin: 0;padding: 0;list-style: none;;}
 
-#modDiv{width: 100%;max-width: 600px;
+#modDiv{
+position:fixed;
+z-index:500;
+left:50% -250px;
+top:0px;
+width: 100%;max-width: 600px;
 margin: 0 auto;
 padding:10px;
 box-sizing: border-box;
@@ -68,23 +73,26 @@ background-color: transparent;}
 	</div>
 	<hr/>
 
-	
+ <!-- 대댓글 작성하는 -->
+	<div class='reply_area' style="display:none;">
+		<div>REPLYER <input type="text" name="reReplyWriter" id="reReplyWriter" ></div>
+		<div>REPLY TEXT <input type="text" id="reReplyText"></div>
+		<button id="reReplyBtn">ADD REPLY</button>
+	</div>
 	
 	<!-- 모달창 -->
 	<div id="modDiv" style="display:none;">
-		<div class ="modal-title">
-		</div>
+		<div class ="modal-title"></div>
 		
 		<div class="btn_content">
-			<button type="button" id="reReplyBtn">답글달기</button>
-			<button type="button" id="btn">수정</button>
-			<button type="button" id="replyDelBtn">삭제</button>
-			<button type="button" id="replyModBtn">저장</button>
-			<button type="button" id="closeBtn">닫기</button>	
-			
-			
+			<button type="button" class="reReplyBtn">답글달기</button>
+			<button type="button" class="btn">수정</button>
+			<button type="button" class="replyDelBtn">삭제</button>
+			<button type="button" class="replyModBtn">저장</button>
+			<button type="button" class="closeBtn">닫기</button>	
 		</div>
 	</div>
+	
 	
 	
 	
@@ -97,6 +105,8 @@ background-color: transparent;}
 	/* 댓글 불러오는 로직 */
 	let post_num = ${post.post_num};
 
+
+	
 	 function getAllList(){
 		$.getJSON("/replies/all/" + post_num, function(data){
 
@@ -108,6 +118,8 @@ background-color: transparent;}
 					// 시간
 					let timestamp = this.update_date;
 					let date = new Date(timestamp);
+					let depth = this.reply_level; 
+					let depth_level = "";
 					
 					let formattedTime = " 게시일 : " + date.getFullYear()
 										+ "/" + (date.getMonth()+1)
@@ -115,13 +127,27 @@ background-color: transparent;}
 										+ "-" + date.getHours()
 										+":" + date.getMinutes()
 										+":" + date.getSeconds()
+					
 										
-					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong>@"
+						// 댓글 깊이
+					for(var i=0; i < depth; i++) {
+						console.log(i)
+						depth_level += "&nbsp;&nbsp;&nbsp;"
+						}				
+										
+										
+					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'>"
+						+ depth_level
+						+ "<strong>@"
 						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
 						+ "<div class='reply_content'>" + this.reply_content + "</div>"
-						+ "<button type='button' class='btn btn-info'>수정/삭제</button>"
-						
+						+ "<button type='button' class='btn btn-info'>수정/삭제</button><br/><br/>"
 						+ "</div>";
+						
+					 
+
+				
+						
 				});
 		
 			$("#replies").html(str);			
@@ -129,13 +155,54 @@ background-color: transparent;}
 	 }
 	 getAllList();
 	 
+	 $(".reReplyBtn").click(function(){
+		 $(".reply_area").show()
+		 
+	 });
+	 
+	 
+	  // 대댓글
+	 $(".reReplyBtn").click(function(){
+		 
+
+		 
+		 var parent_num = $("#modDiv .modal-title").html()
+		 var reReplyWriter = $("#reReplyWriter").val()
+		 var reReplyText = $("#reReplyText").val()
+		 
+		 $.ajax({
+			 type : 'post',
+			 url : '/replies',
+			 headers : {
+				"Content-Type" : "application/json",
+				"X-HTTP-Method-Override" : "POST"
+			 },
+			 dataType : 'text',
+			 data : JSON.stringify({
+				post_num : post_num,
+				parent_num : parent_num,
+				reply_id : reReplyWriter,
+				reply_content : reReplyText,
+				reply_level:1
+			}),
+			success : function(result){
+				if(result == 'OK'){
+					alert("등록되었습니다.");
+					getAllList();
+					refresh();
+				}
+			}
+		 });
+	 }); 
+
 	 /* 댓글 작성 후 댓글작성란 비우는 로직 */
 	 function refresh(){
 		 $("#newReplyWriter").val("");
 		 $("#newReplyText").val("");	 
 	 }
 	 
-	 $("#replyAddBtn").on("click", function(){
+	 // 기본댓글
+	 $(".replyAddBtn").on("click", function(){
 			var reply_id = $("#newReplyWriter").val();
 			var reply_content = $("#newReplyText").val();
 			
@@ -146,11 +213,13 @@ background-color: transparent;}
 					"Content-Type" : "application/json",
 					"X-HTTP-Method-Override" : "POST"
 				},
-				dataType : 'text',
+				
 				data : JSON.stringify({
 					post_num : post_num,
+					parent_num : parent_num,
 					reply_id : reply_id,
-					reply_content : reply_content
+					reply_content : reply_content,
+					reply_level:0
 				}),
 				success : function(result){
 					if(result == 'OK'){
@@ -187,12 +256,12 @@ background-color: transparent;}
 	 });
 	
 	 // 닫기
-	 $("#closeBtn").on("click", function(){
+	 $(".closeBtn").on("click", function(){
 		 $("#modDiv").hide("slow");
 	 });
 	 
 	 // 삭제
-	 $("#replyDelBtn").on("click", function(){
+	 $(".replyDelBtn").on("click", function(){
 		let reply_num = $(".modal-title").html();
 		$.ajax({
 			type : 'delete',
@@ -214,13 +283,13 @@ background-color: transparent;}
 	 });
 	 
 	 // 수정버튼
-	 $("#btn").click(function(){
+	 $(".btn").click(function(){
 			let input = "<input type='text' class='reply' value='"+ select.html() +"'>"
 			select.html(input);
 		})
 		
 	 // 수정사항 저장 버튼
-	 $("#replyModBtn").on("click", function(){
+	 $(".replyModBtn").on("click", function(){
 		let reply_num = $(".modal-title").html();
 		let reply_content = $(".reply").val();
 		$.ajax({

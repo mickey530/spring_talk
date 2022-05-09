@@ -8,14 +8,15 @@
 		<select id="getList" resultType="com.talk.reply.domain.ReplyVO">
 			SELECT * FROM reply
 				WHERE post_num = #{post_num}
-				ORDER BY reply_num DESC		
+				START WITH parent_num IS NULL
+				CONNECT BY PRIOR reply_num = parent_num
 		</select>
 		
 		<insert id="create">
 			INSERT INTO reply
-			(reply_num, post_num, reply_content, reply_id)
+			(reply_num, post_num, reply_content, reply_id, parent_num, reply_level)
 				VALUES
-			(reply_num.nextval, #{post_num}, #{reply_content}, #{reply_id})	
+			(reply_num.nextval, #{post_num}, #{reply_content}, #{reply_id}, #{parent_num}, #{reply_level})	
 		</insert>
 		
 		<update id="update">
@@ -40,5 +41,8 @@
 				WHERE reply_num = #{reply_num}		
 		</select>
 		
+		<select  id ="select" resultType="com.talk.reply.domain.ReplyVO">
+		SELECT * FROM reply WHERE reply_num = #{reply_num}
+		</select>
 
 	</mapper>

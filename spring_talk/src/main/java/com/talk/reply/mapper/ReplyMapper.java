@@ -19,5 +19,6 @@ public interface ReplyMapper {
 
 	public Long getPost_num(Long reply_num); // 댓글 번호를 통해 글 번호유추하기
 	
+	public ReplyVO select(long reply_num);
 	
 }
