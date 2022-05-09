@@ -8,7 +8,8 @@
 </head>
 <body>
 	<form action="/report/post" method="post">
-		<input type="text" name="report_id" value="${sessionScope.user_name }" readonly><br/>		
+		<input type="number" name="report_post_num" placeholder="신고할 게시글 번호"><br/>
+		<input type="text" name="report_id" placeholder="신고자"><br/>		
 		<textarea name="report_reason" placeholder="신고 사유"></textarea><br/>
 		<input type="submit" value="신고">
 		<input type="reset" value="초기화">

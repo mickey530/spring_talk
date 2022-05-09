@@ -16,6 +16,8 @@
 		      <thead>
 		        <tr>
 		          <th>신고번호</th>
+		          <th>신고일</th>
+		          <th>신고한 게시물번호</th>
 		          <th>신고자</th>
 		          <th>신고 사유</th>
 		        </tr>
@@ -23,9 +25,11 @@
 		      <tbody>
 		        <c:forEach var="post" items="${postList }">
 		          <tr>
+		          	<td>${post.report_pnum }</td>
+		            <td>${post.report_post_date }</td>
 		            <td>${post.report_post_num }</td>
 		            <td>${post.report_id }</td>
-		            <td><a href="/report/reportPostDetail/${post.report_post_num }">${post.report_reason }</a></td>		
+		            <td><a href="/report/reportPostDetail/${post.report_pnum }">${post.report_reason }</a></td>		
 		          </tr>
 		        </c:forEach>
 		      </tbody>

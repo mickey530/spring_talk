@@ -14,16 +14,16 @@
 		
 		${replyvo }
 	
-		<h1>댓글 신고번호 - ${reply.report_reply_num }번 신고내역</h1>
+		<h1>${reply.report_reply_num }번 댓글 신고내역</h1>
 		<div class="row">
 			<div class="col-md-3">
-				<input type="text" class="form-control" value="신고자: ${sessionScope.user_id }" readonly/>
+				<input type="text" class="form-control" value="신고자: ${reply.report_id }" readonly/>
 			</div>
-		</div>
+		</div>	
 		<textarea readonly rows="10" class="form-control">사유 : ${reply.report_reason }</textarea>
 		
 		<c:if test="${sessionScope.user_id eq reply.report_id }">
-			<a href="/report/reportReplyDelete/${reply.report_reply_num }" class="btn btn-danger">삭제하기</a><hr/>
+			<a href="/report/reportReplyDelete/${reply.report_rnum }" class="btn btn-danger">삭제하기</a><hr/>
 		</c:if>	
 			<a href="/report/reportReplyList" class="btn btn-dark">댓글 신고목록</a>
 		
