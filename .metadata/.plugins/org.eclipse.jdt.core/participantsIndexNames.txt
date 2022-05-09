@@ -1,3 +1,9 @@
 INDEX VERSION 1.131
+/Users/user/talk_prj/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/735463926.index
+/spring_talk/src/main/java
 /Users/user/talk_prj/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/4007319408.index
+/spring_talk/src/main/java
+/Users/user/talk_prj/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/3351440739.index
+/spring_talk/src/main/java
+/Users/user/talk_prj/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/4241486642.index
 /spring_talk/src/main/java
