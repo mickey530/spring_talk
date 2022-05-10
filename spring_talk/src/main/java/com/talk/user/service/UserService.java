@@ -17,8 +17,10 @@ public interface UserService {
 	public UserVO selectById(String uid);
 	
 	public void insert(UserVO vo);
+	
+	public void insert(UserVO vo, String auth);
 
-	public void delete(long user_num);
+	public void delete(String user_id);
 	
 	public void update(UserVO vo);
 	

@@ -138,8 +138,35 @@
 			success : function(result){
 				console.log("result: " + result);
 				if(result == 'BAN SUCCESS' || result == 'UNBAN SUCCESS'){
-					getBan(); //수정된 댓글 반영한 새 댓글목록 갱신
-					getBaned();
+					getAllData();
+				}
+			}
+		});
+	 });
+
+	 // 밴 업데이트 버튼
+	 $("#followBtn").on("click", function(){
+		
+		var jsonData = {
+				follower:'${sessionScope.user_id}',
+				followed:$("#user_id").text(),
+				favorite:'N'
+		};
+		 
+		$.ajax({
+			type : 'post', 
+			url : '/user/follow/${userInfo.user_id}',
+			header : {
+				"Content-Type" : "application/json",
+				"X-HTTP-Method-Override" : "PATCH" 
+			},	
+			contentType:"application/json", // json 자료를 추가로 입력받기 때문에
+			data: JSON.stringify(jsonData),
+			dataType : 'text',
+			success : function(result){
+				console.log("result: " + result);
+				if(result == 'FOLLOW SUCCESS' || result == 'UNFOLLOW SUCCESS'){
+					getAllData();
 				}
 			}
 		});

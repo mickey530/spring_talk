@@ -24,10 +24,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
 import com.talk.user.domain.UserVO;
+import com.talk.user.service.BanService;
 import com.talk.user.service.BanServiceImpl;
+import com.talk.user.service.FollowService;
 import com.talk.post.service.TagService;
 import com.talk.reply.domain.ReplyVO;
 import com.talk.user.service.FollowServiceImpl;
+import com.talk.user.service.UserService;
 import com.talk.user.service.UserServiceImpl;
 
 import lombok.extern.log4j.Log4j;
@@ -38,13 +41,13 @@ import lombok.extern.log4j.Log4j;
 public class UserController {
 	
 	@Autowired
-	private UserServiceImpl userService;
+	private UserService userService;
 	
 	@Autowired
-	private BanServiceImpl banService;
+	private BanService banService;
 	
 	@Autowired
-	private FollowServiceImpl followService;
+	private FollowService followService;
 	
 	//user단
 	
@@ -67,6 +70,13 @@ public class UserController {
 
 		return "user/userInfo";
 	}
+	
+	@GetMapping("/room/{user_id}")
+    public String insertTest(@PathVariable String user_id, Model model) {
+        UserVO user = userService.selectById(user_id);
+        model.addAttribute("user", user);
+        return "user/room";
+    }
 	
 	@GetMapping(value="/getAllUsers")
 	public String getAllUsers( Model model) {
@@ -127,10 +137,8 @@ public class UserController {
 		// 이 값이 null이면 아이디나 비밀번호가 맞지 않다는 것이므로 회원탈퇴 처리하지 않음
 		
 		if(userInfo != null) {//구분해서 처리 예정
-
-			long user_num = userInfo.getUser_num();
 			
-			userService.delete(user_num);
+			userService.delete(uid);
 			
 			session.invalidate();
 			return "redirect:/user/";
@@ -175,10 +183,12 @@ public class UserController {
 		return "/user/loginForm";
 	}
 
-	@GetMapping(value="/login")
+	@PostMapping(value="/login")
 	public String loginUser(
 			String uid, String upw,
 			HttpSession session) {
+		System.out.println("uid : " + uid);
+		System.out.println("upw : " + upw);
 
 		UserVO userInfo = userService.loginCheck(uid, upw);
 		
@@ -186,10 +196,12 @@ public class UserController {
 		if(userInfo != null) {//구분해서 처리 예정
 			session.setAttribute("user_id", userInfo.getUser_id()); 
 			session.setAttribute("user_name", userInfo.getUser_name()); 
+			System.out.println("로그인 성공");
 			
 			return "redirect:/user/";
 		}
 
+		System.out.println("로그인 실패");
 		return "redirect:/user/";
 	}
 	
@@ -282,12 +294,24 @@ public class UserController {
 	@PostMapping(value="/follow/{user_id}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity <String> insertFollow(@RequestBody FollowVO vo){
 		ResponseEntity<String> entity= null;
+		System.out.println("insertBan : " + vo.getFollower());
+		System.out.println(vo.toString());
 		try {
 			followService.insert(vo);
-			entity = new ResponseEntity<String>("OK", HttpStatus.OK);
-		}catch(Exception e) {
+			entity = new ResponseEntity<String>("FOLLOW SUCCESS", HttpStatus.OK);
+		} catch(DataIntegrityViolationException e) {
+			try {
+				followService.delete(vo);
+				entity = new ResponseEntity<String>("UNFOLLOW SUCCESS", HttpStatus.OK);
+			} catch(DataIntegrityViolationException DVE) {
+				System.out.println("DataIntegrityViolationException : " + DVE);
+				entity = new ResponseEntity<String>(DVE.getMessage(), HttpStatus.BAD_REQUEST);
+			}
+    	}catch(Exception e) {
+			System.out.println("FOLLOW Exception : " + e);
 			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
+		System.out.println(entity);
 		return entity;
 	}
 	
@@ -309,7 +333,7 @@ public class UserController {
 				entity = new ResponseEntity<String>(DVE.getMessage(), HttpStatus.BAD_REQUEST);
 			}
     	}catch(Exception e) {
-			System.out.println("Exception : " + e);
+			System.out.println("BAN Exception : " + e);
 			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		System.out.println(entity);
