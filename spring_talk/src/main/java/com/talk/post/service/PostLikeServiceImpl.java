@@ -14,12 +14,18 @@ public class PostLikeServiceImpl implements PostLikeService{
 	
 	@Override
 	public void like(PostLikeVO vo) {
-		postLikeMapper.like(vo);
+		String check = postLikeMapper.islike(vo);
+		
+		if(check == null) {
+			postLikeMapper.like(vo);			
+		} else {
+			postLikeMapper.unlike(vo);
+		}
 	}
-	
+
 	@Override
-	public void unlike(PostLikeVO vo) {
-		postLikeMapper.unlike(vo);
+	public String islike(PostLikeVO vo) {	
+		return postLikeMapper.islike(vo);
 	}
 
 }

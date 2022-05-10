@@ -90,6 +90,7 @@ public class ReportController {
 	}
 	@PostMapping("/reply")
 	public String replyForm(ReportReplyVO vo) {
+		log.info(vo);
 	    reportReplyService.addReport(vo);
 		return "redirect:/report/reportReplyList";		
 	}
@@ -208,7 +209,7 @@ public class ReportController {
 	public String reportReplyDetail(@PathVariable Long report_reply_num, Long board_num, Model model) {
 		ReportReplyVO reply = reportReplyService.select(report_reply_num);
 		model.addAttribute("reply", reply);
-		ReplyVO replyvo = (ReplyVO) replyService.listReply(board_num);
+		List<ReplyVO> replyvo = replyService.listReply(board_num);
 		model.addAttribute("replyvo", replyvo);		
 		return "report/reportReplyDetail";
 	}
