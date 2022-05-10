@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="/insert" method="post">
+	<form action="/galldog/insert" method="post">
 		작성자 : <input type="text" name="writer">
 		제목 : <input type="text" name="board_title">
 		내용 : <input type="text" name="board_content">
