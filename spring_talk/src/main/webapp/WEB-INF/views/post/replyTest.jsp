@@ -15,14 +15,13 @@
 
 #modDiv{
 position:fixed;
-z-index:500;
-left:50% -250px;
-top:0px;
-width: 100%;max-width: 600px;
+z-index:100;
+bottom:0 ; left:0;
+width: 100%;
 margin: 0 auto;
 padding:10px;
 box-sizing: border-box;
-background-color: blanchedalmond;}
+background-color:#fff;}
 
 .btn_content{width: 100%;
 border-radius: 5px;
@@ -69,17 +68,17 @@ background-color: transparent;}
 		<div>
 			REPLY TEXT <input type="text" id="newReplyText">
 		</div>
-		<button id="replyAddBtn">ADD REPLY</button>
+		<button id="replyAddBtn" class="replyAddBtn">ADD REPLY</button>
 	</div>
 	<hr/>
 
  <!-- 대댓글 작성하는 -->
-	<div class='reply_area' style="display:none;">
+	<!-- <div class='reply_area' style="display:none;">
 		<div>REPLYER <input type="text" name="reReplyWriter" id="reReplyWriter" ></div>
 		<div>REPLY TEXT <input type="text" id="reReplyText"></div>
 		<button id="reReplyBtn">ADD REPLY</button>
 	</div>
-	
+	 -->
 	<!-- 모달창 -->
 	<div id="modDiv" style="display:none;">
 		<div class ="modal-title"></div>
@@ -142,7 +141,12 @@ background-color: transparent;}
 						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
 						+ "<div class='reply_content'>" + this.reply_content + "</div>"
 						+ "<button type='button' class='btn btn-info'>수정/삭제</button><br/><br/>"
-						+ "</div>";
+						+ "</div>"
+						+"<div class='reply_area' style='display:none';>"
+						+"<div>REPLYER <input type='text' name='reReplyWriter' id='reReplyWriter' ></div>"
+						+"<div>REPLY TEXT <input type='text' id='reReplyText'></div>"
+						+"<button id='reReplyBtn'>ADD REPLY</button>"
+					+"</div>";
 						
 					 
 
@@ -203,9 +207,10 @@ background-color: transparent;}
 	 
 	 // 기본댓글
 	 $(".replyAddBtn").on("click", function(){
+		 	var parent_num = $("#modDiv .modal-title").html();
 			var reply_id = $("#newReplyWriter").val();
 			var reply_content = $("#newReplyText").val();
-			
+			console.log('buttonclicked');
 			$.ajax({
 				type : 'post',
 				url : '/replies',
@@ -227,6 +232,9 @@ background-color: transparent;}
 						getAllList();
 						refresh();
 					}
+				},
+				error: function(){
+					alert("error")
 				}
 				/* error도 설정 가능 */
 			});
