@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
 <html>
 <head>
 	<title>
@@ -15,7 +14,7 @@ Get All Users</title>
 		<c:if test="${user_id ne null }">
      	    	
 			<h1>
-				Welcome, "${user_name}"
+				세션 : ${sessionScope.user_id }
 			</h1>
 			
 			<tbody>

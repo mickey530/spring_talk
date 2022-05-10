@@ -48,6 +48,11 @@ public class ReplyServiceImpl implements ReplyService {
 	public void removeAllReply(Long post_num) {
 		mapper.deleteAll(post_num);
 	}
+
+	@Override
+	public ReplyVO getselect(long reply_num) {
+		return mapper.select(reply_num);
+	}
 	
 	
 	

@@ -6,10 +6,13 @@ import com.talk.report.domain.ReportPostVO;
 
 public interface ReportPostService {
 
-	public List<ReportPostVO> listReport(long report_post_num);
+	public List<ReportPostVO> listReport(long report_post_date);
 	
 	public void addReport(ReportPostVO vo);
 	
-	public void removeReport(long report_post_num);
+	public void removeReport(long report_pnum);
+	
+	public ReportPostVO select(long report_pnum);
+	
 }
   

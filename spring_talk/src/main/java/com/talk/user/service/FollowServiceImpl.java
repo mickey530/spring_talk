@@ -17,12 +17,12 @@ public class FollowServiceImpl implements FollowService {
 	private FollowMapper FollowMapper;
 
 	@Override
-	public List<String> selectIdsByFollowed(String user_id) {
+	public List<FollowVO> selectIdsByFollowed(String user_id) {
 		return FollowMapper.selectIdsByFollowed(user_id);
 	}
 
 	@Override
-	public List<String> selectIdsByFollower(String user_id) {
+	public List<FollowVO> selectIdsByFollower(String user_id) {
 		return FollowMapper.selectIdsByFollower(user_id);
 	}
 

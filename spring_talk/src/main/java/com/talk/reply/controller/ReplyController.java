@@ -42,6 +42,10 @@ public class ReplyController {
 	// insert
 	@PostMapping(value="", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity <String> register(@RequestBody ReplyVO vo){
+		System.out.print("================"+vo+"===========");
+//		int n = 225;
+//		long m = n;
+//		vo.setParent_num(m);
 		ResponseEntity<String> entity= null;
 		try {
 			service.addReply(vo);
