@@ -68,6 +68,13 @@ public class PostController {
 		return "post/postDetail";
 	}
 	
+	@GetMapping("/detail/test/{post_num}")
+	public String detail2(@PathVariable long post_num, Model model) {
+		PostVO post = service.select(post_num);
+		model.addAttribute("post", post);
+		return "post/replyTest";
+	}
+	
 	@GetMapping("delete/{post_num}")
 	public String delete(@PathVariable long post_num) {
 		replyService.removeAllReply(post_num);
