@@ -77,7 +77,7 @@
 		
 		
 	<script>
-	 
+
 	// 팔로우 정보 가져오기
 	function getFollow(){
 		$.getJSON("/user/getFollow/${userInfo.user_id }" , function(data){
@@ -119,13 +119,12 @@
 
 	 // 밴 업데이트 버튼
 	 $("#banBtn").on("click", function(){
-
-
+		
 		var jsonData = {
 				user_id:'${sessionScope.user_id}',
 				ban_id:$("#user_id").text()
 		};
-			
+		 
 		$.ajax({
 			type : 'post', 
 			url : '/user/ban/${userInfo.user_id}',
@@ -137,45 +136,11 @@
 			data: JSON.stringify(jsonData),
 			dataType : 'text',
 			success : function(result){
-				if(result == 'BAN SUCCESS'){
-					$("#banBtn").text('언밴');
-				}
-				if(result == 'UNBAN SUCCESS'){
-					$("#banBtn").text('밴');
-				}
 				console.log("result: " + result);
-				getAllData(); //수정된 팔로우/밴 사항 업데이트
-			}
-		});
-	 });
-
-	 // 밴 업데이트 버튼
-	 $("#followBtn").on("click", function(){
-
-		var jsonData = {
-				follower:'${sessionScope.user_id}',
-				followed:$("#user_id").text(),
-				favorite: 'N'
-		};
-		$.ajax({
-			type : 'post', 
-			url : '/user/follow/${userInfo.user_id}',
-			header : {
-				"Content-Type" : "application/json",
-				"X-HTTP-Method-Override" : "PATCH" 
-			},	
-			contentType:"application/json", // json 자료를 추가로 입력받기 때문에
-			data: JSON.stringify(jsonData),
-			dataType : 'text',
-			success : function(result){
-				if(result == 'FOLLOW SUCCESS'){
-					$("#followBtn").text('언팔로우');
+				if(result == 'BAN SUCCESS' || result == 'UNBAN SUCCESS'){
+					getBan(); //수정된 댓글 반영한 새 댓글목록 갱신
+					getBaned();
 				}
-				if(result == 'UNFOLLOW SUCCESS'){
-					$("#followBtn").text('팔로우');
-				}
-				console.log("result: " + result);
-				getAllData(); //수정된 팔로우/밴 사항 업데이트
 			}
 		});
 	 });

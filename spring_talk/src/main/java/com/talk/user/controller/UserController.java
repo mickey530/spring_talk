@@ -1,8 +1,6 @@
 package com.talk.user.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -249,8 +247,9 @@ public class UserController {
 													MediaType.APPLICATION_JSON_UTF8_VALUE})
 	
 	public ResponseEntity<Integer> banList(@PathVariable("user_id")String user_id){
-
+		
 		ResponseEntity<Integer> entity= null;
+		
 		try {
 			entity = new ResponseEntity<>(banService.ban(user_id),HttpStatus.OK);
 		}catch(Exception e) {
@@ -283,43 +282,24 @@ public class UserController {
 	@PostMapping(value="/follow/{user_id}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity <String> insertFollow(@RequestBody FollowVO vo){
 		ResponseEntity<String> entity= null;
-		
-		System.out.println("insertFollow : " + vo.getFollower());
-		System.out.println(vo.toString());
-		
 		try {
 			followService.insert(vo);
-			entity = new ResponseEntity<String>("FOLLOW SUCCESS", HttpStatus.OK);
-			System.out.println("ResponseEntity<String> : " + entity);
-		} catch(DataIntegrityViolationException e) {
-			try {
-				followService.delete(vo);
-				entity = new ResponseEntity<String>("UNFOLLOW SUCCESS", HttpStatus.OK);
-			} catch(DataIntegrityViolationException DVE) {
-				System.out.println("DataIntegrityViolationException : " + DVE);
-				entity = new ResponseEntity<String>(DVE.getMessage(), HttpStatus.BAD_REQUEST);
-			}
-    	}catch(Exception e) {
-			System.out.println("Exception : " + e);
+			entity = new ResponseEntity<String>("OK", HttpStatus.OK);
+		}catch(Exception e) {
 			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		System.out.println(entity);
 		return entity;
 	}
 	
 	// insert ban
-	@PostMapping(value="/ban/{user_id}", produces= {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> insertBan(@RequestBody BanVO vo){
+	@PostMapping(value="/ban/{user_id}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity <String> insertBan(@RequestBody BanVO vo){
 		ResponseEntity<String> entity= null;
-		
-		ResponseEntity<ResponseEntity<String>> a = null;
 		System.out.println("insertBan : " + vo.getUser_id());
 		System.out.println(vo.toString());
-		
 		try {
 			banService.insert(vo);
 			entity = new ResponseEntity<String>("BAN SUCCESS", HttpStatus.OK);
-			System.out.println("ResponseEntity<String> : " + entity);
 		} catch(DataIntegrityViolationException e) {
 			try {
 				banService.delete(vo);
