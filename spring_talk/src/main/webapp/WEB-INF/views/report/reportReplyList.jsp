@@ -15,22 +15,26 @@
 			<table boarder="1" class="table table-hover">
 		      <thead>
 		       <tr>
-		          <th>신고번호</th>
+		       	  <th>신고번호</th>
+		       	  <th>신고일</th>
+		          <th>신고한 댓글번호</th>
 		          <th>신고자</th>
 		          <th>신고 사유</th>
 		        </tr>
 		      </thead>
 		      <tbody>
 		        <c:forEach var="reply" items="${replyList }">
-		          <tr>
+		          <tr>	
+		          	<td>${reply.report_rnum }</td>
+		            <td>${reply.report_reply_date }</td>
 		            <td>${reply.report_reply_num }</td>
 		            <td>${reply.report_id }</td>
-		            <td><a href="/report/reportReplyDetail/${reply.report_reply_num }">${reply.report_reason }</a></td>						
+		            <td><a href="/report/reportReplyDetail/${reply.report_rnum }">${reply.report_reason }</a></td>						
 		          </tr>
 		        </c:forEach>
 		      </tbody>
 		    </table>
-		    <a href="/report/post" class="btn btn-warning">댓글 신고하기</a><hr/>
+		    <a href="/report/reply" class="btn btn-warning">댓글 신고하기</a><hr/>
 	  </div>
 		    
 </body>
