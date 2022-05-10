@@ -34,7 +34,7 @@
 		        </c:forEach>
 		      </tbody>
 		    </table>
-		    <a href="/report/post" class="btn btn-warning">게시글 신고하기</a><hr/>	    
+		    <a href="/report/post/{post_num}" class="btn btn-warning">게시글 신고하기</a><hr/>	    
 		 </div>
 </body>
 </html>

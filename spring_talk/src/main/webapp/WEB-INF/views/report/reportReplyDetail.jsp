@@ -21,12 +21,10 @@
 			</div>
 		</div>	
 		<textarea readonly rows="10" class="form-control">사유 : ${reply.report_reason }</textarea>
-		
-		<c:if test="${sessionScope.user_id eq reply.report_id }">
-			<a href="/report/reportReplyDelete/${reply.report_rnum }" class="btn btn-danger">삭제하기</a><hr/>
-		</c:if>	
+				
+			<a href="/report/reportReplyDelete/${reply.report_rnum }" class="btn btn-danger">삭제하기</a>	
 			<a href="/report/reportReplyList" class="btn btn-dark">댓글 신고목록</a>
-		
+			<a href="/replies/{report_reply_num}" class="btn btn-danger">게시글 삭제</a>		
 	</div>
 </body>
 </html>
