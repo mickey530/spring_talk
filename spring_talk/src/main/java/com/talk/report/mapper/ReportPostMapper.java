@@ -15,4 +15,6 @@ public interface ReportPostMapper {
 	
 	public ReportPostVO select(long report_pnum);
 	
+	public ReportPostVO select(long report_post_num);
+	
 }
