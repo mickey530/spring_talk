@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostVO;
+import com.talk.post.domain.UserCriteria;
 
 public interface PostService {
 
@@ -18,5 +19,5 @@ public interface PostService {
 	
 	public List<PostVO> getAllPost(Criteria cri);
 	
-	public List<PostVO> getUserPost(String writer, Criteria cri);
+	public List<PostVO> getUserPost(UserCriteria cri);
 }

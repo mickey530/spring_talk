@@ -6,6 +6,10 @@ import com.talk.user.domain.BanVO;
 
 public interface BanService {
 	
+	public List<BanVO> banedList(String user_id);
+
+	public List<BanVO> banList(String user_id);
+	
 	//user_id가 밴 한 횟수
 	public int ban(String user_id);
 	

@@ -25,6 +25,16 @@ public class UserServiceImpl implements UserService {
 		return UserMapper.getUser(uno);
 	}
 
+	
+	@Override
+	public UserVO selectById(String uid) {
+		return UserMapper.getUserById(uid);
+	}
+	
+	public UserVO loginCheck(String uid, String upw) {
+		return UserMapper.loginCheck(uid, upw);
+	}
+
 	@Override
 	public void insert(UserVO vo) {
 		UserMapper.insert(vo);
@@ -38,6 +48,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void update(UserVO vo) {
 		UserMapper.update(vo);
+	}
+
+	@Override
+	public long getLastNum() {
+		long result = UserMapper.lastUserNum();
+
+		return result;
 	}
 	
 }
