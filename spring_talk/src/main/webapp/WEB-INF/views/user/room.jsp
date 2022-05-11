@@ -12,6 +12,8 @@
 	<header class="justify-content-center">
 	${user.user_id}<br/>
 	${user.user_name}' Room
+	<button id="follow">팔로</button>
+	<button id="ban">응 차단~</button>
 	</header>
 	<hr/>
 	
@@ -52,6 +54,49 @@
 		});
 	 }
 	 more();
+	 
+	 let login_id = '${sessionScope.user_id}';
+	 $("#follow").on("click", function(){
+			$.ajax({
+				type : 'post',
+				url : '/user/follow',
+				headers : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "POST"
+				},
+				dataType : 'text',
+				data : JSON.stringify({
+					follower : login_id, // 로그인 아이디
+					followed : user_id, // 팔로우할 아이디
+					favorite : 'N'
+				}),
+				success : function(result){
+					if(result == 'OK'){
+					}
+				}
+			});
+		});
+	 
+	 $("#ban").on("click", function(){
+			$.ajax({
+				type : 'post',
+				url : '/user/ban',
+				headers : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "POST"
+				},
+				dataType : 'text',
+				data : JSON.stringify({
+					user_id : login_id, // 로그인 아이디
+					ban_id : user_id // 차단할 아이디
+				}),
+				success : function(result){
+					if(result == 'OK'){
+					}
+				}
+			});
+		});
+	 
 	 
 	 </script>
 	
