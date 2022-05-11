@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostLikeVO;
@@ -103,8 +104,8 @@ public class PostController {
 	}
 	
 	// 뉴스피드 비동기 로드
+	@ResponseBody
 	@GetMapping(value="/newsfeed", produces= {
-//			아래꺼 있으면 xml 형식으로 떠서 걍 지워버림
 //			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public ResponseEntity<List<PostVO>>list(Criteria cri){
@@ -147,7 +148,23 @@ public class PostController {
 	}
 	
 	
-	// LikeService 비동기
+	// LikeService 비동기	
+	
+	// 좋아요 확인
+	@ResponseBody
+	@PostMapping(value="/islike", consumes="application/json", produces= {
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<String> islike(@RequestBody PostLikeVO vo){
+		ResponseEntity<String> entity= null;
+		try {
+			entity = new ResponseEntity<>(likeService.islike(vo), HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
 	
 	// 좋아요
 	@PostMapping(value="/like", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
@@ -161,20 +178,6 @@ public class PostController {
 		}
 		return entity;
 	}
-
-	// 좋아요 취소
-	@PostMapping(value="/unlike", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity <String> unlike(@RequestBody PostLikeVO vo){
-		ResponseEntity<String> entity= null;
-		try {
-			likeService.unlike(vo);
-			entity = new ResponseEntity<String>("OK", HttpStatus.OK);
-		}catch(Exception e) {
-			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-		}
-		return entity;
-	}
-	
 	
 }
 

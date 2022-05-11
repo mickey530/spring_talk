@@ -12,20 +12,19 @@
 <body>
 	<div class="container" >
 	
-		
+		${postvo }
 	
-		<h1>게시글 신고번호 - ${post.report_post_num }번 신고내역</h1>
+		<h1>${post.report_post_num }번 게시물 신고내역</h1>
 		<div class="row">
 			<div class="col-md-3">
-				<input type="text" class="form-control" value="신고자: ${sessionScope.user_id }" readonly />
+				<input type="text" class="form-control" value="신고자: ${post.report_id }" readonly />
 			</div>
 		</div>
 		<textarea readonly rows="10" class="form-control">사유 : ${post.report_reason }</textarea>
 		
-		<c:if test="${sessionScope.user_id eq post.report_id }">
-			<a href="/report/reportPostDelete/${post.report_post_num }" class="btn btn-danger">삭제하기</a>	
-		</c:if>
+			<a href="/report/reportPostDelete/${post.report_pnum }" class="btn btn-danger">신고내역 삭제</a>		
 			<a href="/report/reportPostList" class="btn btn-dark">게시글 신고목록</a>
+			<a href="/post/delete/{report_post_num}" class="btn btn-danger">게시글 삭제</a>
 	</div>
 </body>
 </html>
