@@ -23,9 +23,11 @@ public class ReplyServiceImpl implements ReplyService {
 		return mapper.getList(board_num);
 	}
 
+
 	@Override
 	public void addReply(ReplyVO vo) {
 		mapper.create(vo);
+		postmapper.updateReplyCount(vo.getPost_num(), 1);
 		
 	}
 

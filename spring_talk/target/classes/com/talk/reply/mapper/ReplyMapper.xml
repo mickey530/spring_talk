@@ -44,5 +44,10 @@
 		<select  id ="select" resultType="com.talk.reply.domain.ReplyVO">
 		SELECT * FROM reply WHERE reply_num = #{reply_num}
 		</select>
+		
+		<delete id="deleteAllReplies">
+			delete from reply_tbl
+				WHERE post_num = #{post_num}
+		</delete>
 
 	</mapper>
