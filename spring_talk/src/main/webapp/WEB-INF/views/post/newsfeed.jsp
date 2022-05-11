@@ -87,7 +87,7 @@ summary > p {
 			$(data).each(
 				function() {
 					post += "<p data-post_num='" + this.post_num + "' class='post'>"
-						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | " + this.writer + " <br/> " + this.title + " <br/> " + this.content
+						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | " + this.writer + " <br/> " + this.title + " <br/> " + this.content + "<br/>" + this.replycount +
 						+ "</p><hr/>";
 
 				});

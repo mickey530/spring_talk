@@ -14,9 +14,9 @@
 		
 		<insert id="create">
 			INSERT INTO reply
-			(reply_num, post_num, reply_content, reply_id, parent_num, reply_level)
+			(reply_num, post_num, reply_content, reply_id)
 				VALUES
-			(reply_num.nextval, #{post_num}, #{reply_content}, #{reply_id}, #{parent_num}, #{reply_level})	
+			(reply_num.nextval, #{post_num}, #{reply_content}, #{reply_id})	
 		</insert>
 		
 		<update id="update">
