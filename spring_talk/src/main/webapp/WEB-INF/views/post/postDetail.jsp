@@ -250,7 +250,7 @@ $("#btn").click(function(){
 	 
 	 
 	 // 답글달기
-	 <div class ="collapse" id="reply"
+
 	 
 	 
 	 

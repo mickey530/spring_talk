@@ -4,17 +4,22 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostVO;
 import com.talk.post.domain.UserCriteria;
 import com.talk.post.mapper.PostMapper;
+import com.talk.reply.mapper.ReplyMapper;
 
 @Service
 public class PostServiceImpl implements PostService{
 
 	@Autowired
 	private PostMapper postMapper;
+	
+	@Autowired
+	private ReplyMapper replyMapper;
 	
 	@Override
 	public void insert(PostVO vo) {
@@ -26,8 +31,10 @@ public class PostServiceImpl implements PostService{
 		return postMapper.select(post_num);
 	}
 
+	@Transactional
 	@Override
 	public void delete(long post_num) {
+		replyMapper.deleteAllReplies(post_num);
 		postMapper.delete(post_num);
 	}
 
@@ -45,5 +52,6 @@ public class PostServiceImpl implements PostService{
 	public List<PostVO> getUserPost(UserCriteria cri) {
 		return postMapper.getUserPost(cri);
 	}
+	
 
 }

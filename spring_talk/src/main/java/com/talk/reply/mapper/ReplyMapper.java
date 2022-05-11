@@ -21,4 +21,6 @@ public interface ReplyMapper {
 	
 	public ReplyVO select(long reply_num);
 	
+	public void deleteAllReplies(Long post_num);
+	
 }
