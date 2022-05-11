@@ -12,7 +12,6 @@ import com.talk.post.domain.UserCriteria;
 import com.talk.post.mapper.PostMapper;
 import com.talk.reply.mapper.ReplyMapper;
 
-
 @Service
 public class PostServiceImpl implements PostService{
 
@@ -35,7 +34,7 @@ public class PostServiceImpl implements PostService{
 	@Transactional
 	@Override
 	public void delete(long post_num) {
-		replyMapper.deleteAll(post_num);
+		replyMapper.deleteAllReplies(post_num);
 		postMapper.delete(post_num);
 	}
 
@@ -53,5 +52,6 @@ public class PostServiceImpl implements PostService{
 	public List<PostVO> getUserPost(UserCriteria cri) {
 		return postMapper.getUserPost(cri);
 	}
+	
 
 }
