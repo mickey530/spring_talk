@@ -52,9 +52,12 @@ background-color: transparent;}
 		<c:if test="${sessionScope.user_id ne null}">
 			<button class="btn btn-outline-danger" id="postLike">좋아요</button>
 		</c:if>
+		<c:if test="${sessionScope.user_id eq post.writer}">
+			<a href="/post/updateForm/${post.post_num}" class="btn">수정</a>
+			<a href="/post/delete/${post.post_num}" class="btn">삭제</a>
+		</c:if>
+		<a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>
 		
-		<a href="/post/updateForm/${post.post_num}" class="btn">수정</a>
-		<a href="/post/delete/${post.post_num}" class="btn">삭제</a>
 	</div>
 </div>
 
@@ -263,10 +266,7 @@ background-color: transparent;}
 	 
 	 
 	 
-	 
-	 // 답글달기
-	 <div class ="collapse" id="reply"
-	 
+
 	 
 	 
 	 </script>
