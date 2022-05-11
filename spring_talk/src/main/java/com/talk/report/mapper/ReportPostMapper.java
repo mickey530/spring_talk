@@ -2,7 +2,6 @@ package com.talk.report.mapper;
 
 import java.util.List;
 
-import com.talk.post.domain.PostVO;
 import com.talk.report.domain.ReportPostVO;
 
 public interface ReportPostMapper {
