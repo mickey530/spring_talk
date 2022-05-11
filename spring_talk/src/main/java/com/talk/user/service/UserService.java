@@ -18,7 +18,7 @@ public interface UserService {
 	
 	public void insert(UserVO vo);
 	
-	public void insert(UserVO vo, String auth);
+	public void insert(UserVO vo, String[] auth);
 
 	public void delete(String user_id);
 	

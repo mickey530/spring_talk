@@ -21,6 +21,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler{
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
+		System.out.println("onAuthenticationSuccess");
 		List<String> authList = new ArrayList<String>();
 		
 		for(GrantedAuthority ga : authentication.getAuthorities()) {

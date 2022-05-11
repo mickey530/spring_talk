@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- 위쪽에는 마이바티스에서 사용할 xml파일임을 명시
-아래쪽 mapper태그의 namespace에 어떤 인터페이스와 연동할지 패키지부터 다 적음 -->
 <mapper namespace="com.talk.user.mapper.AuthMapper">
 	<resultMap type="com.talk.user.domain.UserAuthVO" id="userAuthMap">
 
@@ -31,10 +29,21 @@
 				where u.user_id= #{userId}
 	</select>
 	
+	<select id="getAllUserAuth" resultMap="userAuthMap">
+		SELECT u.user_id, a.authority
+				from
+				user_info u left outer join user_auth a on u.user_id = a.user_id
+	</select>
+	
 	<insert id="insert">
 		insert into user_auth
 			values (#{user_id}, #{user_auth})
 	</insert>
+	
+	<delete id="deleteAll">
+		delete from user_auth
+			where (user_id = #{user_id})
+	</delete>
 	
 	<delete id="delete">
 		delete from user_auth

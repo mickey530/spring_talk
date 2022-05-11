@@ -127,10 +127,10 @@
 		 
 		$.ajax({
 			type : 'post', 
-			url : '/user/ban/${userInfo.user_id}',
+			url : '/user/ban',
 			header : {
 				"Content-Type" : "application/json",
-				"X-HTTP-Method-Override" : "PATCH" 
+				"X-HTTP-Method-Override" : "post" 
 			},	
 			contentType:"application/json", // json 자료를 추가로 입력받기 때문에
 			data: JSON.stringify(jsonData),
@@ -155,10 +155,10 @@
 		 
 		$.ajax({
 			type : 'post', 
-			url : '/user/follow/${userInfo.user_id}',
+			url : '/user/follow',
 			header : {
 				"Content-Type" : "application/json",
-				"X-HTTP-Method-Override" : "PATCH" 
+				"X-HTTP-Method-Override" : "post" 
 			},	
 			contentType:"application/json", // json 자료를 추가로 입력받기 때문에
 			data: JSON.stringify(jsonData),
@@ -168,7 +168,8 @@
 				if(result == 'FOLLOW SUCCESS' || result == 'UNFOLLOW SUCCESS'){
 					getAllData();
 				}
-			}
+			},
+			
 		});
 	 });
 	

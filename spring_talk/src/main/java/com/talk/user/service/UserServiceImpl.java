@@ -43,7 +43,13 @@ public class UserServiceImpl implements UserService {
 		System.out.println("loginCheck uid : " + uid);
 		System.out.println("loginCheck upw : " + upw);
 		
-		String encodedPW = UserMapper.getUserById(uid).getUser_pw();
+		UserVO user = UserMapper.getUserById(uid);
+		
+		if(user == null) {
+			return null;
+		}
+		
+		String encodedPW = user.getUser_pw();
 
 		System.out.println("loginCheck upw : " + upw);
 		
@@ -59,23 +65,31 @@ public class UserServiceImpl implements UserService {
 // 권한이 따로 주어지 않았을 때
 	@Override 
 	public void insert(UserVO vo) {
-		insert(vo,"ROLE_ALL");
+		String [] default_auth = {"ROLE_ALL"};
+		insert(vo,default_auth);
 	}
 	
 // 권한이 따로 주어질 때
 	@Override
-	public void insert(UserVO vo, String auth) {
+	public void insert(UserVO vo, String[] auths) {
 		String originPW = vo.getUser_pw();
 		String encodedPW = pwEncode.encode(originPW);
 		vo.setUser_pw(encodedPW);
 		System.out.println("VO insert");
 		System.out.println(vo.toString());
 		UserMapper.insert(vo);
-		authMapper.insert(vo.getUser_id(), auth);
+		for(String auth : auths) {
+			String user_id = vo.getUser_id();
+
+			System.out.println("auth : " + auth);
+			authMapper.insert(user_id, auth);
+		}
 	}
 
 	@Override
 	public void delete(String user_id) {
+
+		authMapper.deleteAll(user_id);
 		UserMapper.delete(user_id);
 	}
 

@@ -53,7 +53,7 @@ public class OracleSecurityConnection {
 				
 				log.info("users getFetchSize  : " + rsmd.getColumnCount());;
 				
-				for(int index = 1 ; index <= rsmd.getColumnCount(); index++) {
+				for(int index = 1 ; index < rsmd.getColumnCount(); index++) {
 
 					log.info("object "+ index +" : " + rs.getObject(index));;
 				}

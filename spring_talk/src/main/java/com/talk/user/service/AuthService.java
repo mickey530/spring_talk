@@ -2,12 +2,12 @@ package com.talk.user.service;
 
 import java.util.List;
 
-import com.talk.user.domain.BanVO;
+import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.UserAuthVO;
 
 public interface AuthService {
 	
-	public List<UserAuthVO> userAuthList(String user_id);
+	public List<AuthVO>  userAuthList(String user_id);
 
 	public List<UserAuthVO> readAllAuthList();
 

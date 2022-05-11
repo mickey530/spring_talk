@@ -179,6 +179,11 @@ public class UserController {
 	}
 
 	@GetMapping(value="/loginForm")
+	public String loginForm() {
+		return "/user/loginForm";
+	}
+
+	@GetMapping(value="/login")
 	public String login() {
 		return "/user/loginForm";
 	}
@@ -206,7 +211,13 @@ public class UserController {
 	}
 	
 	@GetMapping(value="/logout")
-	public String logout(HttpSession session) {
+	public String logoutGet() {
+
+		return "user/logoutForm";
+	}
+	
+	@PostMapping(value="/logout")
+	public String logoutPost(HttpSession session) {
 
 
 		session.invalidate(); 
@@ -290,11 +301,11 @@ public class UserController {
 		return entity;
 	}
 	
-	// insert follow
-	@PostMapping(value="/follow/{user_id}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	// insert & delete follow
+	@PostMapping(value="/follow", consumes="application/json", produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public ResponseEntity <String> insertFollow(@RequestBody FollowVO vo){
 		ResponseEntity<String> entity= null;
-		System.out.println("insertBan : " + vo.getFollower());
+		System.out.println("insertFollow : " + vo.getFollower());
 		System.out.println(vo.toString());
 		try {
 			followService.insert(vo);
@@ -315,8 +326,8 @@ public class UserController {
 		return entity;
 	}
 	
-	// insert ban
-	@PostMapping(value="/ban/{user_id}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	// insert & delete ban
+	@PostMapping(value="/ban", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity <String> insertBan(@RequestBody BanVO vo){
 		ResponseEntity<String> entity= null;
 		System.out.println("insertBan : " + vo.getUser_id());

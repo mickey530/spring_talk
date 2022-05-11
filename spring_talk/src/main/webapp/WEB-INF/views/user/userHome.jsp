@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
@@ -7,7 +9,36 @@
 Get All Users</title>
 </head>
 <body>
-			     	    
+
+	<sec:authorize access="isAnonymous()">	
+			<h1>
+				익명
+			</h1>
+	</sec:authorize>
+
+	<sec:authorize access="isAuthenticated()">
+			<h1>
+				인증된
+			</h1>
+	</sec:authorize>
+
+	<sec:authorize access="hasRole('ROLE_ALL')">
+			<h1>
+				평시의 권한
+			</h1>
+	</sec:authorize>
+
+	<sec:authorize access="hasRole('ROLE_MEMBER')">
+			<h1>
+				매니저의 권한
+			</h1>
+	</sec:authorize>
+
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+			<h1>
+				관리자의 권한
+			</h1>
+	</sec:authorize>
 			
 <table border="1" class="table">
 

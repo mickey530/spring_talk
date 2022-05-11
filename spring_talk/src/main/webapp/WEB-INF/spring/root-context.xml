@@ -45,6 +45,9 @@
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>	
 	
+	<bean id="bcryptPasswordEncoder" 
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+		
 	<mybatis-spring:scan base-package="com.talk.user.mapper"/>
 	<mybatis-spring:scan base-package="com.talk.post.mapper"/>
 	<mybatis-spring:scan base-package="com.talk.reply.mapper"/>
