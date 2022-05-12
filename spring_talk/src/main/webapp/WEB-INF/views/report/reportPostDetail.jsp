@@ -23,8 +23,8 @@
 		<textarea readonly rows="10" class="form-control">사유 : ${post.report_reason }</textarea>
 		
 			<a href="/report/reportPostDelete/${post.report_pnum }" class="btn btn-danger">신고내역 삭제</a>		
-			<a href="/report/reportPostList" class="btn btn-dark">게시글 신고목록</a>
-			<a href="/post/delete/{report_post_num}" class="btn btn-danger">게시글 삭제</a>
+			<a href="/report/reportPostList" class="btn btn-dark">게시물 신고목록</a>
+			<a href="/post/delete/${postvo.post_num }" class="btn btn-danger">해당 게시물 삭제</a>
 	</div>
 </body>
 </html>
