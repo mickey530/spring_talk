@@ -195,8 +195,13 @@ background-color:#ffffff;
 						getAllList();
 						refresh();
 					}
-				}
+					
+				},
 				/* error도 설정 가능 */
+				error: function(){
+					alert("error")
+				}
+				
 			});
 			
 		});
