@@ -13,8 +13,17 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <style>
 *{margin: 0;padding: 0;list-style: none;;}
+body{
+	width:100%;
+	height:100vh;
+}
 
 #modDiv{width: 100%;max-width: 600px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
 margin: 0 auto;
 padding:10px;
 box-sizing: border-box;
@@ -84,15 +93,14 @@ background-color: transparent;}
 	
 	<!-- 모달창 -->
 	<div id="modDiv" style="display:none;">
-		<div class ="modal-title">
+		<div class="modal-title modalArea">
 		</div>
 		
-		<div class="btn_content">
-			<button type="button" id="reReplyBtn">답글달기</button>
-			<button type="button" id="btn">수정</button>
-			<button type="button" id="replyDelBtn">삭제</button>
-			<button type="button" id="replyModBtn">저장</button>
-			<button type="button" id="closeBtn">닫기</button>	
+		<div class="btn_content modalArea">
+			<button type="button" id="reReplyBtn" class="modalArea">답글달기</button>
+			<button type="button" id="btn" class="modalArea">수정</button>
+			<button type="button" id="replyDelBtn" class="modalArea">삭제</button>
+			<button type="button" onclick="closeModal()" class="modalArea">닫기</button>	
 			
 			
 		</div>
@@ -131,11 +139,8 @@ background-color: transparent;}
 					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong>@"
 						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
 						+ "<div class='reply_content'>" + this.reply_content + "</div>"
-						+ "<button type='button' class='btn btn-info'>수정/삭제</button>"
-						
-						+ "</div>";
-					+ "<button type='button' class='replyModBtn btn-info'>저장</button>"
-						
+						+ "<button type='button' class='btn btn-info modalBtn modalArea'>수정/삭제</button>"
+						+ "</div>";						
 						
 						
 						
@@ -187,7 +192,9 @@ background-color: transparent;}
 	 	let select = "";
 	 	
 	// 이벤트 위임
-	 $("#replies").on("click", " button", function(){
+	 let modalArea = false; // 모달 열려있는지 확인
+
+	 $("#replies").on("click", ".modalBtn", function(){
 		let replytag=$(this).parent();
 	 	console.log(replytag);
 		
@@ -200,15 +207,25 @@ background-color: transparent;}
 		$(".modal-title").html(reply_num);
 		$("#reply").val(reply_content);
 		$("#modDiv").show("slow");
+		modalArea = true; // 모달 열려있음
+		if(modalArea){
+			$('html').click(function(e) {
+				if(!$(e.target).hasClass("modalArea")) {
+					closeModal();
+					}
+				});		 
+		 }
 		
 		// select 에 저장 //////////////////////
 		select = $(this).siblings(".reply_content");
 	 });
 	
-	 // 닫기
-	 $("#closeBtn").on("click", function(){
+	 // 모달 닫기
+	 function closeModal(){
 		 $("#modDiv").hide("slow");
-	 });
+		 modalArea = false;
+		 console.log("근데 이게 자꾸 찍힘;;")
+	 };
 	 
 	 // 삭제
 	 $("#replyDelBtn").on("click", function(){
@@ -234,12 +251,18 @@ background-color: transparent;}
 	 
 	 // 수정버튼
 	 $("#btn").click(function(){
-			let input = "<input type='text' class='reply' value='"+ select.html() +"'>"
-			select.html(input);
+			closeModal();
+			$(".modalBtn").toggleClass("modalBtn");
+			let replyText = select.html();
+			let input = "<input type='text' class='reply' value='"+ replyText +"'>"
+			let modify = "<button type='button' onclick='replyMod()'>저장</button>";
+
+			select.html(input + modify);
 		})
 		
 	 // 수정사항 저장 버튼
-	 $("#replyModBtn").on("click", function(){
+	 function replyMod(){
+		$(".modalBtn").toggleClass("modalBtn");
 		let reply_num = $(".modal-title").html();
 		let reply_content = $(".reply").val();
 		$.ajax({
@@ -256,15 +279,13 @@ background-color: transparent;}
 				console.log("result: " + result);
 				if(result == 'SUCCESS'){
 					alert("수정되었습니다.");
-					$("#modDiv").hide("slow");
 					getAllList(); //수정된 댓글 반영한 새 댓글목록 갱신
 				}
 			}
 		});
-	 });
+	 };
 	 
-	 
-	 
+
 	 
 
 	 
