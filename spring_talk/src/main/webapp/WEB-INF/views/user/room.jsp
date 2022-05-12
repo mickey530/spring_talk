@@ -7,15 +7,21 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	body {width:100%;}
+	.container{width : 100%}
+</style>
 </head>
 <body>
 	<header class="justify-content-center">
 	${user.user_id}<br/>
 	${user.user_name}' Room
+	<button id="follow">팔로</button>
+	<button id="ban">응 차단~</button>
 	</header>
 	<hr/>
 	
-	<div class="container">
+	<div class="container m-1">
 		<div class="post row">
 
 		</div>
@@ -52,6 +58,54 @@
 		});
 	 }
 	 more();
+	 
+	 // 팔로우 숫자
+	 
+	 
+	 
+	 // 팔로우 기능
+	 let login_id = '${sessionScope.user_id}';
+	 $("#follow").on("click", function(){
+			$.ajax({
+				type : 'post',
+				url : '/user/follow',
+				headers : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "POST"
+				},
+				dataType : 'text',
+				data : JSON.stringify({
+					follower : login_id, // 로그인 아이디
+					followed : user_id, // 팔로우할 아이디
+					favorite : 'N'
+				}),
+				success : function(result){
+					if(result == 'OK'){
+					}
+				}
+			});
+		});
+	 // 밴 기능
+	 $("#ban").on("click", function(){
+			$.ajax({
+				type : 'post',
+				url : '/user/ban',
+				headers : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "POST"
+				},
+				dataType : 'text',
+				data : JSON.stringify({
+					user_id : login_id, // 로그인 아이디
+					ban_id : user_id // 차단할 아이디
+				}),
+				success : function(result){
+					if(result == 'OK'){
+					}
+				}
+			});
+		});
+	 
 	 
 	 </script>
 	

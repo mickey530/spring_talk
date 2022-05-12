@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostVO;
 import com.talk.post.domain.UserCriteria;
+import com.talk.post.mapper.PostLikeMapper;
 import com.talk.post.mapper.PostMapper;
 import com.talk.reply.mapper.ReplyMapper;
 
@@ -21,6 +22,9 @@ public class PostServiceImpl implements PostService{
 	@Autowired
 	private ReplyMapper replyMapper;
 	
+	@Autowired
+	private PostLikeMapper postLikeMapper;
+
 	@Override
 	public void insert(PostVO vo) {
 		postMapper.insert(vo);
