@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script src="http://code.jquery.com/jquery-latest.js"></script> 
+
 <html>
 <head>
 	<title>Home</title>
@@ -77,6 +78,8 @@
 		
 		
 	<script>
+	var _csrf = '${_csrf.token}';
+	var _csrf_header = '${_csrf.headerName}';
 
 	// 팔로우 정보 가져오기
 	function getFollow(){
@@ -132,6 +135,9 @@
 				"Content-Type" : "application/json",
 				"X-HTTP-Method-Override" : "post" 
 			},	
+		    beforeSend: function(xhr){
+		        xhr.setRequestHeader(_csrf_header, _csrf);
+		    },
 			contentType:"application/json", // json 자료를 추가로 입력받기 때문에
 			data: JSON.stringify(jsonData),
 			dataType : 'text',
@@ -144,7 +150,7 @@
 		});
 	 });
 
-	 // 밴 업데이트 버튼
+	 // 팔로우 업데이트 버튼
 	 $("#followBtn").on("click", function(){
 		
 		var jsonData = {
@@ -163,6 +169,9 @@
 			contentType:"application/json", // json 자료를 추가로 입력받기 때문에
 			data: JSON.stringify(jsonData),
 			dataType : 'text',
+		    beforeSend: function(xhr){
+		        xhr.setRequestHeader(_csrf_header, _csrf);
+		    },
 			success : function(result){
 				console.log("result: " + result);
 				if(result == 'FOLLOW SUCCESS' || result == 'UNFOLLOW SUCCESS'){

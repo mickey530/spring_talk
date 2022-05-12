@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,15 +16,39 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import com.talk.user.domain.SecurityUser;
+import com.talk.user.domain.UserVO;
+import com.talk.user.mapper.AuthMapper;
+import com.talk.user.mapper.UserMapper;
+
 import lombok.extern.log4j.Log4j;
 
 
 @Log4j
-public class CustomUserDetailsService implements UserDetailsService{@Override
+public class CustomUserDetailsService implements UserDetailsService{
+
+	@Autowired
+	AuthMapper authmapper;
+	
+	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	
 		System.out.println("username : " + username);
-		return null;
+
+		UserVO vo = authmapper.getUserAuth(username);
+		
+		System.out.println("user info : " + vo.toString());
+		
+		SecurityUser su;
+		if(vo == null) {
+			System.out.println("vo == null");
+			su= null;
+		} else {
+			System.out.println("vo != null");
+			su= new SecurityUser(vo);
+		}
+		
+		return su;
 	}
 	
 

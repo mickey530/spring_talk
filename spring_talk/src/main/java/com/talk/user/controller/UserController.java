@@ -1,5 +1,6 @@
 package com.talk.user.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,9 +22,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
 import com.talk.user.domain.UserVO;
+import com.talk.user.mapper.AuthMapper;
+import com.talk.user.service.AuthService;
 import com.talk.user.service.BanService;
 import com.talk.user.service.BanServiceImpl;
 import com.talk.user.service.FollowService;
@@ -48,6 +52,9 @@ public class UserController {
 	
 	@Autowired
 	private FollowService followService;
+	
+	@Autowired
+	private AuthService authService;
 	
 	//user단
 	
@@ -128,7 +135,7 @@ public class UserController {
 		return "/user/deleteForm";
 	}
 	
-	@GetMapping(value="/deleteUser")
+	@PostMapping(value="/delete")
 	public String deleteUser(
 			String uid, String upw,
 			HttpSession session) {
@@ -137,13 +144,16 @@ public class UserController {
 		// 이 값이 null이면 아이디나 비밀번호가 맞지 않다는 것이므로 회원탈퇴 처리하지 않음
 		
 		if(userInfo != null) {//구분해서 처리 예정
-			
+
+			authService.deleteAll(uid);
 			userService.delete(uid);
-			
+
+			System.out.println("delete 성공");
 			session.invalidate();
 			return "redirect:/user/";
 		}
 		else {//실패시 실패했다는 메시지를 띄우도록
+			System.out.println("delete 실패");
 			return "redirect:/user/";
 		}
 		
@@ -154,16 +164,29 @@ public class UserController {
 		return "/user/insertForm";
 	}
 	
-	@GetMapping(value="/insertUser")
-	public String insertUser(UserVO vo,
+	@PostMapping(value="/insert")
+	public String insertUser(UserVO vo,String[] roles,
 			HttpSession session) throws DataIntegrityViolationException{
-		
+
 		System.out.println("user_id : " + vo.getUser_id()); 
-		System.out.println("user_name : " + vo.getUser_name()); 
+		System.out.println("user_name : " + vo.getUser_name());
+
+		List<AuthVO> authList = new ArrayList<AuthVO>();
+		for(String role : roles) {
+			AuthVO auth = new AuthVO();
+			auth.setUser_id(vo.getUser_id());
+			auth.setAuthority(role);
+			authList.add(auth);
+			
+			System.out.println("authList = " + auth.toString());
+		}
 		
+		UserVO uavo = vo;
+		uavo.setAvos(authList);
 		
 		try {
-			userService.insert(vo);
+			userService.insert(uavo);
+			
 			session.setAttribute("user_id", vo.getUser_id()); 
 			session.setAttribute("user_name", vo.getUser_name()); 
 			return "redirect:/user/userInfo/" + vo.getUser_id();
@@ -178,20 +201,24 @@ public class UserController {
 
 	}
 
-	@GetMapping(value="/loginForm")
-	public String loginForm() {
-		return "/user/loginForm";
-	}
-
 	@GetMapping(value="/login")
-	public String login() {
-		return "/user/loginForm";
+	public void login(String error, String logout, Model model) {
+		System.out.println("error 여부 : " + error);
+		System.out.println("logout 여부 : " + logout);
+		
+		if(error != null) {
+			model.addAttribute("error", "로그인 관련 에러입니다. 계정확인을 다시 해 주세요.");
+		}
+		if(logout != null) {
+			model.addAttribute("logout", "로그아웃 했습니다.");
+		}	
 	}
 
 	@PostMapping(value="/login")
-	public String loginUser(
+	public void loginUser(
 			String uid, String upw,
 			HttpSession session) {
+		System.out.println("login post ");
 		System.out.println("uid : " + uid);
 		System.out.println("upw : " + upw);
 
@@ -203,11 +230,11 @@ public class UserController {
 			session.setAttribute("user_name", userInfo.getUser_name()); 
 			System.out.println("로그인 성공");
 			
-			return "redirect:/user/";
+			return ;
 		}
 
 		System.out.println("로그인 실패");
-		return "redirect:/user/";
+		return;
 	}
 	
 	@GetMapping(value="/logout")

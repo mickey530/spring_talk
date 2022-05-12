@@ -16,16 +16,28 @@ public class SecurityController {
 
 	@GetMapping("/all")
 	public void doAll() {
-		log.info("doAll");
+		System.out.println("doAll");
 	}
 	
 	@GetMapping("/member")
 	public void doMember() {
-		log.info("doMember");
+		System.out.println("doMember");
 	}
 	
 	@GetMapping("/admin")
 	public void doAdmin() {
-		log.info("doAdmin");
+		System.out.println("doAdmin");
 	}
+
+	@GetMapping("/login")
+	public void login() {
+		System.out.println("login");
+	}
+
+
+	@GetMapping("/logout")
+	public void logout() {
+		System.out.println("logout");
+	}
+	
 }

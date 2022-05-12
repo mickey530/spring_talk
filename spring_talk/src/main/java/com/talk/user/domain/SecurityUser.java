@@ -14,16 +14,18 @@ public class SecurityUser extends User {
 
 	private static final long serialVersionUID = 1L;
 	
-	private UserAuthVO member;
+	private UserVO user;
 	
-	public SecurityUser(String username, String password, Collection<? extends GrantedAuthority> auth) {
+	public SecurityUser(String username, String password, 
+			Collection<? extends GrantedAuthority> auth) {
 		super(username, password, auth);
 	}
 
-	public SecurityUser(UserAuthVO vo) {
-		super(vo.getUvo().getUser_id(), vo.getUvo().getUser_pw(), vo.getAvos().stream().map(author ->
+	public SecurityUser(UserVO vo) {
+		super(vo.getUser_id(), vo.getUser_pw(), 
+				vo.getAvos().stream().map(author ->
 						new SimpleGrantedAuthority(author.getAuthority()))
 						.collect(Collectors.toList()));
-		this.member = vo;
+		this.user = vo;
 	}
 }

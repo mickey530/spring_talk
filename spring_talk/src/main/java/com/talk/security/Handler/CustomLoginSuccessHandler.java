@@ -26,7 +26,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler{
 		
 		for(GrantedAuthority ga : authentication.getAuthorities()) {
 			authList.add(ga.getAuthority());
-			System.out.println("CustomLoginSuccessHandler" + ga.getAuthority());
+			System.out.println("CustomLoginSuccessHandler : " + ga.getAuthority());
 		}
 		
 		if(authList.contains("ROLE_ADMIN")) {
@@ -36,6 +36,11 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler{
 		
 		if(authList.contains("ROLE_MEMBER")) {
 			response.sendRedirect("secu/member");
+			return;
+		}
+		
+		if(authList.contains("ROLE_ALL")) {
+			response.sendRedirect("user/userInfo");
 			return;
 		}
 	}

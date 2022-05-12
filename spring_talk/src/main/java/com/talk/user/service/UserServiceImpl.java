@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.UserVO;
 import com.talk.user.mapper.AuthMapper;
 import com.talk.user.mapper.UserMapper;
@@ -40,8 +41,8 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public UserVO loginCheck(String uid, String upw) {
-		System.out.println("loginCheck uid : " + uid);
-		System.out.println("loginCheck upw : " + upw);
+		System.out.println("UserService loginCheck uid : " + uid);
+		System.out.println("UserService loginCheck upw : " + upw);
 		
 		UserVO user = UserMapper.getUserById(uid);
 		
@@ -51,39 +52,40 @@ public class UserServiceImpl implements UserService {
 		
 		String encodedPW = user.getUser_pw();
 
-		System.out.println("loginCheck upw : " + upw);
+		System.out.println("UserService loginCheck upw : " + upw);
 		
 		if(pwEncode.matches(upw, encodedPW)) {
-			return UserMapper.getUserById(uid);
+			System.out.println("UserService pwEncode.matches");
+			return user;
 		}
 		else {
+			upw= pwEncode.encode(upw);
+			System.out.println("UserService loginCheck upw : " + upw);
+			System.out.println("UserService loginCheck encodedPW : " + encodedPW);
+			
+
+			System.out.println("일치? : " + (upw.equals(encodedPW)));
 			return null;
 		}
 	}
 
-
-// 권한이 따로 주어지 않았을 때
-	@Override 
-	public void insert(UserVO vo) {
-		String [] default_auth = {"ROLE_ALL"};
-		insert(vo,default_auth);
-	}
 	
 // 권한이 따로 주어질 때
 	@Override
-	public void insert(UserVO vo, String[] auths) {
+	public void insert(UserVO vo) {
 		String originPW = vo.getUser_pw();
 		String encodedPW = pwEncode.encode(originPW);
 		vo.setUser_pw(encodedPW);
 		System.out.println("VO insert");
 		System.out.println(vo.toString());
 		UserMapper.insert(vo);
-		for(String auth : auths) {
-			String user_id = vo.getUser_id();
+		
 
-			System.out.println("auth : " + auth);
-			authMapper.insert(user_id, auth);
+		for(AuthVO auth : vo.getAvos()) {
+			System.out.println("insert auth : " + auth);
 		}
+		
+		authMapper.insertAuth(vo);
 	}
 
 	@Override

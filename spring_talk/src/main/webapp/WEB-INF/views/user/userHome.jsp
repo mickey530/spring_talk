@@ -64,7 +64,7 @@ Get All Users</title>
 			<tbody>
 			
 					<tr>
-						<td><button onclick="location.href='/user/loginForm'">로그인</button></td>
+						<td><button onclick="location.href='/user/login'">로그인</button></td>
 						<td><button onclick="location.href='/user/insert'">회원가입</button></td>
 					</tr>
 			</tbody>
