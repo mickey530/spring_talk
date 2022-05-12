@@ -25,4 +25,21 @@
 			SELECT * FROM post_report WHERE report_pnum = #{report_pnum}
 		</select>
 		
+		<!-- 
+			<resultMap type="com.talk.report.domain.ReportPostVO" id="reportpostMap">
+				<id property="reportId" column="report_id"/>
+				<result property="reportId" column="report_id"/>
+				<result property="reportPnum" column="report_pnum"/>
+				<result property="reportpostDate" column="report_post_date"/>
+				<result property="reportpostNum" column="report_post_num"/>
+				<result property="reportReason" column="report_reason"/>
+				<collection property="" resultMap=""></collection>
+			</resultMap>
+			
+			<resultMap type="com.ict.domain.AuthVO" id="authMap">
+				<result property="userId" column="userid"/>
+				<result property="auth" column="auth"/>
+			</resultMap>
+		-->
+		
 	</mapper>

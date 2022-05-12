@@ -207,8 +207,6 @@ public class ReportController {
 		PostVO postvo = postService.select(report_post_num);
 		model.addAttribute("postvo", postvo);
 		
-		postService.delete(report_post_num);
-		
 		return "report/reportPostDetail";
 	} 
 
@@ -222,8 +220,6 @@ public class ReportController {
 
 		ReplyVO replyvo = replyService.getselect(report_reply_num);
 		model.addAttribute("replyvo", replyvo);
-		
-		replyService.removeReply(report_reply_num);
 		
 		return "report/reportReplyDetail";
 	}
