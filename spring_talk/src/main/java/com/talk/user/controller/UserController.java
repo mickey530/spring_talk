@@ -279,7 +279,7 @@ public class UserController {
 	}
 	
 	// insert follow
-	@PostMapping(value="/follow/{user_id}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	@PostMapping(value="/follow", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity <String> insertFollow(@RequestBody FollowVO vo){
 		ResponseEntity<String> entity= null;
 		try {
@@ -292,7 +292,7 @@ public class UserController {
 	}
 	
 	// insert ban
-	@PostMapping(value="/ban/{user_id}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	@PostMapping(value="/ban", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity <String> insertBan(@RequestBody BanVO vo){
 		ResponseEntity<String> entity= null;
 		System.out.println("insertBan : " + vo.getUser_id());

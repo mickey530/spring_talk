@@ -7,6 +7,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	body {width:100%;}
+	.container{width : 100%}
+</style>
 </head>
 <body>
 	<header class="justify-content-center">
@@ -17,7 +21,7 @@
 	</header>
 	<hr/>
 	
-	<div class="container">
+	<div class="container m-1">
 		<div class="post row">
 
 		</div>
@@ -55,6 +59,11 @@
 	 }
 	 more();
 	 
+	 // 팔로우 숫자
+	 
+	 
+	 
+	 // 팔로우 기능
 	 let login_id = '${sessionScope.user_id}';
 	 $("#follow").on("click", function(){
 			$.ajax({
@@ -76,7 +85,7 @@
 				}
 			});
 		});
-	 
+	 // 밴 기능
 	 $("#ban").on("click", function(){
 			$.ajax({
 				type : 'post',
