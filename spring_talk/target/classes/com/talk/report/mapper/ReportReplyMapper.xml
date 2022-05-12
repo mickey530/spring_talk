@@ -6,24 +6,22 @@
 	<mapper namespace="com.talk.report.mapper.ReportReplyMapper">
 		
 		<insert id="insert">
-			INSERT INTO reply_report (report_rnum, report_reply_num, report_id , report_reason) 
+			INSERT INTO reply_report (report_reply_num, report_id , report_reason) 
 			VALUES
-			(report_rnum.nextval, #{report_reply_num}, #{report_id}, #{report_reason})
+			(report_reply_num.nextval, #{report_id}, #{report_reason})
 		</insert>
 		
 		<delete id="delete">
 			DELETE FROM reply_report 
-			WHERE report_rnum = #{report_rnum}
+			WHERE report_reply_num = #{report_reply_num}
 		</delete>
 	
 		<select id="allList" resultType="com.talk.report.domain.ReportReplyVO">
 			SELECT * FROM reply_report
-			ORDER BY report_reply_date DESC		
+			ORDER BY report_reply_num DESC		
 		</select>
 		
 		<select id="select" resultType="com.talk.report.domain.ReportReplyVO">
-			SELECT * FROM reply_report WHERE report_rnum = #{report_rnum}
+			SELECT * FROM reply_report WHERE report_reply_num = #{report_reply_num}
 		</select>
-		
-		
 	</mapper>
