@@ -36,8 +36,8 @@
 	<select id="getUserPost" resultType="com.talk.post.domain.PostVO">
 		<![CDATA[
 		SELECT * FROM
-			(SELECT /*+ INDEX_DESC(post pk_post_post_num) */ rownum rn, post.* FROM post WHERE writer = #{writer} AND rownum <= #{page_num}*10)
-		WHERE rn > (#{page_num}-1)*10
+			(SELECT /*+ INDEX_DESC(post pk_post_post_num) */ rownum rn, post.* FROM post WHERE writer = #{writer} AND rownum <= #{page_num}*#{number})
+		WHERE rn > (#{page_num}-1)*#{number}
 		]]>
 	</select>
 	

@@ -3,6 +3,7 @@ package com.talk.user.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.talk.user.domain.UserVO;
 
@@ -18,7 +19,7 @@ public interface UserMapper {
 	
 	public void insert(UserVO vo);
 	
-	public void delete(@Param("user_num") long uno);
+	public void delete(@Param("uid") String uid);
 	
 	public void update(UserVO vo);
 	

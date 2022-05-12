@@ -8,7 +8,7 @@
 </head>
 <body>
 	<form action="/report/reply" method="post">
-		<input type="number" name="report_reply_num" placeholder="신고할 댓글 번호"><br/>
+		<input type="hidden" name="report_reply_num" value="${reply_num }"><br/>
 		<input type="text" name="report_id" placeholder="신고자"><br/>		
 		<textarea name="report_reason" placeholder="신고 사유"></textarea><br/>
 		<input type="submit" value="신고">

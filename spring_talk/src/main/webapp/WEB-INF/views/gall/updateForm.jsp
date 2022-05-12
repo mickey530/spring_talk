@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="gall/updateForm" method="post">
+	<form action="/post/update" method="post">
 		<input type="hidden" name="post_num" value="${post.post_num }">
 		작성자 : <input type="text" value="${post.writer }" readonly><br/>
 		제목 : <input type="text" name="title" value="${post.title }"><br/>

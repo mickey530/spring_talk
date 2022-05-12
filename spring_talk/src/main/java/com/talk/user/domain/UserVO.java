@@ -1,5 +1,7 @@
 package com.talk.user.domain;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -12,4 +14,5 @@ public class UserVO {
 	private String last_name;
 	private String user_age;
 	private String phone_num;
+	private List<AuthVO> avos;
 }

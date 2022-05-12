@@ -11,30 +11,28 @@
 </head>
 <body>
 	 <div class="container">
-			<h1>게시글 신고 목록</h1>
+			<h1>게시물 신고 목록</h1>
 			<table boarder="1" class="table table-hover">
 		      <thead>
 		        <tr>
 		          <th>신고번호</th>
-		          <th>신고일</th>
-		          <th>신고한 게시물번호</th>
 		          <th>신고자</th>
-		          <th>신고 사유</th>
+		          <th>신고한 게시물번호</th>
+		          <th>신고일</th>
 		        </tr>
 		      </thead>
 		      <tbody>
 		        <c:forEach var="post" items="${postList }">
 		          <tr>
-		          	<td>${post.report_pnum }</td>
-		            <td>${post.report_post_date }</td>
-		            <td>${post.report_post_num }</td>
+		          	<td><a href="/report/reportPostDetail/${post.report_pnum }">${post.report_pnum }</a></td>
 		            <td>${post.report_id }</td>
-		            <td><a href="/report/reportPostDetail/${post.report_pnum }">${post.report_reason }</a></td>		
+		            <td>${post.report_post_num }</td>	            
+		            <td>${post.report_post_date }</td>
 		          </tr>
 		        </c:forEach>
 		      </tbody>
 		    </table>
-		    <a href="/report/post" class="btn btn-warning">게시글 신고하기</a><hr/>	    
+		    <!-- <a href="/report/post/{post_num}" class="btn btn-warning">게시글 신고하기</a><hr/> -->
 		 </div>
 </body>
 </html>

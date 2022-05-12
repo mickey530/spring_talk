@@ -145,7 +145,7 @@ background-color: transparent;}
 						+"<div class='reply_area' style='display:none';>"
 						+"<div>REPLYER <input type='text' name='reReplyWriter' id='reReplyWriter' ></div>"
 						+"<div>REPLY TEXT <input type='text' id='reReplyText'></div>"
-						+"<button id='reReplyBtn'>ADD REPLY</button>"
+						
 					+"</div>";
 						
 					 

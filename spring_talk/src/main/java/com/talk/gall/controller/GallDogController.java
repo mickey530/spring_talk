@@ -26,13 +26,13 @@ public class GallDogController {
 
 	@GetMapping("/insert")
 	public String insert() {
-		return "galldog/insertForm";
+		return "gall/insertForm";
 	}
 	
-	@PostMapping("/insert")
+	@PostMapping("/detail")
 	public String insert(GallDogVO vo) {
 		service.insert(vo);
-		return "galldog/postDetail"; // 나중에 뉴스피드로 리다이렉트 예정
+		return "gall/postDetail"; // 나중에 뉴스피드로 리다이렉트 예정
 	}
 	
 	@GetMapping("/detail/{board_num}")
@@ -63,6 +63,7 @@ public class GallDogController {
 		
 		
 	// 	PostController 참고하여 기재
+		
 	}
 	
 }

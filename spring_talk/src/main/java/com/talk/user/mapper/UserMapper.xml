@@ -31,7 +31,7 @@
 	
 	<delete id="delete">
 	
-		DELETE FROM user_info WHERE user_num=#{user_num}
+		DELETE FROM user_info WHERE user_id=#{uid}
 	</delete>
 	
 	<update id="update">
@@ -45,3 +45,4 @@
 		WHERE user_num=#{user_num}
 	</update>
 </mapper>
+

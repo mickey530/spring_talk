@@ -13,14 +13,17 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <style>
 *{margin: 0;padding: 0;list-style: none;;}
+
 #modDiv{width: 100%;max-width: 600px;
 margin: 0 auto;
 padding:10px;
 box-sizing: border-box;
 background-color: blanchedalmond;}
+
 .btn_content{width: 100%;
 border-radius: 5px;
 background-color: #fff;;}
+
 .btn_content button{
 display: block;	
 width: 100%;
@@ -29,8 +32,12 @@ border: 0;
 padding: 10px;
 border-bottom: 1px solid #ddd;
 background-color: transparent;}
+
 .btn_content button:last-child{border-bottom: 0;}
+
+
 .btn_content button:hover{background-color: #484848; color: #fff;}
+
     
 </style>
 </head>
@@ -55,6 +62,7 @@ background-color: transparent;}
 세션 : <button onclick="isLike"()">${sessionScope.user_id }</button><h2>댓글</h2>
 	
 	<hr/>
+
 	<div id="replies"></div>
 	
 	<!-- 댓글 작성란 -->
@@ -68,6 +76,7 @@ background-color: transparent;}
 		<button id="replyAddBtn">ADD REPLY</button>
 	</div>
 	<hr/>
+
 	
 	
 	<!-- 모달창 -->
@@ -96,8 +105,10 @@ background-color: transparent;}
 	
 	/* 댓글 불러오는 로직 */
 	let post_num = ${post.post_num};
+
 	 function getAllList(){
 		$.getJSON("/replies/all/" + post_num, function(data){
+
 			var str = "";
 			console.log(data);
 			
@@ -313,6 +324,7 @@ background-color: transparent;}
 			});
 	 } isLike()
 	 
+
 	// 좋아요 버튼 클릭 시 
 	 $("#postLike").on("click", function(){
 			console.log($(".post-like").val());

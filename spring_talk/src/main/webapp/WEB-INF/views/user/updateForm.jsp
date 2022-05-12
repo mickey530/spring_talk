@@ -15,6 +15,7 @@
 		<input type="text" name="last_name" value="${userInfo.last_name }"><br/>
 		<input type="number" name="age" value="${userInfo.user_age }"><br/>
 		<input type="submit" value="정보 수정">
+		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 	</form>
 </body>
 </html>

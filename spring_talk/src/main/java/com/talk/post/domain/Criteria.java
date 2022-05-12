@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class Criteria {
 	private int page_num = 1;
-	private int number = 10;
+	private int number = 12;
 	
 }

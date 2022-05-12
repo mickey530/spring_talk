@@ -9,6 +9,17 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 <style>
+  html, body {height:100%;}
+  body {
+    background-color: white;
+    color: black;
+  }
+  #wrapper{
+      height: auto;
+      min-height: 100%;
+      padding-bottom: 50px;
+  }
+  a{text-decoration:none; text-align:center;}
 .title-padding{
     padding:10px;
 }
@@ -36,13 +47,33 @@ summary > p {
 .card {
     font-size: 12px;
 }
+
+footer {
+        display: flex !important;
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        height: 50px;
+        font-size: 15px;
+        align-items: center;
+        background-color: white;
+        z-index: 2;
+        }
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
 
+<!-- 대충 헤더임 -->
+
+<div id="wrapper">
+<div class="sticky-top p-3 bg-light">대충 헤더영역 : 뉴스피드</div>
 <div class="container">
+
+
+
+
 <%-- 
 <div class="row justify-content-center">
 <c:forEach var="post" items="${postList }">
@@ -61,14 +92,26 @@ summary > p {
 </div>
  --%>
 
+
+
 <div class="post">
 
 </div>
-
+<hr/>
 <button id="more" onclick="more()">more</button>
+
+</div> 
+</div>
+
+<footer class="mx-0 py-2 w-100 border-top row justify-content-between">
+      <a href="#" class="col-2">팔로우</a>
+      <a href="#" class="col-2">채팅</a>
+      <a href="#" class="col-2">뉴스피드</a>
+      <a href="#" class="col-2">커뮤니티</a>
+      <a href="#" class="col-2">마이룸</a>
+</footer>
  
- 
- </div>
+
 <!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>	
 
@@ -87,8 +130,9 @@ summary > p {
 			$(data).each(
 				function() {
 					post += "<p data-post_num='" + this.post_num + "' class='post'>"
-						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | " + this.writer + " <br/> " + this.title + " <br/> " + this.content
-						+ "</p><hr/>";
+						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | " + this.writer + " <br/>제목 : " + this.title + " <br/>내용 : " + this.content + "<br/> 댓글 " + this.replycount
+						+ "개</p><hr/>";
+						console.log(this.replycount)
 
 				});
 			$(".post").html(post);			
@@ -107,6 +151,7 @@ summary > p {
 					"Content-Type" : "application/json",
 					"X-HTTP-Method-Override" : "POST"
 				},
+				
 				dataType : 'text',
 				data : JSON.stringify({
 					post_num : post_num,

@@ -10,10 +10,11 @@
 	로그아웃 확인용 페이지
 </h1>
 
-	<form action="/user/deleteUser" method="get">
+	<form action="/user/delete" method="post">
 		<input type="text" name="uid" placeholder="아이디" value=""><br/>
 		<input type="password" name="upw" placeholder="비밀번호" value=""><br/>
 		<input type="submit" value="회원탈퇴">
+		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 	</form>
 </body>
 </html>
