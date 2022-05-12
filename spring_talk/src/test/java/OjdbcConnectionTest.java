@@ -41,7 +41,6 @@ public class OjdbcConnectionTest {
                 sr.getObject(5);
                 sr.getObject(6);
                 sr.getObject(7);
-
             }
 
             log.info(con);

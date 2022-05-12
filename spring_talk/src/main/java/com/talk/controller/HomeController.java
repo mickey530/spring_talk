@@ -6,11 +6,16 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.talk.user.domain.UserVO;
+import com.talk.user.service.UserService;
 
 import lombok.extern.log4j.Log4j;
 
@@ -21,6 +26,8 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class HomeController {
 	
+	@Autowired
+	UserService userService;
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	/**
@@ -40,8 +47,11 @@ public class HomeController {
 		return "home";
 	}
 	
-	@GetMapping("/insertTest")
-    public void insertTest() {
-    } 
+	@GetMapping("/room/{user_id}")
+    public String insertTest(@PathVariable String user_id, Model model) {
+        UserVO user = userService.selectById(user_id);
+        model.addAttribute("user", user);
+        return "user/room";
+    }
 
 }

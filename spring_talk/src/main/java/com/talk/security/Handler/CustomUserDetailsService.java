@@ -31,11 +31,11 @@ public class CustomUserDetailsService implements UserDetailsService{
 	AuthMapper authmapper;
 	
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String user_id) throws UsernameNotFoundException {
 	
-		System.out.println("username : " + username);
+		System.out.println("username : " + user_id);
 
-		UserVO vo = authmapper.getUserAuth(username);
+		UserVO vo = authmapper.getUserAuth(user_id);
 		
 		System.out.println("user info : " + vo.toString());
 		

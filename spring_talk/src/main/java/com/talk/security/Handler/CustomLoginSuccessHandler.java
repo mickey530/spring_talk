@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,18 +25,37 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler{
 		System.out.println("onAuthenticationSuccess");
 		List<String> authList = new ArrayList<String>();
 		
+		
+		 HttpSession session = request.getSession();
+
+		 String a = (String)(session.getAttribute("username"));
+		 String b = (String)(session.getAttribute("userid"));
+		 String c = (String)(session.getAttribute("uid"));
+		 String d = (String)(session.getAttribute("user_id"));
+		 String e = (String)(session.getAttribute("user_name"));
+
+		 System.out.println("username : " + a );
+		 System.out.println("userid : " + b );
+		 System.out.println("uid : " + c );
+		 System.out.println("user_id : " + d );
+		 System.out.println("user_name : " + e );
+
+//			session.setAttribute("user_id", vo.getUser_id());
+//			session.setAttribute("user_name", vo.getUser_name()); 
+//		 session.setAttribute(null, session);
+		 
 		for(GrantedAuthority ga : authentication.getAuthorities()) {
 			authList.add(ga.getAuthority());
 			System.out.println("CustomLoginSuccessHandler : " + ga.getAuthority());
 		}
 		
 		if(authList.contains("ROLE_ADMIN")) {
-			response.sendRedirect("secu/admin");
+			response.sendRedirect("/user/userInfo");
 			return;
 		}
 		
 		if(authList.contains("ROLE_MEMBER")) {
-			response.sendRedirect("secu/member");
+			response.sendRedirect("/user/userInfo");
 			return;
 		}
 		
