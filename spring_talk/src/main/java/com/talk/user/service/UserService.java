@@ -18,7 +18,7 @@ public interface UserService {
 	
 	public void insert(UserVO vo);
 
-	public void delete(long user_num);
+	public void delete(String user_id);
 	
 	public void update(UserVO vo);
 	

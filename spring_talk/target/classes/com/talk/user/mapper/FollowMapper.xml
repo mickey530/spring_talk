@@ -34,8 +34,8 @@
 	
 	<delete id="delete">
 		delete from follow 
-			WHERE followed = #{followed}
-			WHERE follower = #{follower}
+			WHERE followed = #{followed} and
+			follower = #{follower}
 	</delete>
 	
 	<insert id="insert">
@@ -49,7 +49,7 @@
 			SET 
 		favorite = #{favorite}
 			WHERE (
-				follower = #{follower}, 
+				follower = #{follower} and
 				followed = #{followed}
 			)
 	</update>

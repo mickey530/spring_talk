@@ -14,6 +14,8 @@
 <style>
 *{margin: 0;padding: 0;list-style: none;;}
 
+#reply{display:none};
+
 #modDiv{width: 100%;max-width: 600px;
 margin: 0 auto;
 padding:10px;
@@ -106,6 +108,10 @@ background-color: transparent;}
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
 	
+$("#btn").click(function(){
+	$("#reply").stop().show();
+})
+	
 	/* 댓글 불러오는 로직 */
 	let post_num = ${post.post_num};
 
@@ -131,6 +137,7 @@ background-color: transparent;}
 					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong>@"
 						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
 						+ "<div class='reply_content'>" + this.reply_content + "</div>"
+						+ "<input type='text' id='reply'>"
 						+ "<button type='button' class='btn btn-info'>수정/삭제</button>"
 						
 						+ "</div>";

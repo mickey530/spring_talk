@@ -1,5 +1,6 @@
 package com.talk.user.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,13 +22,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
 import com.talk.user.domain.UserVO;
+import com.talk.user.mapper.AuthMapper;
+import com.talk.user.service.AuthService;
+import com.talk.user.service.BanService;
 import com.talk.user.service.BanServiceImpl;
+import com.talk.user.service.FollowService;
 import com.talk.post.service.TagService;
 import com.talk.reply.domain.ReplyVO;
 import com.talk.user.service.FollowServiceImpl;
+import com.talk.user.service.UserService;
 import com.talk.user.service.UserServiceImpl;
 
 import lombok.extern.log4j.Log4j;
@@ -38,13 +45,16 @@ import lombok.extern.log4j.Log4j;
 public class UserController {
 	
 	@Autowired
-	private UserServiceImpl userService;
+	private UserService userService;
 	
 	@Autowired
-	private BanServiceImpl banService;
+	private BanService banService;
 	
 	@Autowired
-	private FollowServiceImpl followService;
+	private FollowService followService;
+	
+	@Autowired
+	private AuthService authService;
 	
 	//user단
 	
@@ -67,6 +77,13 @@ public class UserController {
 
 		return "user/userInfo";
 	}
+	
+	@GetMapping("/room/{user_id}")
+    public String insertTest(@PathVariable String user_id, Model model) {
+        UserVO user = userService.selectById(user_id);
+        model.addAttribute("user", user);
+        return "user/room";
+    }
 	
 	@GetMapping(value="/getAllUsers")
 	public String getAllUsers( Model model) {
@@ -118,7 +135,7 @@ public class UserController {
 		return "/user/deleteForm";
 	}
 	
-	@GetMapping(value="/deleteUser")
+	@PostMapping(value="/delete")
 	public String deleteUser(
 			String uid, String upw,
 			HttpSession session) {
@@ -128,14 +145,15 @@ public class UserController {
 		
 		if(userInfo != null) {//구분해서 처리 예정
 
-			long user_num = userInfo.getUser_num();
-			
-			userService.delete(user_num);
-			
+			authService.deleteAll(uid);
+			userService.delete(uid);
+
+			System.out.println("delete 성공");
 			session.invalidate();
 			return "redirect:/user/";
 		}
 		else {//실패시 실패했다는 메시지를 띄우도록
+			System.out.println("delete 실패");
 			return "redirect:/user/";
 		}
 		
@@ -146,16 +164,29 @@ public class UserController {
 		return "/user/insertForm";
 	}
 	
-	@GetMapping(value="/insertUser")
-	public String insertUser(UserVO vo,
+	@PostMapping(value="/insert")
+	public String insertUser(UserVO vo,String[] roles,
 			HttpSession session) throws DataIntegrityViolationException{
-		
+
 		System.out.println("user_id : " + vo.getUser_id()); 
-		System.out.println("user_name : " + vo.getUser_name()); 
+		System.out.println("user_name : " + vo.getUser_name());
+
+		List<AuthVO> authList = new ArrayList<AuthVO>();
+		for(String role : roles) {
+			AuthVO auth = new AuthVO();
+			auth.setUser_id(vo.getUser_id());
+			auth.setAuthority(role);
+			authList.add(auth);
+			
+			System.out.println("authList = " + auth.toString());
+		}
 		
+		UserVO uavo = vo;
+		uavo.setAvos(authList);
 		
 		try {
-			userService.insert(vo);
+			userService.insert(uavo);
+			
 			session.setAttribute("user_id", vo.getUser_id()); 
 			session.setAttribute("user_name", vo.getUser_name()); 
 			return "redirect:/user/userInfo/" + vo.getUser_id();
@@ -170,15 +201,26 @@ public class UserController {
 
 	}
 
-	@GetMapping(value="/loginForm")
-	public String login() {
-		return "/user/loginForm";
+	@GetMapping(value="/login")
+	public void login(String error, String logout, Model model) {
+		System.out.println("error 여부 : " + error);
+		System.out.println("logout 여부 : " + logout);
+		
+		if(error != null) {
+			model.addAttribute("error", "로그인 관련 에러입니다. 계정확인을 다시 해 주세요.");
+		}
+		if(logout != null) {
+			model.addAttribute("logout", "로그아웃 했습니다.");
+		}	
 	}
 
-	@GetMapping(value="/login")
-	public String loginUser(
+	@PostMapping(value="/login")
+	public void loginUser(
 			String uid, String upw,
 			HttpSession session) {
+		System.out.println("login post ");
+		System.out.println("uid : " + uid);
+		System.out.println("upw : " + upw);
 
 		UserVO userInfo = userService.loginCheck(uid, upw);
 		
@@ -186,15 +228,23 @@ public class UserController {
 		if(userInfo != null) {//구분해서 처리 예정
 			session.setAttribute("user_id", userInfo.getUser_id()); 
 			session.setAttribute("user_name", userInfo.getUser_name()); 
+			System.out.println("로그인 성공");
 			
-			return "redirect:/user/";
+			return ;
 		}
 
-		return "redirect:/user/";
+		System.out.println("로그인 실패");
+		return;
 	}
 	
 	@GetMapping(value="/logout")
-	public String logout(HttpSession session) {
+	public String logoutGet() {
+
+		return "user/logoutForm";
+	}
+	
+	@PostMapping(value="/logout")
+	public String logoutPost(HttpSession session) {
 
 
 		session.invalidate(); 
@@ -278,21 +328,33 @@ public class UserController {
 		return entity;
 	}
 	
-	// insert follow
-	@PostMapping(value="/follow/{user_id}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	// insert & delete follow
+	@PostMapping(value="/follow", consumes="application/json", produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public ResponseEntity <String> insertFollow(@RequestBody FollowVO vo){
 		ResponseEntity<String> entity= null;
+		System.out.println("insertFollow : " + vo.getFollower());
+		System.out.println(vo.toString());
 		try {
 			followService.insert(vo);
-			entity = new ResponseEntity<String>("OK", HttpStatus.OK);
-		}catch(Exception e) {
+			entity = new ResponseEntity<String>("FOLLOW SUCCESS", HttpStatus.OK);
+		} catch(DataIntegrityViolationException e) {
+			try {
+				followService.delete(vo);
+				entity = new ResponseEntity<String>("UNFOLLOW SUCCESS", HttpStatus.OK);
+			} catch(DataIntegrityViolationException DVE) {
+				System.out.println("DataIntegrityViolationException : " + DVE);
+				entity = new ResponseEntity<String>(DVE.getMessage(), HttpStatus.BAD_REQUEST);
+			}
+    	}catch(Exception e) {
+			System.out.println("FOLLOW Exception : " + e);
 			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
+		System.out.println(entity);
 		return entity;
 	}
 	
-	// insert ban
-	@PostMapping(value="/ban/{user_id}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	// insert & delete ban
+	@PostMapping(value="/ban", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity <String> insertBan(@RequestBody BanVO vo){
 		ResponseEntity<String> entity= null;
 		System.out.println("insertBan : " + vo.getUser_id());
@@ -309,7 +371,7 @@ public class UserController {
 				entity = new ResponseEntity<String>(DVE.getMessage(), HttpStatus.BAD_REQUEST);
 			}
     	}catch(Exception e) {
-			System.out.println("Exception : " + e);
+			System.out.println("BAN Exception : " + e);
 			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		System.out.println(entity);
