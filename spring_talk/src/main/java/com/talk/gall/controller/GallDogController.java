@@ -32,7 +32,7 @@ public class GallDogController {
 	@PostMapping("/detail")
 	public String insert(GallDogVO vo) {
 		service.insert(vo);
-		return "gall/postDetail"; // 나중에 뉴스피드로 리다이렉트 예정
+		return "gall/postDetail"; 
 	}
 	
 	@GetMapping("/detail/{board_num}")

@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="/galldog/update" method="post">
+	<form action="/gall/gallDetail" method="post">
 		<input type="hidden" name="board_num" value="${gall.board_num }">
 		작성자 : <input type="text" value="${gall.writer }" readonly><br/>
 		제목 : <input type="text" name="title" value="${gall.board_title }"><br/>
