@@ -2,8 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.talk.user.mapper.AuthMapper">
-	
-	
 	<resultMap type="com.talk.user.domain.UserVO" id="userMap">
 		<id property="user_num" column="user_num" />
 		<result property="user_num" column="user_num" />
@@ -22,10 +20,12 @@
 	</resultMap>
 	
 	<select id="getUserAuth" resultMap="userMap">
-		SELECT u.user_id, u.user_pw, a.authority
+		SELECT 
+			u.user_id, u.user_pw, a.authority
 				from
-				user_info u left outer join user_auth a on u.user_id = a.user_id
-				where u.user_id= #{userId}
+			user_info u left outer join user_auth a on u.user_id = a.user_id
+				where 
+			u.user_id= #{userId}
 	</select>
 	
 	<select id="getAllUserAuth" resultMap="userMap">
