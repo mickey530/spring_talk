@@ -255,6 +255,13 @@ public class UserController {
 	
 	//팔로우, 밴 단
 
+	// follow page
+	@GetMapping(value="/follow")
+	public String followTab(){
+		
+		return "user/follow";
+	}
+	
 
 	// select follow
 	@GetMapping(value="/getFollower/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,

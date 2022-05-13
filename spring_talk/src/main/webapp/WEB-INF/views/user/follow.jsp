@@ -23,28 +23,35 @@
 <!-- 대충 헤더임 -->
 
 <div id="wrapper">
+<header>
 	<div class="sticky-top p-3 bg-primary text-white border-bottom row">
 		<span class="col-11">${login_id }'s follow</span>
 		<a href="/post/insert" class="col-1 text-left text-white">포스팅</a>
 	</div>
+</header>
+
 <div class="container">
+<div id="followList">
+
+</div>
+
+
+
+
+
 
 	
 	
 
-	</header>
-	<hr/>
-	
-	<div class="container m-1">
-		<div class="post row">
 
-		</div>
-	</div>
 	
-	<button id="more" onclick="more()">more</button>
+<button id="more" onclick="more()">more</button>
  
  
- </div>
+ </div> <!-- container -->
+ 
+ 
+ </div> <!-- wrapper -->
 <!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>	
 
@@ -56,7 +63,26 @@
 	 
 	 // 팔로워
 	 
-	 
+	 /* 댓글 불러오는 로직 */
+	
+	 let login_id = '${login_id}';
+	 function getFollower(){
+		$.getJSON("/getFollower/" + login_id, function(data){
+
+			var str = "";
+			console.log(data);
+			
+			$(data).each(
+				function() {
+					
+					str += "<div>" + this.follower + this.followed + "</div>";						
+
+				});
+		
+			$("#followList").html(str);			
+		});
+	 }
+	 getFollower();
 
 	 // 팔로우 기능
 	 $("#follow").on("click", function(){

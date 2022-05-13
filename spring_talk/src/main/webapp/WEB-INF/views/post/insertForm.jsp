@@ -9,7 +9,10 @@
 <title>Insert title here</title>
 </head>
 <body>
+<sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal.user.user_id" var="login_id"/>
+</sec:authorize>
+
 	<form action="/post/insert" method="post">
 		<input type="hidden" name="writer" value="${login_id }" placeholder="작성자">
 		<input type="text" name="title" placeholder="제목"><br/>

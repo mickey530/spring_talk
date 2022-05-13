@@ -15,13 +15,15 @@
 </style>
 </head>
 <body>
+<sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal.user.user_id" var="login_id"/>
+</sec:authorize>
+
 	<header class="justify-content-center">
-	${user.user_id}<br/>
-	${user.user_name}' Room
+	<h2>${user_id}'s Room</h2>
 	
 	<c:if test="${login_id ne 'null' }">
-		<button id="follow">팔로</button>
+		팔로워 : <span id="followNum"></span>명<button id="follow">팔로</button>
 		<button id="ban">응 차단~</button>
 	</c:if>
 
@@ -63,7 +65,7 @@
 			$(data).each(
 				function() {
 					post += "<div class='col-4'><p data-post_num='" + this.post_num + "' class='post'>"
-						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | " + this.writer + " <br/> " + this.title + " <br/> " + this.content
+						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | <a href='/user/room/" + this.writer + "'>"+ this.writer +"</a><br/> " + this.title + " <br/> " + this.content
 						+ "</p></div>";
 
 				});
@@ -74,8 +76,19 @@
 	 
 	 // 팔로우 숫자
 	 
-	 
+	 let login_id = '${login_id}';
+	 function followerNum(){
+		$.getJSON("/user/getFollow/" + user_id, function(data){
 
+			console.log(data)
+		
+			$("#followNum").html(data);			
+		});
+	 }
+	 followerNum();
+
+	 // 로딩 끝나고
+		 
 	 // 팔로우 기능
 	 $("#follow").on("click", function(){
 			$.ajax({
@@ -87,7 +100,7 @@
 				},
 				dataType : 'text',
 				data : JSON.stringify({
-					follower : ${login_id}, // 로그인 아이디
+					follower : login_id, // 로그인 아이디
 					followed : user_id, // 팔로우할 아이디
 					favorite : 'N'
 				}),
@@ -96,9 +109,10 @@
 	            },
 				success : function(result){
 					if(result == 'FOLLOW SUCCESS'){
-					}
+						
+					} followerNum() // 팔로우 수 재호출
 				}
-			});
+			}) 
 		});
 	 // 밴 기능
 	 $("#ban").on("click", function(){
@@ -111,7 +125,7 @@
 				},
 				dataType : 'text',
 				data : JSON.stringify({
-					user_id : ${login_id}, // 로그인 아이디
+					user_id : login_id, // 로그인 아이디
 					ban_id : user_id // 차단할 아이디
 				}),
 				beforeSend: function(xhr){
@@ -124,6 +138,7 @@
 			});
 		});
 	 
+		 
 	 
 	 </script>
 	
