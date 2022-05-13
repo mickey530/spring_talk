@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <html>
 <head>
 	<title>
@@ -9,7 +10,11 @@ Get All Users</title>
 <body>
 <h1>
 
-				세션 : ${sessionScope.user_id }<br>
+		<sec:authorize access="isAuthenticated()">
+			
+			<sec:authentication property="principal" var="princ"/>
+				환영합니다 ${princ.user.user_id}님
+		</sec:authorize>
 Get All Users
 </h1>
 
