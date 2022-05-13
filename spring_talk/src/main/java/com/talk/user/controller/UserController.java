@@ -96,10 +96,10 @@ public class UserController {
 	}
 	
 	@GetMapping(value="/update")
-	public String update(Model model,
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+	public String update(String uid,
+			Model model) {
 		
-		String uid = (String)session.getAttribute("user_id");
+		System.out.println("uid : " + uid);
 		
 		UserVO user = userService.selectById(uid);
 		
@@ -111,15 +111,12 @@ public class UserController {
 	@GetMapping(value="/updateUser")
 	public String updateUser(
 				UserVO vo, 
-				Model model,
-				HttpSession session)
+				Model model)
 			throws DataIntegrityViolationException
 	{
 		
 		try {
 			userService.update(vo);
-			session.setAttribute("user_id", vo.getUser_id());
-			session.setAttribute("user_name", vo.getUser_name()); 
 			return "redirect:/user/";
     	} catch(DataIntegrityViolationException e) {
     		System.out.println("DuplicateKeyException");
@@ -165,8 +162,7 @@ public class UserController {
 	}
 	
 	@PostMapping(value="/insert")
-	public String insertUser(UserVO vo,String[] roles,
-			HttpSession session) throws DataIntegrityViolationException{
+	public String insertUser(UserVO vo,String[] roles) throws DataIntegrityViolationException{
 
 		System.out.println("user_id : " + vo.getUser_id()); 
 		System.out.println("user_name : " + vo.getUser_name());
@@ -187,8 +183,6 @@ public class UserController {
 		try {
 			userService.insert(uavo);
 			
-			session.setAttribute("user_id", vo.getUser_id()); 
-			session.setAttribute("user_name", vo.getUser_name()); 
 			return "redirect:/user/userInfo/" + vo.getUser_id();
     	} catch(DataIntegrityViolationException e) {
     		System.out.println("DuplicateKeyException");
@@ -215,9 +209,7 @@ public class UserController {
 	}
 
 	@PostMapping(value="/login")
-	public void loginUser(
-			String uid, String upw,
-			HttpSession session) {
+	public void loginUser(String uid, String upw) {
 		System.out.println("login post ");
 		System.out.println("uid : " + uid);
 		System.out.println("upw : " + upw);
@@ -226,8 +218,6 @@ public class UserController {
 		
 
 		if(userInfo != null) {//구분해서 처리 예정
-			session.setAttribute("user_id", userInfo.getUser_id()); 
-			session.setAttribute("user_name", userInfo.getUser_name()); 
 			System.out.println("로그인 성공");
 			
 			return ;

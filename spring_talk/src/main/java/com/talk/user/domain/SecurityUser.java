@@ -18,7 +18,9 @@ public class SecurityUser extends User {
 	
 	public SecurityUser(String username, String password, 
 			Collection<? extends GrantedAuthority> auth) {
+		
 		super(username, password, auth);
+		System.out.println("SecurityUser 1");
 	}
 
 	public SecurityUser(UserVO vo) {
@@ -27,5 +29,6 @@ public class SecurityUser extends User {
 						new SimpleGrantedAuthority(author.getAuthority()))
 						.collect(Collectors.toList()));
 		this.user = vo;
+		System.out.println("SecurityUser 2");
 	}
 }

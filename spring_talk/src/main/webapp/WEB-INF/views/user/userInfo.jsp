@@ -1,15 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <script src="http://code.jquery.com/jquery-latest.js"></script> 
 
-<html>
+
+
+<html> 
 <head>
 	<title>Home</title>
 </head>
 <body>
 
 
+	
 <table border="1" class="table">
 			<thead>
 				<tr>
@@ -55,26 +59,33 @@
 						${userInfo.phone_num }
 						
 		 -->
+			
 		 
 		 
 		<!-- 본인 -->
-		<c:if test="${userInfo.user_id eq sessionScope.user_id }">
 		
-
-			<button onclick="location.href='/user/logout'">로그아웃</button>
-			<button onclick="location.href='/user/delete'">탈퇴</button>
-			<button onclick="location.href='/user/getAllUsers'">전체 회원 조회</button>
-			<button onclick="location.href='/user/update'">회원정보 수정</button>
-			<button onclick="location.href='/user/userInfo/${user_id}'">회원정보 확인</button>
-		</c:if>
+		<sec:authorize access="isAuthenticated()">
+			
+		<sec:authentication property="principal" var="princ"/>
+			<c:if test="${userInfo.user_id eq princ.username}">
+			
+	
+				<button onclick="location.href='/user/logout'">로그아웃</button>
+				<button onclick="location.href='/user/delete'">탈퇴</button>
+				<button onclick="location.href='/user/getAllUsers'">전체 회원 조회</button>
+				<button onclick="location.href='/user/update?uid=${princ.username}'">회원정보 수정</button>
+				<button onclick="location.href='/user/userInfo/${user_id}'">회원정보 확인</button>
+			</c:if>
+			
+			<!-- 타인 -->
+			<c:if test="${userInfo.user_id ne princ.username}">
+				<button id="followBtn">팔로우</button>
+				<button id="banBtn">밴</button>
+				<button onclick="location.href='/user/getAllUsers'" id="getAllUsers">전체 회원 조회</button>
+				 
+			</c:if>
+		</sec:authorize>
 		
-		<!-- 타인 -->
-		<c:if test="${userInfo.user_id ne sessionScope.user_id }">
-			<button id="followBtn">팔로우</button>
-			<button id="banBtn">밴</button>
-			<button onclick="location.href='/user/getAllUsers'" id="getAllUsers">전체 회원 조회</button>
-			 
-		</c:if>
 		
 		
 	<script>
@@ -122,9 +133,11 @@
 
 	 // 밴 업데이트 버튼
 	 $("#banBtn").on("click", function(){
+		 
 		
 		var jsonData = {
-				user_id:'${sessionScope.user_id}',
+			
+				user_id:'${princ.username}',
 				ban_id:$("#user_id").text()
 		};
 		 
@@ -154,7 +167,7 @@
 	 $("#followBtn").on("click", function(){
 		
 		var jsonData = {
-				follower:'${sessionScope.user_id}',
+				follower:'${princ.username}',
 				followed:$("#user_id").text(),
 				favorite:'N'
 		};

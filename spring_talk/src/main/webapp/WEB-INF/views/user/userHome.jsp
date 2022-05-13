@@ -39,15 +39,15 @@ Get All Users</title>
 				관리자의 권한
 			</h1>
 	</sec:authorize>
-			
 <table border="1" class="table">
 
-		<c:if test="${user_id ne null }">
+	<sec:authorize access="isAuthenticated()">	
      	    	
+			<p>principal.username : <sec:authentication property="principal.username"/></p>
+			<p>principal.test : <sec:authentication property="principal.user.user_pw"/></p>
 			<h1>
-				세션 : ${sessionScope.user_id }
+				<sec:authentication property="principal.username"/>
 			</h1>
-			
 			<tbody>
 			
 					<tr>
@@ -56,9 +56,9 @@ Get All Users</title>
 						<td><button onclick="location.href='/user/userInfo/${user_id}'">회원정보 확인</button></td>
 					</tr>
 			</tbody>
-     	</c:if>
+	</sec:authorize>
 		<!-- 비로그인 -->
-		<c:if test="${user_id eq null }">
+	<sec:authorize access="isAnonymous()">	
 			
 			
 			<tbody>
@@ -68,7 +68,7 @@ Get All Users</title>
 						<td><button onclick="location.href='/user/insert'">회원가입</button></td>
 					</tr>
 			</tbody>
-		</c:if>
+		</sec:authorize>
 		</table>
 
 </body>

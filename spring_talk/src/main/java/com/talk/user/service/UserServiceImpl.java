@@ -1,5 +1,6 @@
 package com.talk.user.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	
-// 권한이 따로 주어질 때
 	@Override
 	public void insert(UserVO vo) {
 		String originPW = vo.getUser_pw();
@@ -78,6 +78,14 @@ public class UserServiceImpl implements UserService {
 		vo.setUser_pw(encodedPW);
 		System.out.println("VO insert");
 		System.out.println(vo.toString());
+		
+		if(vo.getAvos().size() < 1) {
+			AuthVO defaultVO = new AuthVO();
+			defaultVO.setUser_id(vo.getUser_id());
+			defaultVO.setAuthority("ROLE_ALL");
+			vo.getAvos().add(defaultVO);
+		}
+		
 		UserMapper.insert(vo);
 		
 
@@ -97,6 +105,19 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void update(UserVO vo) {
+		
+		String originPW = vo.getUser_pw();
+		String encodedPW = pwEncode.encode(originPW);
+		vo.setUser_pw(encodedPW);
+		System.out.println("VO insert");
+		System.out.println(vo.toString());
+		UserMapper.insert(vo);
+		
+
+		for(AuthVO auth : vo.getAvos()) {
+			System.out.println("insert auth : " + auth);
+		}
+		
 		UserMapper.update(vo);
 	}
 

@@ -33,18 +33,19 @@ public class OracleSecurityConnection {
 	private DataSource ds;
 	
 	
+	
 	@Test
 	public void test () {
-		
+		String sql = "UPDATE user_info set user_pw=?";
 		try {
 			Connection con = ds.getConnection();
 			
-//			PreparedStatement p =  con.prepareStatement(sql);
-//			
-//
-//			p.setString(1, pwEncode.encode("user001"));
-//			p.executeUpdate();
-//			
+			PreparedStatement p =  con.prepareStatement(sql);
+			
+
+			p.setString(1, pwEncode.encode("1234"));
+			p.executeUpdate();
+			
 			Statement s = con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT * FROM user_info");
 			ResultSetMetaData rsmd = rs.getMetaData();

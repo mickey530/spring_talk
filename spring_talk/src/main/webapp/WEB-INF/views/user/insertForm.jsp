@@ -16,7 +16,7 @@
 		<input type="text" name="phone_num" placeholder="전화번호"  value="${user.phone_num }"><br/>
 		<input type="checkbox" name="roles" value="ROLE_ADMIN">어드민 권한 &nbsp;&nbsp;&nbsp;
 		<input type="checkbox" name="roles" value="ROLE_MEMBER">멤버십 회원 권한 &nbsp;&nbsp;&nbsp;
-		<input type="checkbox" name="roles" value="ROLE_ALL">평회원 권한 &nbsp;&nbsp;&nbsp;
+		<input type="checkbox" name="roles" value="ROLE_ALL" checked>평회원 권한 &nbsp;&nbsp;&nbsp;
 		<input type="submit" value="회원가입">
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 	</form>
