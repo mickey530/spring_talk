@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
@@ -68,7 +69,10 @@ footer {
 <!-- 대충 헤더임 -->
 
 <div id="wrapper">
-<div class="sticky-top p-3 bg-light">대충 헤더영역 : 뉴스피드</div>
+<div class="sticky-top p-3 bg-primary text-white border-bottom row">
+<span class="col-11">대충 헤더영역 : 뉴스피드</span>
+<a href="/post/insert" class="col-1 text-left text-white">포스팅</a>
+</div>
 <div class="container">
 
 
@@ -97,7 +101,6 @@ footer {
 <div class="post">
 
 </div>
-<hr/>
 <button id="more" onclick="more()">more</button>
 
 </div> 

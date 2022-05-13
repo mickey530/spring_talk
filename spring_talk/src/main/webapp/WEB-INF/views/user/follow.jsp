@@ -15,15 +15,19 @@
 </style>
 </head>
 <body>
+
+<sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal.user.user_id" var="login_id"/>
-	<header class="justify-content-center">
-	${user.user_id}<br/>
-	${user.user_name}' Room
-	
-	<c:if test="${login_id ne 'null' }">
-		<button id="follow">팔로</button>
-		<button id="ban">응 차단~</button>
-	</c:if>
+</sec:authorize>
+
+<!-- 대충 헤더임 -->
+
+<div id="wrapper">
+	<div class="sticky-top p-3 bg-primary text-white border-bottom row">
+		<span class="col-11">${login_id }'s follow</span>
+		<a href="/post/insert" class="col-1 text-left text-white">포스팅</a>
+	</div>
+<div class="container">
 
 	
 	
@@ -49,30 +53,8 @@
 	var _csrf = '${_csrf.token}';
 	var _csrf_header = '${_csrf.headerName}';
 	
-	/* 게시글 불러오는 로직 */
-	let page_num = 0;
-	let user_id = '${user.user_id}';
-	var post = "";
-
-	 function more(){
-		page_num += 1;
-		$.getJSON("/post/userfeed/" + user_id + "?page_num=" + page_num, function(data){
-
-			console.log(data);
-			
-			$(data).each(
-				function() {
-					post += "<div class='col-4'><p data-post_num='" + this.post_num + "' class='post'>"
-						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | " + this.writer + " <br/> " + this.title + " <br/> " + this.content
-						+ "</p></div>";
-
-				});
-			$(".post").html(post);			
-		});
-	 }
-	 more();
 	 
-	 // 팔로우 숫자
+	 // 팔로워
 	 
 	 
 

@@ -59,7 +59,7 @@ public class PostController {
 	@PostMapping("/insert")
 	public String insert(PostVO vo) {
 		service.insert(vo);
-		return "post/postDetail"; // 나중에 뉴스피드로 리다이렉트 예정
+		return "post/newsfeed"; // 나중에 뉴스피드로 리다이렉트 예정
 	}
 	
 	@GetMapping("/detail/{post_num}")

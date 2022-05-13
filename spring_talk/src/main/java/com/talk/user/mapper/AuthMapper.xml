@@ -5,7 +5,6 @@
 	
 	
 	<resultMap type="com.talk.user.domain.UserVO" id="userMap">
-		<id property="user_num" column="user_num" />
 		<result property="user_num" column="user_num" />
 		<result property="user_id" column="user_id" />
 		<result property="user_pw" column="user_pw" />

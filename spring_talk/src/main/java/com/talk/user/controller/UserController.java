@@ -213,30 +213,30 @@ public class UserController {
 			model.addAttribute("logout", "로그아웃 했습니다.");
 		}	
 	}
-
-	@PostMapping(value="/login")
-	public void loginUser(
-			String uid, String upw,
-			HttpSession session) {
-		System.out.println("login post ");
-		System.out.println("uid : " + uid);
-		System.out.println("upw : " + upw);
-
-		UserVO userInfo = userService.loginCheck(uid, upw);
-		
-
-		if(userInfo != null) {//구분해서 처리 예정
-			session.setAttribute("user_id", userInfo.getUser_id()); 
-			session.setAttribute("user_name", userInfo.getUser_name()); 
-			System.out.println("로그인 성공");
-			
-			return ;
-		}
-
-		System.out.println("로그인 실패");
-		return;
-	}
-	
+//
+//	@PostMapping(value="/login")
+//	public void loginUser(
+//			String uid, String upw,
+//			HttpSession session) {
+//		System.out.println("login post ");
+//		System.out.println("uid : " + uid);
+//		System.out.println("upw : " + upw);
+//
+//		UserVO userInfo = userService.loginCheck(uid, upw);
+//		
+//
+//		if(userInfo != null) {//구분해서 처리 예정
+//			session.setAttribute("user_id", userInfo.getUser_id()); 
+//			session.setAttribute("user_name", userInfo.getUser_name()); 
+//			System.out.println("로그인 성공");
+//			
+//			return ;
+//		}
+//
+//		System.out.println("로그인 실패");
+//		return;
+//	}
+//	
 	@GetMapping(value="/logout")
 	public String logoutGet() {
 
