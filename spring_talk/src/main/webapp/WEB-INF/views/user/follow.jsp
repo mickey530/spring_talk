@@ -15,34 +15,43 @@
 </style>
 </head>
 <body>
+
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal.user.user_id" var="login_id"/>
 </sec:authorize>
 
-	<header class="justify-content-center">
-	<h2>${user_id}'s Room</h2>
-	
-	<c:if test="${login_id ne 'null' }">
-		팔로워 : <span id="followNum"></span>명<button id="follow">팔로</button>
-		<button id="ban">응 차단~</button>
-	</c:if>
+<!-- 대충 헤더임 -->
 
-	
-	
-
-	</header>
-	<hr/>
-	
-	<div class="container m-1">
-		<div class="post row">
-
-		</div>
+<div id="wrapper">
+<header>
+	<div class="sticky-top p-3 bg-primary text-white border-bottom row">
+		<span class="col-11">${login_id }'s follow</span>
+		<a href="/post/insert" class="col-1 text-left text-white">포스팅</a>
 	</div>
+</header>
+
+<div class="container">
+<div id="followList">
+
+</div>
+
+
+
+
+
+
 	
-	<button id="more" onclick="more()">more</button>
+	
+
+
+	
+<button id="more" onclick="more()">more</button>
  
  
- </div>
+ </div> <!-- container -->
+ 
+ 
+ </div> <!-- wrapper -->
 <!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>	
 
@@ -51,44 +60,30 @@
 	var _csrf = '${_csrf.token}';
 	var _csrf_header = '${_csrf.headerName}';
 	
-	/* 게시글 불러오는 로직 */
-	let page_num = 0;
-	let user_id = '${user.user_id}';
-	var post = "";
+	 
+	 // 팔로워
+	 
+	 /* 댓글 불러오는 로직 */
+	
+	 let login_id = '${login_id}';
+	 function getFollower(){
+		$.getJSON("/getFollower/" + login_id, function(data){
 
-	 function more(){
-		page_num += 1;
-		$.getJSON("/post/userfeed/" + user_id + "?page_num=" + page_num, function(data){
-
+			var str = "";
 			console.log(data);
 			
 			$(data).each(
 				function() {
-					post += "<div class='col-4'><p data-post_num='" + this.post_num + "' class='post'>"
-						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | <a href='/user/room/" + this.writer + "'>"+ this.writer +"</a><br/> " + this.title + " <br/> " + this.content
-						+ "</p></div>";
+					
+					str += "<div>" + this.follower + this.followed + "</div>";						
 
 				});
-			$(".post").html(post);			
-		});
-	 }
-	 more();
-	 
-	 // 팔로우 숫자
-	 
-	 let login_id = '${login_id}';
-	 function followerNum(){
-		$.getJSON("/user/getFollow/" + user_id, function(data){
-
-			console.log(data)
 		
-			$("#followNum").html(data);			
+			$("#followList").html(str);			
 		});
 	 }
-	 followerNum();
+	 getFollower();
 
-	 // 로딩 끝나고
-		 
 	 // 팔로우 기능
 	 $("#follow").on("click", function(){
 			$.ajax({
@@ -100,7 +95,7 @@
 				},
 				dataType : 'text',
 				data : JSON.stringify({
-					follower : login_id, // 로그인 아이디
+					follower : ${login_id}, // 로그인 아이디
 					followed : user_id, // 팔로우할 아이디
 					favorite : 'N'
 				}),
@@ -109,10 +104,9 @@
 	            },
 				success : function(result){
 					if(result == 'FOLLOW SUCCESS'){
-						
-					} followerNum() // 팔로우 수 재호출
+					}
 				}
-			}) 
+			});
 		});
 	 // 밴 기능
 	 $("#ban").on("click", function(){
@@ -125,7 +119,7 @@
 				},
 				dataType : 'text',
 				data : JSON.stringify({
-					user_id : login_id, // 로그인 아이디
+					user_id : ${login_id}, // 로그인 아이디
 					ban_id : user_id // 차단할 아이디
 				}),
 				beforeSend: function(xhr){
@@ -138,7 +132,6 @@
 			});
 		});
 	 
-		 
 	 
 	 </script>
 	

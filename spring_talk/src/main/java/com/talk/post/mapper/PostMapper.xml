@@ -41,6 +41,15 @@
 		]]>
 	</select>
 	
+	<select id="getFollowingPost" resultType="com.talk.post.domain.PostVO">
+		<![CDATA[
+		SELECT * FROM
+			(SELECT /*+ INDEX_DESC(post pk_post_post_num) */ rownum rn, post.* FROM post WHERE writer IN
+			(SELECT Followed FROM FOLLOW WHERE FOLLOWER = #{login_id}) AND rownum <= #{page_num}*#{number})
+		WHERE rn > (#{page_num}-1)*#{number}
+		]]>
+	</select>
+	
 	<update id="updateReplyCount">
 		UPDATE post
 			SET

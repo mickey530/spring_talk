@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.talk.post.domain.Criteria;
+import com.talk.post.domain.FollowCriteria;
 import com.talk.post.domain.PostLikeVO;
 import com.talk.post.domain.PostVO;
 import com.talk.post.domain.UserCriteria;
@@ -59,7 +60,7 @@ public class PostController {
 	@PostMapping("/insert")
 	public String insert(PostVO vo) {
 		service.insert(vo);
-		return "post/postDetail"; // 나중에 뉴스피드로 리다이렉트 예정
+		return "post/newsfeed"; // 나중에 뉴스피드로 리다이렉트 예정
 	}
 	
 	@GetMapping("/detail/{post_num}")
@@ -124,8 +125,7 @@ public class PostController {
 	
 	// 유저피드 기본주소
 	@GetMapping(value="/userfeed/{writer}")
-	public String UserPostList(@PathVariable("writer")String writer, Model model){
-		model.addAttribute("writer", writer);
+	public String UserPostList(@PathVariable("writer")String writer){
 		return "post/userfeed";
 	}
 	
@@ -134,12 +134,37 @@ public class PostController {
 //			아래꺼 있으면 xml 형식으로 떠서 걍 지워버림
 //			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<PostVO>>list(@PathVariable("writer")String writer, UserCriteria cri, Model model){
-	model.addAttribute("writer", writer);
+	public ResponseEntity<List<PostVO>>list(@PathVariable("writer")String writer, UserCriteria cri){
 	ResponseEntity<List<PostVO>> entity= null;
 	
 	try {
 		entity = new ResponseEntity<>(service.getUserPost(cri),HttpStatus.OK);
+	}catch(Exception e) {
+		e.printStackTrace();
+		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+		return entity;
+	}
+	
+	// 팔로잉 피드 기본주소
+	@GetMapping(value="/followfeed/{login_id}")
+	public String followingPostList(@PathVariable("login_id")String login_id){
+		return "post/followfeed";
+	}
+	
+	// 팔로잉 피드 비동기 로드
+	@GetMapping(value="/followfeed/{login_id}", produces= {
+//			아래꺼 있으면 xml 형식으로 떠서 걍 지워버림
+//			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<List<PostVO>>followingPostList(@PathVariable("login_id")String login_id, FollowCriteria cri){
+	ResponseEntity<List<PostVO>> entity= null;
+	log.info("????" + login_id);
+	
+	try {
+		entity = new ResponseEntity<>(service.getFollowingPost(cri),HttpStatus.OK);
+		log.info("????" + service.getFollowingPost(cri));
+
 	}catch(Exception e) {
 		e.printStackTrace();
 		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);

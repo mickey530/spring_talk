@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,17 +11,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 <style>
-  html, body {height:100%;}
-  body {
-    background-color: white;
-    color: black;
-  }
-  #wrapper{
-      height: auto;
-      min-height: 100%;
-      padding-bottom: 50px;
-  }
-  a{text-decoration:none; text-align:center;}
 .title-padding{
     padding:10px;
 }
@@ -48,18 +38,6 @@ summary > p {
 .card {
     font-size: 12px;
 }
-
-footer {
-        display: flex !important;
-        position: fixed;
-        bottom: 0px;
-        width: 100%;
-        height: 50px;
-        font-size: 15px;
-        align-items: center;
-        background-color: white;
-        z-index: 2;
-        }
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -68,18 +46,7 @@ footer {
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal.user.user_id" var="login_id"/>
 </sec:authorize>
-<!-- 대충 헤더임 -->
-
-<div id="wrapper">
-<div class="sticky-top p-3 bg-primary text-white border-bottom row">
-<span class="col-11">대충 헤더영역 : 뉴스피드</span>
-<a href="/post/insert" class="col-1 text-left text-white">포스팅</a>
-</div>
 <div class="container">
-
-
-
-
 <%-- 
 <div class="row justify-content-center">
 <c:forEach var="post" items="${postList }">
@@ -98,25 +65,14 @@ footer {
 </div>
  --%>
 
-
-
+${login_id }
 <div class="post">
-
 </div>
+
 <button id="more" onclick="more()">more</button>
-
-</div> 
-</div>
-
-<footer class="mx-0 py-2 w-100 border-top row justify-content-between">
-      <a href="#" class="col-2">팔로우</a>
-      <a href="#" class="col-2">채팅</a>
-      <a href="#" class="col-2">뉴스피드</a>
-      <a href="#" class="col-2">커뮤니티</a>
-      <a href="/user/room/${login_id }" class="col-2">마이룸</a>
-</footer>
  
-
+ 
+ </div>
 <!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>	
 
@@ -124,20 +80,20 @@ footer {
 	
 	/* 게시글 불러오는 로직 */
 	let page_num = 0;
+	let login_id = '${login_id}';
 	var post = "";
 
 	 function more(){
 		page_num += 1;
-		$.getJSON("/post/newsfeed?page_num=" + page_num, function(data){
+		$.getJSON("/post/followfeed/" + login_id + "?page_num=" + page_num, function(data){
 
 			console.log(data);
 			
 			$(data).each(
 				function() {
 					post += "<p data-post_num='" + this.post_num + "' class='post'>"
-						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | <a href='/user/room/" + this.writer + "'>"+ this.writer +"</a><br/> " + this.title + " <br/> " + this.content
-						+"<br/> 댓글 " + this.replycount+ "개</p><hr/>";
-						console.log(this.replycount)
+						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | " + this.writer + " <br/> " + this.title + " <br/> " + this.content
+						+ "</p>";
 
 				});
 			$(".post").html(post);			
@@ -156,7 +112,6 @@ footer {
 					"Content-Type" : "application/json",
 					"X-HTTP-Method-Override" : "POST"
 				},
-				
 				dataType : 'text',
 				data : JSON.stringify({
 					post_num : post_num,
