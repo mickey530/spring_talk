@@ -12,7 +12,11 @@
 		작성자 : <input type="text" value="${gall.writer }" readonly><br/>
 		제목 : <input type="text" name="title" value="${gall.board_title }"><br/>
 		내용 : <input type="text" name="content" value="${gall.board_content }"><br/>
-		<input type="submit" value="등록완료">
+
+		<input type="hidden" name="searchType" value="${param.searchType }" />
+		<input type="hidden" name="keyword" value="${param.keyword }" />
+		<input type="hidden" name="pageNum" value="${param.pageNum }" />
+		<input type="submit" value="글쓰기"><input type="reset" value="초기화">
 	</form>
 </body>
 </html>
