@@ -14,5 +14,4 @@ public interface ReportReplyMapper {
 	
 	public ReportReplyVO select(long report_rnum);
 
-	
 }

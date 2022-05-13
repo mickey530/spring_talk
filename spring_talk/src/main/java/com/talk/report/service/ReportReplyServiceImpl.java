@@ -15,9 +15,9 @@ public class ReportReplyServiceImpl implements ReportReplyService{
 	private ReportReplyMapper mapper;
 
 	@Override
-	public List<ReportReplyVO> listReport(long report_reply_date) {
+	public List<ReportReplyVO> listReport(long report_rnum) {
 		// TODO Auto-generated method stub
-		return mapper.allList(report_reply_date);
+		return mapper.allList(report_rnum);
 	}
 
 	@Override

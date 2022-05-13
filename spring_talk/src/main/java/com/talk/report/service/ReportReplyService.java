@@ -6,7 +6,7 @@ import com.talk.report.domain.ReportReplyVO;
 
 public interface ReportReplyService {
 	
-	public List<ReportReplyVO> listReport(long report_reply_date);
+	public List<ReportReplyVO> listReport(long report_rnum);
 	
 	public void addReport(ReportReplyVO vo);
 	
