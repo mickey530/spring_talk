@@ -13,6 +13,7 @@
 		제목 : <input type="text" name="title" value="${post.title }"><br/>
 		내용 : <input type="text" name="content" value="${post.content }"><br/>
 		<input type="submit" value="수정완료">
+		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 	</form>
 </body>
 </html>

@@ -46,7 +46,7 @@
 		</select>
 		
 		<delete id="deleteAllReplies">
-			delete from reply_tbl
+			delete from reply
 				WHERE post_num = #{post_num}
 		</delete>
 

@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<!-- c태그라이브러리 -->
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
 
 <!DOCTYPE html>
 <html>
@@ -17,7 +20,7 @@
 <style>
 *{margin: 0;padding: 0;list-style: none;;}
 
-#modDiv{
+#modDiv, #modDiv2{
 position:fixed;
 z-index:100;
 bottom:0 ; left:0;
@@ -26,6 +29,7 @@ margin: 0 auto;
 padding:10px;
 box-sizing: border-box;
 background-color:#fff;}
+	     
 
 .btn_content{width: 100%;
 border-radius: 5px;
@@ -56,6 +60,13 @@ background-color:#ffffff;
 </head>
 <body>
 <div class="container">
+		 <sec:authorize access="isAuthenticated()">
+		 
+			<sec:authentication property="principal.user.user_id" var="login_id"/> 	
+		 </sec:authorize>
+
+
+
 <div>
 	<h2>게시글</h2>
 	<p>작성자 : ${post.writer }</p>
@@ -82,41 +93,50 @@ background-color:#ffffff;
 	<div id="replies"></div>
 	
 	<!-- 댓글 작성란 -->
-	<div>
+	 <sec:authorize access="isAuthenticated()">
 		<div>
-			REPLYER <input type="text" id="newReplyWriter"> 
+	<sec:authentication property="principal.user.user_id" var="login_id"/> 	
+		
+			<div>
+				REPLYER <input type="text" id="newReplyWriter" value='${login_id}'> 
+			</div>
+			<div>
+				REPLY TEXT <input type="text" id="newReplyText">
+			</div>
+			<button id="replyAddBtn">ADD REPLY</button>
 		</div>
-		<div>
-			REPLY TEXT <input type="text" id="newReplyText">
-		</div>
-		<button id="replyAddBtn">ADD REPLY</button>
-	</div>
+	</sec:authorize>
+	
+	<sec:authorize access="isAnonymous()">
+	<a href="http://localhost:8181/user/login">로그인</a>
+	</sec:authorize>
+	
 	<hr/>
 
-	
+		<!-- 본인 =  답글 수정 삭제 닫기
+			 본인x = 답글         닫기 -->
 	
 	<!-- 모달창 -->
 	<div id="modDiv" style="display:none;">
 		<div class="modal-title modalArea">
 		</div>
-		
 		<div class="btn_content modalArea">
-			<button type="button" id="reReplyBtn" class="modalArea">답글달기</button>
-			<button type="button" id="btn" class="modalArea">수정</button>
-			<button type="button" id="replyDelBtn" class="modalArea">삭제</button>
-			<button type="button" onclick="closeModal()" class="modalArea">닫기</button>	
-			
-			
+
+				<button type="button" id="reReplyBtn" class="modalArea">답글달기</button>	
+				<button type="button" onclick="closeModal()" class="modalArea">닫기</button>
+				<button type="button" id="btn" class="modalArea auth visually-hidden">수정</button>
+				<button type="button" id="replyDelBtn" class="modalArea auth visually-hidden">삭제</button>
 		</div>
 	</div>
-	
-	
-	
+
 </div>
 	
 	<!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
+	
+	var _csrf = '${_csrf.token}';
+    var _csrf_header = '${_csrf.headerName}';
 	
 	/* 댓글 불러오는 로직 */
 	let post_num = ${post.post_num};
@@ -132,20 +152,24 @@ background-color:#ffffff;
 					// 시간
 					let timestamp = this.update_date;
 					let date = new Date(timestamp);
-					
+					let user_name = '${login_id}';
+					console.log("user_name : "+user_name);
 					let formattedTime = " 게시일 : " + date.getFullYear()
 										+ "/" + (date.getMonth()+1)
 										+ "/" + date.getDate()
 										+ "-" + date.getHours()
 										+":" + date.getMinutes()
 										+":" + date.getSeconds()
+										+ '&nbsp;&nbsp;&nbsp;';
 										
-										+ '&nbsp;&nbsp;&nbsp;'
-										+"<a type='button'href='/report/reply/${reply.reply_num}' >🚨</a>"
-										+ '&nbsp;'
+										if(!(this.reply_id == user_name)){
+											formattedTime += "<a type='button'href='/report/reply/${reply.reply_num}' >🚨</a>";
+										}
+										
+										formattedTime += '&nbsp;';
 									//	+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 										
-					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong>@"
+					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>@"
 						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
 						+ "<div class='reply_content'>" + this.reply_content 
 						+ "</div>"
@@ -184,6 +208,9 @@ background-color:#ffffff;
 					"X-HTTP-Method-Override" : "POST"
 				},
 				dataType : 'text',
+				beforeSend: function(xhr){
+	                xhr.setRequestHeader(_csrf_header, _csrf);
+	            },
 				data : JSON.stringify({
 					post_num : post_num,
 					reply_id : reply_id,
@@ -209,10 +236,22 @@ background-color:#ffffff;
 	// 선택한 댓글 외부에서 사용 ///////////////////
 	 	let select = "";
 	 	
-	// 이벤트 위임
+	// 모달 이벤트 위임
 	 let modalArea = false; // 모달 열려있는지 확인
 
 	 $("#replies").on("click", ".modalBtn", function(){
+
+		 let reply_id = $(this).siblings(".reply_id").html();
+	     let login_id = '${login_id}';
+	     
+	     console.log("reply_id = "+reply_id+" , login_id = " + login_id);
+	     if(("@"+login_id) == reply_id){
+	         $(".auth").removeClass("visually-hidden");
+	     } else{
+	         $(".auth").addClass("visually-hidden");
+
+	     }
+		 
 		let replytag=$(this).parent();
 	 	console.log(replytag);
 		
@@ -224,7 +263,9 @@ background-color:#ffffff;
 		
 		$(".modal-title").html(reply_num);
 		$("#reply").val(reply_content);
+
 		$("#modDiv").show("slow");
+		
 		modalArea = true; // 모달 열려있음
 		if(modalArea){
 			$('html').click(function(e) {
@@ -256,6 +297,9 @@ background-color:#ffffff;
 			},
 			
 			dataType : 'text',
+			beforeSend: function(xhr){
+                xhr.setRequestHeader(_csrf_header, _csrf);
+            },
 			success : function(result){
 				console.log("result: " + result);
 				if(result == 'SUCCESS'){
@@ -281,6 +325,7 @@ background-color:#ffffff;
 		
 	 // 수정사항 저장 버튼
 	 function replyMod(){
+		 
 		$(".modalBtn").toggleClass("modalBtn");
 		let reply_num = $(".modal-title").html();
 		let reply_content = $(".reply").val();
@@ -291,6 +336,9 @@ background-color:#ffffff;
 				"Content-Type" : "application/json",
 				"X-HTTP-Method-Override" : "PATCH" 
 			},	
+			beforeSend: function(xhr){
+                xhr.setRequestHeader(_csrf_header, _csrf);
+            },
 			contentType:"application/json", // json 자료를 추가로 입력받기 때문에
 			data: JSON.stringify({reply_content:reply_content}),
 			dataType : 'text',
@@ -345,6 +393,9 @@ background-color:#ffffff;
 					"X-HTTP-Method-Override" : "POST"
 				},
 				dataType : 'text',
+				beforeSend: function(xhr){
+	                xhr.setRequestHeader(_csrf_header, _csrf);
+	            },
 				data : JSON.stringify({
 					post_num : post_num,
 					user_id : user_id
@@ -379,6 +430,9 @@ background-color:#ffffff;
 					"X-HTTP-Method-Override" : "POST"
 				},
 				dataType : 'text',
+				beforeSend: function(xhr){
+	                xhr.setRequestHeader(_csrf_header, _csrf);
+	            },
 				data : JSON.stringify({
 					post_num : post_num,
 					user_id : user_id
