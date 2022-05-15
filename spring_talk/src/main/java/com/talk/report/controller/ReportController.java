@@ -213,10 +213,12 @@ public class ReportController {
 	public String reportReplyDetail(@PathVariable Long report_rnum, Model model) {
 		ReportReplyVO reply = reportReplyService.select(report_rnum);
 		model.addAttribute("reply", reply);
+		log.info(reply);
 		Long report_reply_num = reply.getReport_reply_num();
+		log.info(report_reply_num);
 
-
-		ReplyVO replyvo = replyService.getselect(report_reply_num);
+		ReplyVO replyvo = replyService.getselect(report_rnum);
+		log.info(replyvo);
 		model.addAttribute("replyvo", replyvo);
 		
 		return "report/reportReplyDetail";

@@ -202,7 +202,7 @@ background-color:#ffffff;
 										+ '&nbsp;&nbsp;&nbsp;';
 										
 										if(!(this.reply_id == login_id)){
-											formattedTime += "<a type='button'href='/report/reply/${reply.reply_num}' >🚨</a>";
+											formattedTime += "<a type='button'href='/report/reply/"+this.reply_num+"' >🚨</a>";
 										}
 										
 										formattedTime += '&nbsp;';

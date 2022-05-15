@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">   
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,5 +29,14 @@
 			<a href="/report/reportPostList" class="btn btn-dark">게시물 신고목록</a>
 			<a href="/post/delete/${postvo.post_num }" class="btn btn-danger">해당 게시물 삭제</a>
 	</div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
+	<script type="text/javascript">
+	// 선택한 댓글 외부에서 사용 ///////////////////
+	 	let select = "";
+		var _csrf = '${_csrf.token}';
+		var _csrf_header = '${_csrf.headerName}';	
+		
+	</script>	
 </body>
 </html>

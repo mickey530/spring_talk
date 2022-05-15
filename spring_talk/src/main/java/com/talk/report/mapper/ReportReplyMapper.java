@@ -12,6 +12,6 @@ public interface ReportReplyMapper {
 	
 	public void delete(long report_reply_num);
 	
-	public ReportReplyVO select(long report_reply_num);
+	public ReportReplyVO select(long report_rnum);
 
 }

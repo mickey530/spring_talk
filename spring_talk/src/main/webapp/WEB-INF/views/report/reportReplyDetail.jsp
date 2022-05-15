@@ -70,12 +70,15 @@ background-color: transparent;}
 		</div>
 	</div>
 	
+	
+	
 	<!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
 	// 선택한 댓글 외부에서 사용 ///////////////////
 	 	let select = "";
-	 	
+		var _csrf = '${_csrf.token}';
+		var _csrf_header = '${_csrf.headerName}';	 	
 	// 이벤트 위임
 	 $("#replies").on("click", " button", function(){
 		let replytag=$(this).parent();
@@ -111,6 +114,9 @@ background-color: transparent;}
 			},
 			
 			dataType : 'text',
+			beforeSend: function(xhr){
+	               xhr.setRequestHeader(_csrf_header, _csrf);
+	           },
 			success : function(result){
 				console.log("result: " + result);
 				if(result == 'SUCCESS'){
