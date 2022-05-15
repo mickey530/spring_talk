@@ -22,7 +22,7 @@
 	<header class="justify-content-center">
 	<h2>${user_id}'s Room</h2>
 	
-	<c:if test="${login_id ne 'null' }">
+	<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
 		팔로워 : <span id="followNum"></span>명<button id="follow">팔로</button>
 		<button id="ban">응 차단~</button>
 	</c:if>

@@ -71,9 +71,9 @@ footer {
 <!-- 대충 헤더임 -->
 
 <div id="wrapper">
-<div class="sticky-top p-3 bg-primary text-white border-bottom row">
+<div class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
 <span class="col-11">대충 헤더영역 : 뉴스피드</span>
-<a href="/post/insert" class="col-1 text-left text-white">포스팅</a>
+<a href="/post/insert" class="col-1 text-left text-white">+</a>
 </div>
 <div class="container">
 
@@ -111,7 +111,7 @@ footer {
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
       <a href="#" class="col-2">팔로우</a>
       <a href="#" class="col-2">채팅</a>
-      <a href="#" class="col-2">뉴스피드</a>
+      <a href="/post/newsfeed" class="col-2">뉴스피드</a>
       <a href="#" class="col-2">커뮤니티</a>
       <a href="/user/room/${login_id }" class="col-2">마이룸</a>
 </footer>
@@ -121,6 +121,9 @@ footer {
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>	
 
 	<script type="text/javascript">
+	// csrf 토큰 정의
+	var _csrf = '${_csrf.token}';
+    var _csrf_header = '${_csrf.headerName}';
 	
 	/* 게시글 불러오는 로직 */
 	let page_num = 0;
@@ -134,9 +137,11 @@ footer {
 			
 			$(data).each(
 				function() {
-					post += "<p data-post_num='" + this.post_num + "' class='post'>"
+					post += "<div data-post_num='" + this.post_num + "' class='post'>"
 						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | <a href='/user/room/" + this.writer + "'>"+ this.writer +"</a><br/> " + this.title + " <br/> " + this.content
-						+"<br/> 댓글 " + this.replycount+ "개</p><hr/>";
+						+ "<br/><button class='btn btn-outline-danger btn-sm postLike'>♡</button> 댓글 " + this.replycount+ "개<br/>"
+						+ "<input type='text' class='newReplyText'>"
+						+ "<button class='replyAddBtn'>ADD REPLY</button></div><hr/>";
 						console.log(this.replycount)
 
 				});
@@ -144,36 +149,33 @@ footer {
 		});
 	 }
 	 more();
-	 
-	 $("#replyAddBtn").on("click", function(){
-			var reply_id = $("#newReplyWriter").val();
-			var reply_content = $("#newReplyText").val();
-			
-			$.ajax({
-				type : 'post',
-				url : '/replies',
-				headers : {
-					"Content-Type" : "application/json",
-					"X-HTTP-Method-Override" : "POST"
-				},
+
+		// 좋아요 버튼 클릭 시 
+		 $(".post").on("click", ".postLike", function(){
 				
-				dataType : 'text',
-				data : JSON.stringify({
-					post_num : post_num,
-					reply_id : reply_id,
-					reply_content : reply_content
-				}),
-				success : function(result){
-					if(result == 'OK'){
-						alert("등록되었습니다.");
-						getAllList();
-						refresh();
+			 let = $(this).parent();
+			 console.log(let);
+/* 				$.ajax({
+					type : 'post',
+					url : '/post/like',
+					headers : {
+						"Content-Type" : "application/json",
+						"X-HTTP-Method-Override" : "POST"
+					},
+					dataType : 'text',
+					data : JSON.stringify({
+						post_num : post_num,
+						user_id : user_id
+					}),
+					success : function(result){
+						if(result == 'OK'){
+							isLike();
+						}
 					}
-				}
-				/* error도 설정 가능 */
+				}); */
 			});
-			
-		});
+	 
+
 	 </script>
 
 
