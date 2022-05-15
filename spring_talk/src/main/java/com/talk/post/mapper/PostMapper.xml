@@ -55,4 +55,11 @@
 			SET
 		replycount = replycount + #{amount} WHERE post_num = #{post_num}
 	</update>
+	
+		
+	<update id="updateLikeCount">
+		UPDATE post
+			set
+		like_count = like_count + #{amount} WHERE post_num = #{post_num}	
+	</update>
 </mapper>

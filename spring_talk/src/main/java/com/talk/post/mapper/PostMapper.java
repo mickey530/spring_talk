@@ -28,4 +28,6 @@ public interface PostMapper {
 	public void updateReplyCount(@Param("post_num") Long post_bno,
 								@Param("amount") int amount);
 	
+	public void updateLikeCount(@Param("post_num") Long post_bno,
+								@Param("amount") int amount);
 }
