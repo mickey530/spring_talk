@@ -195,8 +195,8 @@ footer {
 					user_id : login_id
 				}),
 				success : function(result){
-					 let thisPost = $(".postList").children(".postLike");
-					 console.log("thisPost"+thisPost);
+					 let thisPost = $(".postLike");
+					 console.log(post_num+thisPost);
 					if(result != ""){
 						thisPost.addClass("post-liked");
 						thisPost.removeClass("post-like");
