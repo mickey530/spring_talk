@@ -82,7 +82,7 @@ public class PostController {
 		replyService.removeAllReply(post_num);
 		service.delete(post_num);
 		log.info(post_num + "번 게시글 삭제되었습니다.");
-		return ""; // 나중에 마이룸으로 리다이렉트 예정
+		return "post/newsfeed"; // 나중에 마이룸으로 리다이렉트 예정
 	}
 	
 	@GetMapping("updateForm/{post_num}")
@@ -190,6 +190,24 @@ public class PostController {
 		}
 		return entity;
 	}
+	
+	// 좋아요 개수
+	@GetMapping(value="/likeCount/{post_num}",produces= {MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+
+	public ResponseEntity<Long> likeCount(@PathVariable("post_num")long post_num){
+	
+	ResponseEntity<Long> entity= null;
+	
+	try {
+	entity = new ResponseEntity<>(likeService.likeCount(post_num),HttpStatus.OK);
+	}catch(Exception e) {
+	e.printStackTrace();
+	entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	return entity;
+	}	
+	
 	
 	// 좋아요
 	@PostMapping(value="/like", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
