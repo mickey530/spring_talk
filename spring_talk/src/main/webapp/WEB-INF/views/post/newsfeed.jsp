@@ -106,13 +106,23 @@ footer {
 <button id="more" onclick="more()">more</button>
 
 </div> <!-- container -->
+
+<!-- 
+<div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label">댓글 입력</label>
+  <textarea class="form-control newReplyText" id="exampleFormControlTextarea1 " rows="3">
+  </textarea>
+  <button class='replyAddBtn'>ADD REPLY</button>
+</div>
+
+ -->
 </div> <!-- wrapper -->
 
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
       <a href="/user/follow" class="col-2">팔로우</a>
       <a href="#" class="col-2">채팅</a>
-      <a href="/post/newsfeed" class="col-2">뉴스피드</a>
-      <a href="#" class="col-2">커뮤니티</a>
+      <a href="/post/newsfeed" class="col-2">피드</a>
+      <a href="#" class="col-2">커뮤</a>
       <a href="/user/room/${login_id }" class="col-2">마이룸</a>
 </footer>
  
@@ -153,8 +163,12 @@ footer {
 						
  						isLike(this.post_num);
  				}
-			
-			
+/* 				
+				<div class='mb-3'>
+				  <label class='form-label'>댓글 달기</label>
+				  <input class='form-control' rows='1'></input>
+				</div>
+			 */
 			
 			
 			);
@@ -182,7 +196,7 @@ footer {
 				}),
 				success : function(result){
 					 let thisPost = $(".postList").children(".postLike");
-					 console.log(thisPost);
+					 console.log("thisPost"+thisPost);
 					if(result != ""){
 						thisPost.addClass("post-liked");
 						thisPost.removeClass("post-like");

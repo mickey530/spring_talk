@@ -1,8 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!-- c태그라이브러리 -->
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">   
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 
 <!DOCTYPE html>
@@ -19,7 +21,30 @@
 <!--http://localhost:8181/post/detail/102  -->
 <style>
 *{margin: 0;padding: 0;list-style: none;;}
+body {width:100%;}
+.container{width : 100%}
 
+ #wrapper{
+    height: auto;
+    min-height: 100%;
+    padding-bottom: 50px;
+ }
+ a{
+ 	text-decoration:none;
+ 	text-align:center;
+ 	}
+
+footer {
+       display: flex !important;
+       position: fixed;
+       bottom: 0px;
+       width: 100%;
+       height: 50px;
+       font-size: 15px;
+       align-items: center;
+       background-color: white;
+       z-index: 2;
+       }
 #modDiv, #modDiv2{
 position:fixed;
 z-index:100;
@@ -63,6 +88,12 @@ background-color:#ffffff;
 	<sec:authentication property="principal.user.user_id" var="login_id"/> 	
 </sec:authorize>
 
+<div id="wrapper">
+	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
+		<span class="col-11">${login_id }'s post</span>
+		<a href="/post/insert" class="col-1 text-left text-white">+</a>
+	</header>
+
 <div class="container">
 
 
@@ -74,7 +105,7 @@ background-color:#ffffff;
 	<p id="content">내용 : ${post.content }</p>
 	<div>
 		<c:if test="${login_id ne null}">
-			<button class="btn btn-outline-danger" id="postLike">좋아요</button>
+			<button class="btn btn-outline-danger" id="postLike"><span>${post.like_count}</span> 좋아요</button>
 		</c:if>
 		<c:if test="${login_id eq post.writer}">
 			<a href="/post/updateForm/${post.post_num}" class="btn">수정</a>
@@ -86,7 +117,8 @@ background-color:#ffffff;
 </div>
 
 <hr/>
-<h2>댓글</h2>
+<h3>댓글 <span id="replyCount">${post.replycount }</span>개</h3>
+
 	
 	<hr/>
 
@@ -125,8 +157,19 @@ background-color:#ffffff;
 		</div>
 	</div>
 
-</div>
-	
+</div> <!-- container -->
+ 
+ 
+</div> <!-- wrapper -->	
+
+<footer class="mx-0 py-2 w-100 border-top row justify-content-between">
+     <a href="/user/follow" class="col-2">팔로우</a>
+     <a href="#" class="col-2">채팅</a>
+     <a href="/post/newsfeed" class="col-2">피드</a>
+     <a href="#" class="col-2">커뮤</a>
+     <a href="/user/room/${login_id }" class="col-2">마이룸</a>
+</footer>
+
 	<!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
@@ -213,6 +256,7 @@ background-color:#ffffff;
 				success : function(result){
 					if(result == 'OK'){
 						alert("등록되었습니다.");
+						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 반영 로직
 						getAllList();
 						refresh();
 					}
@@ -224,7 +268,6 @@ background-color:#ffffff;
 				}
 				
 			});
-			
 		});
 	 
 	// 선택한 댓글 외부에서 사용 ///////////////////
@@ -297,6 +340,7 @@ background-color:#ffffff;
 				console.log("result: " + result);
 				if(result == 'SUCCESS'){
 					alert("삭제 되었습니다.");
+					$("#replyCount").html(parseInt($("#replyCount").html())-1);
 					$("#modDiv").hide("slow");
 					getAllList();
 				}
@@ -393,7 +437,7 @@ background-color:#ffffff;
 				}),
 				success : function(result){
 					if(result != ""){
-						$("#postLike").addClass("post-liked");
+ 						$("#postLike").addClass("post-liked");
 						$("#postLike").removeClass("post-like");
 						$("#postLike").addClass("btn-danger");
 						$("#postLike").removeClass("btn-outline-danger");
@@ -412,7 +456,14 @@ background-color:#ffffff;
 
 	// 좋아요 버튼 클릭 시 
 	 $("#postLike").on("click", function(){
-			console.log($(".post-like").val());
+			let likeCount = $("#postLike").children().html();
+			console.log(parseInt(likeCount));
+			if($("#postLike").hasClass("post-like")){
+				$("#postLike").children().html(parseInt(likeCount)+1);
+			} else{
+				$("#postLike").children().html(parseInt(likeCount)-1);
+			}
+			
 			$.ajax({
 				type : 'post',
 				url : '/post/like',
@@ -430,6 +481,7 @@ background-color:#ffffff;
 				}),
 				success : function(result){
 					if(result == 'OK'){
+						console.log(result)
 						isLike();
 					}
 				}

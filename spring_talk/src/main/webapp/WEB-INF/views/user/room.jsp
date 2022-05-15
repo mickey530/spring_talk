@@ -11,7 +11,29 @@
 <title>Insert title here</title>
 <style>
 	body {width:100%;}
-	.container{width : 100%}
+.container{width : 100%}
+
+ #wrapper{
+    height: auto;
+    min-height: 100%;
+    padding-bottom: 50px;
+ }
+ a{
+ 	text-decoration:none;
+ 	text-align:center;
+ 	}
+
+footer {
+       display: flex !important;
+       position: fixed;
+       bottom: 0px;
+       width: 100%;
+       height: 50px;
+       font-size: 15px;
+       align-items: center;
+       background-color: white;
+       z-index: 2;
+       }
 </style>
 </head>
 <body>
@@ -19,30 +41,41 @@
 	<sec:authentication property="principal.user.user_id" var="login_id"/>
 </sec:authorize>
 
-	<header class="justify-content-center">
-	<h2>${user_id}'s Room</h2>
-	
+<div id="wrapper">
+	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
+		<span class="col-11">${user_id }'s room</span>
+		<a href="/post/insert" class="col-1 text-left text-white">+</a>
+	</header>
+
+<div class="container">
+
 	<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
 		팔로워 : <span id="followNum"></span>명<button id="follow">팔로</button>
 		<button id="ban">응 차단~</button>
 	</c:if>
-
 	
 	
-
-	</header>
+	
+	
 	<hr/>
 	
-	<div class="container m-1">
+	<div class="container">
 		<div class="post row">
-
+	
 		</div>
 	</div>
 	
 	<button id="more" onclick="more()">more</button>
- 
- 
- </div>
+	
+
+</div>
+<footer class="mx-0 py-2 w-100 border-top row justify-content-between">
+      <a href="/user/follow" class="col-2">팔로우</a>
+      <a href="#" class="col-2">채팅</a>
+      <a href="/post/newsfeed" class="col-2">피드</a>
+      <a href="#" class="col-2">커뮤</a>
+      <a href="/user/room/${login_id }" class="col-2">마이룸</a>
+</footer> 
 <!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>	
 
