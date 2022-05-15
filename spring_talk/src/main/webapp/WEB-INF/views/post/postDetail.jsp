@@ -59,12 +59,11 @@ background-color:#ffffff;
 </style>
 </head>
 <body>
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.user.user_id" var="login_id"/> 	
+</sec:authorize>
 
 <div class="container">
-		 <sec:authorize access="isAuthenticated()">
-		 
-			<sec:authentication property="principal.user.user_id" var="login_id"/> 	
-		 </sec:authorize>
 
 
 
@@ -74,10 +73,10 @@ background-color:#ffffff;
 	<p>제목 : ${post.title }</p>
 	<p id="content">내용 : ${post.content }</p>
 	<div>
-		<c:if test="${sessionScope.user_id ne null}">
+		<c:if test="${login_id ne null}">
 			<button class="btn btn-outline-danger" id="postLike">좋아요</button>
 		</c:if>
-		<c:if test="${sessionScope.user_id eq post.writer}">
+		<c:if test="${login_id eq post.writer}">
 			<a href="/post/updateForm/${post.post_num}" class="btn">수정</a>
 			<a href="/post/delete/${post.post_num}" class="btn">삭제</a>
 		</c:if>
@@ -87,24 +86,20 @@ background-color:#ffffff;
 </div>
 
 <hr/>
-세션 : <button onclick="isLike"()">${sessionScope.user_id }</button><h2>댓글</h2>
+<h2>댓글</h2>
 	
 	<hr/>
 
 	<div id="replies"></div>
 	
 	<!-- 댓글 작성란 -->
+	<br/>
 	 <sec:authorize access="isAuthenticated()">
-		<div>
-	<sec:authentication property="principal.user.user_id" var="login_id"/> 	
-		
-			<div>
-				REPLYER <input type="text" id="newReplyWriter" value='${login_id}'> 
-			</div>
+		<div>			
 			<div>
 				REPLY TEXT <input type="text" id="newReplyText">
+				<button id="replyAddBtn">ADD REPLY</button>
 			</div>
-			<button id="replyAddBtn">ADD REPLY</button>
 		</div>
 	</sec:authorize>
 	
@@ -136,9 +131,11 @@ background-color:#ffffff;
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
 	
-	var _csrf = '${_csrf.token}';
-    var _csrf_header = '${_csrf.headerName}';
-	
+	let _csrf = '${_csrf.token}';
+    let _csrf_header = '${_csrf.headerName}';
+    let login_id = '${login_id}';
+
+    
 	/* 댓글 불러오는 로직 */
 	let post_num = ${post.post_num};
 
@@ -153,8 +150,6 @@ background-color:#ffffff;
 					// 시간
 					let timestamp = this.update_date;
 					let date = new Date(timestamp);
-					let user_name = '${login_id}';
-					console.log("user_name : "+user_name);
 					let formattedTime = " 게시일 : " + date.getFullYear()
 										+ "/" + (date.getMonth()+1)
 										+ "/" + date.getDate()
@@ -163,7 +158,7 @@ background-color:#ffffff;
 										+":" + date.getSeconds()
 										+ '&nbsp;&nbsp;&nbsp;';
 										
-										if(!(this.reply_id == user_name)){
+										if(!(this.reply_id == login_id)){
 											formattedTime += "<a type='button'href='/report/reply/${reply.reply_num}' >🚨</a>";
 										}
 										
@@ -192,13 +187,11 @@ background-color:#ffffff;
 	 
 	 /* 댓글 작성 후 댓글작성란 비우는 로직 */
 	 function refresh(){
-		 $("#newReplyWriter").val("");
 		 $("#newReplyText").val("");	 
 	 }
 	 
 	 // 기본댓글 작성하는곳
 	 $("#replyAddBtn").on("click", function(){
-			var reply_id = $("#newReplyWriter").val();
 			var reply_content = $("#newReplyText").val();
 			
 			$.ajax({
@@ -214,7 +207,7 @@ background-color:#ffffff;
 	            },
 				data : JSON.stringify({
 					post_num : post_num,
-					reply_id : reply_id,
+					reply_id : login_id,
 					reply_content : reply_content
 				}),
 				success : function(result){
@@ -243,7 +236,6 @@ background-color:#ffffff;
 	 $("#replies").on("click", ".modalBtn", function(){
 
 		 let reply_id = $(this).siblings(".reply_id").html();
-	     let login_id = '${login_id}';
 	     
 	     console.log("reply_id = "+reply_id+" , login_id = " + login_id);
 	     if(("@"+login_id) == reply_id){
@@ -382,9 +374,7 @@ background-color:#ffffff;
 	document.getElementById('content').innerHTML = linkedContent;
 		
 		
-	// 좋아요 유무 확인
- 	let user_id = '${sessionScope.user_id}';
-	
+	// 좋아요 유무 확인	
 	 function isLike(){
 		 $.ajax({
 				type : 'post',
@@ -399,7 +389,7 @@ background-color:#ffffff;
 	            },
 				data : JSON.stringify({
 					post_num : post_num,
-					user_id : user_id
+					user_id : login_id
 				}),
 				success : function(result){
 					if(result != ""){
@@ -436,7 +426,7 @@ background-color:#ffffff;
 	            },
 				data : JSON.stringify({
 					post_num : post_num,
-					user_id : user_id
+					user_id : login_id
 				}),
 				success : function(result){
 					if(result == 'OK'){
