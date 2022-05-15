@@ -19,6 +19,7 @@
 		<textarea name="content" placeholder="내용"></textarea><br/>
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<input type="submit" value="글쓰기">
+		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 	</form>
 </body>
 </html>

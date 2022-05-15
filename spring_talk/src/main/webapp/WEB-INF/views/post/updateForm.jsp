@@ -21,6 +21,7 @@
 		내용 : <input type="text" name="content" value="${post.content }"><br/>
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 		<input type="submit" value="수정완료">
+		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 	</form>
 <script>
 let login_id = '${login_id}';
