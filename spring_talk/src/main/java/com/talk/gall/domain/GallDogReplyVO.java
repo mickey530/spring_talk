@@ -5,14 +5,14 @@ import java.sql.Date;
 import lombok.Data;
 
 @Data
-public class GallDogVO {
+public class GallDogReplyVO {
 	
+	private long reply_num;
 	private long board_num;
-	private String board_title;
-	private String board_content;
-	private String writer;
+	private long parent_num;
+	private String reply_content;
+	private String Writer;
 	private Date w_date;
 	private Date m_date;
-	private int replycount;
-	private long like_count;
+
 }

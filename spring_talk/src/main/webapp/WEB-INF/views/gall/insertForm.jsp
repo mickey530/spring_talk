@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,10 +9,15 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="/gall/insert" method="post">
-		작성자 : <input type="text" name="writer" placeholder="작성자"><br/>
-		제목 : <input type="text" name="title" placeholder="제목"><br/>
-		본문 : <textarea name="content"  rows="20" cols="100" placeholder="본문"></textarea><br/>
+	<sec:authorize access="isAuthenticated()">
+		<sec:authentication property="principal.user.user_id" var="login_id"/>
+	</sec:authorize>
+	
+	<form action="/galldog/insert" method="post">
+		<input type="hidden" name="writer" value="${login_id }"><br/>
+		<input type="text" name="board_title" placeholder="제목"><br/>
+		<textarea name="board_content" 	 placeholder="내용"></textarea><br/>
+		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 		<input type="submit" value="글쓰기">
 	</form>
 </body>
