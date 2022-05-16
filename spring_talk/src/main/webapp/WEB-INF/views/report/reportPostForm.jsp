@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,12 +9,16 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<sec:authorize access="isAuthenticated()">
+		<sec:authentication property="principal.user.user_id" var="login_id"/>
+	</sec:authorize>
+	
 	<form action="/report/post" method="post">
 		<input type="hidden" name="report_post_num" value="${post_num }"><br/>
-		<input type="text" name="report_id" placeholder="신고자"><br/>		
+		<input type="text" name="report_id" placeholder="${login_id }"><br/>		
 		<textarea name="report_reason" placeholder="신고 사유"></textarea><br/>
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<input type="submit" value="신고">
-		<input type="reset" value="초기화">
 	</form>
 </body>
 </html>
