@@ -198,8 +198,9 @@ public class ReportController {
 	@GetMapping("/reportPostDetail/{report_pnum}")
 	public String reportPostDetail(@PathVariable Long report_pnum, Model model) {
 		ReportPostVO post = reportPostService.select(report_pnum);
-		Long report_post_num = post.getReport_post_num();
 		model.addAttribute("post", post);
+		
+		Long report_post_num = post.getReport_post_num();
 		
 		PostVO postvo = postService.select(report_post_num);
 		model.addAttribute("postvo", postvo);
@@ -213,9 +214,9 @@ public class ReportController {
 	public String reportReplyDetail(@PathVariable Long report_rnum, Model model) {
 		ReportReplyVO reply = reportReplyService.select(report_rnum);
 		model.addAttribute("reply", reply);
+
 		Long report_reply_num = reply.getReport_reply_num();
-
-
+		
 		ReplyVO replyvo = replyService.getselect(report_reply_num);
 		model.addAttribute("replyvo", replyvo);
 		
