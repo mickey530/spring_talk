@@ -1,14 +1,17 @@
 package com.talk.gall.service;
 
+import java.util.List;
+
 import com.talk.gall.domain.GallDogReplyVO;
+
+public interface GallDogReplyService {
 	
-	public interface GallDogReplyService {
+	public List<GallDogReplyVO> listReply(Long board_num);
+	
+	public void addReply(GallDogReplyVO vo);
+	
+	public void modifyReply(GallDogReplyVO vo);
+	
+	public void removeReply(Long reply_num);
 
-		public void insert(GallDogReplyVO vo);
-		
-		public GallDogReplyVO select(long board_num);
-
-		public void update(GallDogReplyVO vo);
-		
-		public void delete(long board_num);
-		}
+}
