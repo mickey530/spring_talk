@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.talk.gall.domain.GallDogReplyVO;
 import com.talk.gall.mapper.GallDogMapper;
@@ -22,10 +23,13 @@ public class GallDogReplyServiceImpl implements GallDogReplyService {
 	public List<GallDogReplyVO> listReply(Long board_num) {
 		return replymapper.getList(board_num);
 	}
-
+	
+	@Transactional
 	@Override
 	public void addReply(GallDogReplyVO vo) {
 		replymapper.create(vo);
+		
+		boardmapper.updateReplyCount(vo.getBoard_num(), 1);
 		
 	}
 
@@ -34,10 +38,12 @@ public class GallDogReplyServiceImpl implements GallDogReplyService {
 		replymapper.update(vo);
 		
 	}
-
+	@Transactional
 	@Override
 	public void removeReply(Long reply_num) {
+		Long board_num = replymapper.getBoard_num(reply_num);
 		replymapper.delete(reply_num);
+		boardmapper.updateReplyCount(board_num, -1);
 	}
 	
 	

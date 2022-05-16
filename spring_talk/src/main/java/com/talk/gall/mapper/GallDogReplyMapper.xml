@@ -39,5 +39,6 @@
 		 	WHERE board_num = #{board_num}
 	</delete>
 
+
 </mapper>
 	
