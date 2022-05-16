@@ -27,13 +27,19 @@ body {width:100%;}
  #wrapper{
     height: auto;
     min-height: 100%;
-    padding-bottom: 50px;
+    padding-bottom: 121px;
  }
  a{
  	text-decoration:none;
  	text-align:center;
  	}
-
+#replyBar{
+       display: flex !important;
+       background-color:white;
+       position: fixed;
+       bottom: 50px;
+       left: 0px;
+}
 footer {
        display: flex !important;
        position: fixed;
@@ -125,21 +131,25 @@ background-color:#ffffff;
 	<div id="replies"></div>
 	
 	<!-- 댓글 작성란 -->
-	<br/>
-	 <sec:authorize access="isAuthenticated()">
-		<div>			
-			<div>
-				REPLY TEXT <input type="text" id="newReplyText">
-				<button id="replyAddBtn">ADD REPLY</button>
+	<div id="replyBar" class="mx-0 py-2 w-100 row justify-content-between">
+		<hr/>
+		
+		 <sec:authorize access="isAuthenticated()">
+			<div>			
+				<div>
+					<input id="newReplyText" onkeyup="enterkey()" class="form-control" type="text" placeholder="댓글!" aria-label="default input example">
+ 					<!-- <input type="text" id="newReplyText"> -->
+					<!-- <button id="replyAddBtn">ADD REPLY</button> -->
+				</div>
 			</div>
-		</div>
-	</sec:authorize>
+		</sec:authorize>
+		
+		<sec:authorize access="isAnonymous()">
+		<a href="http://localhost:8181/user/login">로그인</a>
+		</sec:authorize>
+		<br/>
+	</div>
 	
-	<sec:authorize access="isAnonymous()">
-	<a href="http://localhost:8181/user/login">로그인</a>
-	</sec:authorize>
-	
-	<hr/>
 
 		<!-- 본인 =  답글 수정 삭제 닫기
 			 본인x = 답글         닫기 -->
@@ -234,7 +244,20 @@ background-color:#ffffff;
 	 }
 	 
 	 // 기본댓글 작성하는곳
-	 $("#replyAddBtn").on("click", function(){
+	 
+	 function enterkey() {
+        if (window.event.keyCode == 13) {
+ 
+             // 엔터키가 눌렸을 때 실행할 내용
+              reply();
+        }
+}
+
+
+	 
+	 
+	 
+	function reply(){
 			var reply_content = $("#newReplyText").val();
 			
 			$.ajax({
@@ -268,7 +291,7 @@ background-color:#ffffff;
 				}
 				
 			});
-		});
+		};
 	 
 	// 선택한 댓글 외부에서 사용 ///////////////////
 	 	let select = "";
