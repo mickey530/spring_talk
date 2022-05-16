@@ -155,11 +155,11 @@ footer {
 				function() {
 					post += "<div data-post_num='" + this.post_num + "' class='post'>"
 						+ "<a href='/post/detail/" + this.post_num + "'>"+ this.post_num +"</a> | <a href='/user/room/" + this.writer + "'>"+ this.writer +"</a><br/> " + this.title + " <br/> " + this.content
-						+ "<br/><button class='btn btn-sm postLike'>♡"+this.like_count+"</button> 댓글 " + this.replycount+ "개<br/>"
+						+ "<br/><button class='btn btn-sm postLike' id='postNum_"+ this.post_num +"'>♡"+this.like_count+"</button> 댓글 " + this.replycount+ "개<br/>"
 						+ "<input type='text' class='newReplyText'>"
 						+ "<button class='replyAddBtn'>ADD REPLY</button></div><hr/>";
-						console.log("댓글 개수" + this.replycount);
-						console.log("좋아요 개수" + this.like_count);
+						/* console.log("댓글 개수" + this.replycount);
+						console.log("좋아요 개수" + this.like_count); */
 						
  						isLike(this.post_num);
  				}
@@ -195,8 +195,9 @@ footer {
 					user_id : login_id
 				}),
 				success : function(result){
-					 let thisPost = $(".postLike");
-					 console.log(post_num+thisPost);
+					 let thisPost = $("#postNum_"+ post_num);
+					 let likeNum = parseInt(thisPost.html().substr(1, 1));
+					 thisPost.html("♡" + likeNum)
 					if(result != ""){
 						thisPost.addClass("post-liked");
 						thisPost.removeClass("post-like");
@@ -222,6 +223,13 @@ footer {
 		 $(".postList").on("click", ".postLike", function(){
 				
 			 let post_num = $(this).parent()[0].dataset.post_num;
+			 let thisPost = $("#postNum_"+ post_num);
+			 let likeNum = parseInt(thisPost.html().substr(1, 1));
+			 if(thisPost.hasClass("post-liked")){
+				 thisPost.html("♡" + (likeNum - 1))
+			 } if(thisPost.hasClass("post-like")){
+				 thisPost.html("♡" + (likeNum + 1))
+			 }
 			 console.log(post_num);
 				$.ajax({
 					type : 'post',
@@ -240,8 +248,8 @@ footer {
 					}),
 					success : function(result){
 						if(result == 'OK'){
-/* 							isLike();
- */						}
+ 							isLike(post_num);
+						}
 					}
 				});
 			});
