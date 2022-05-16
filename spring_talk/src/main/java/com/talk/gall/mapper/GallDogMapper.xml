@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.talk.gall.mapper.GallDogMapper">
+	<insert id="insert">
+		INSERT INTO gall_dog (board_num, board_title, board_content, writer)
+			VALUES
+		(board_num.nextval, #{board_title}, #{board_content}, #{writer})
+	</insert>
+
+	<select id="select" resultType="com.talk.gall.domain.GallDogVO">
+		SELECT * FROM gall_dog WHERE board_num=#{board_num}
+	</select>
+
+	<delete id="delete">
+		DELETE FROM gall_dog WHERE board_num=#{board_num}
+	</delete>
+	
+	<update id="update">
+		UPDATE gall_dog
+			SET 
+		board_title=#{board_title}, board_content=#{board_content}, m_date=SYSDATE 
+			WHERE 
+		board_num=#{board_num}
+	</update>
+	
+	<select id="allList" resultType="com.talk.gall.domain.GallDogVO">
+		SELECT * FROM gall_dog
+		ORDER BY board_num DESC
+	</select>
+	
+</mapper>
