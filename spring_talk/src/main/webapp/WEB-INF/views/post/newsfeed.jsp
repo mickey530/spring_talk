@@ -155,7 +155,7 @@ footer {
 				function() {
 					post += "<div data-post_num='" + this.post_num + "' class='post'>"
 						+ "<a href='/post/detail/" + this.post_num + "'>"+ this.post_num +"</a> | <a href='/user/room/" + this.writer + "'>"+ this.writer +"</a><br/> " + this.title + " <br/> " + this.content
-						+ "<br/><button class='btn btn-sm postLike' id='postNum_"+ this.post_num +"'>♡"+this.like_count+"</button> 댓글 " + this.replycount+ "개<br/>"
+						+ "<br/><button class='btn btn-sm postLike' id='postNum_"+ this.post_num +"'>♡"+this.like_count+"</button> 댓글 <span class=replyCount>" + this.replycount+ "</span>개<br/>"
 						+ "<input type='text' class='newReplyText'>"
 						+ "<button class='replyAddBtn'>ADD REPLY</button></div><hr/>";
 						/* console.log("댓글 개수" + this.replycount);
@@ -260,9 +260,9 @@ footer {
 	 $(".postList").on("click", ".replyAddBtn", function(){
 		let post_num = $(this).parent()[0].dataset.post_num;
 		console.log(post_num);
-	
+		let reply_count = $(this).siblings(".replyCount");
+		/* reply_count.html(parseInt(reply_count.html())+1); */
 		let reply_content = $(this).siblings(".newReplyText").val();
-		
 		$.ajax({
 			type : 'post',
 			url : '/replies',
@@ -282,6 +282,7 @@ footer {
 			success : function(result){
 				if(result == 'OK'){
 					alert("등록되었습니다.");
+					reply_count.html(parseInt(reply_count.html())+1);
 					refresh();
 				}
 				
@@ -297,9 +298,8 @@ footer {
 	function refresh(){
 	 $(".newReplyText").val("");	 
 	}
+	
 
-	  
-	  
 	  
 	  
 	 </script>
