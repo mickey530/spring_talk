@@ -15,9 +15,9 @@ public class ReportPostServiceImpl implements ReportPostService{
 	private ReportPostMapper mapper;
 	
 	@Override
-	public List<ReportPostVO> listReport(long report_post_num) {
+	public List<ReportPostVO> listReport(long report_pnum) {
 		// TODO Auto-generated method stub
-		return mapper.allList(report_post_num);
+		return mapper.allList(report_pnum);
 	}
 
 	@Override
@@ -27,14 +27,14 @@ public class ReportPostServiceImpl implements ReportPostService{
 	}
 
 	@Override
-	public void removeReport(long report_post_num) {
-		mapper.delete(report_post_num);
+	public void removeReport(long report_pnum) {
+		mapper.delete(report_pnum);
 		
 	}
 
 	@Override
-	public ReportPostVO select(long report_post_num) {
+	public ReportPostVO select(long report_pnum) {
 		// TODO Auto-generated method stub
-		return mapper.select(report_post_num);
+		return mapper.select(report_pnum);
 	}
 }

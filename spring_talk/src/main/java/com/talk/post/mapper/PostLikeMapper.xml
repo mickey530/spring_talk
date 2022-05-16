@@ -20,4 +20,10 @@
 		post_num = #{post_num} AND user_id = #{user_id}
 	</delete>
 	
+	<select id="likeCount" resultType="long">
+		SELECT count(*) FROM post_like
+			WHERE post_num = #{post_num}
+	</select>
+
+	
 </mapper>

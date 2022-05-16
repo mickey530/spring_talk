@@ -46,12 +46,5 @@ public class HomeController {
 		
 		return "home";
 	}
-	
-	@GetMapping("/room/{user_id}")
-    public String insertTest(@PathVariable String user_id, Model model) {
-        UserVO user = userService.selectById(user_id);
-        model.addAttribute("user", user);
-        return "user/room";
-    }
 
 }

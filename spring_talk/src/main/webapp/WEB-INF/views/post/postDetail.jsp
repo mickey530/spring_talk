@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">   
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 <!DOCTYPE html>
 <html>
@@ -16,8 +21,31 @@
 <!--http://localhost:8181/post/detail/102  -->
 <style>
 *{margin: 0;padding: 0;list-style: none;;}
+body {width:100%;}
+.container{width : 100%}
 
-#modDiv{
+ #wrapper{
+    height: auto;
+    min-height: 100%;
+    padding-bottom: 50px;
+ }
+ a{
+ 	text-decoration:none;
+ 	text-align:center;
+ 	}
+
+footer {
+       display: flex !important;
+       position: fixed;
+       bottom: 0px;
+       width: 100%;
+       height: 50px;
+       font-size: 15px;
+       align-items: center;
+       background-color: white;
+       z-index: 2;
+       }
+#modDiv, #modDiv2{
 position:fixed;
 z-index:100;
 bottom:0 ; left:0;
@@ -26,6 +54,7 @@ margin: 0 auto;
 padding:10px;
 box-sizing: border-box;
 background-color:#fff;}
+	     
 
 .btn_content{width: 100%;
 border-radius: 5px;
@@ -55,17 +84,30 @@ background-color:#ffffff;
 </style>
 </head>
 <body>
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.user.user_id" var="login_id"/> 	
+</sec:authorize>
+
+<div id="wrapper">
+	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
+		<span class="col-11">${login_id }'s post</span>
+		<a href="/post/insert" class="col-1 text-left text-white">+</a>
+	</header>
+
 <div class="container">
+
+
+
 <div>
 	<h2>게시글</h2>
 	<p>작성자 : ${post.writer }</p>
 	<p>제목 : ${post.title }</p>
 	<p id="content">내용 : ${post.content }</p>
 	<div>
-		<c:if test="${sessionScope.user_id ne null}">
-			<button class="btn btn-outline-danger" id="postLike">좋아요</button>
+		<c:if test="${login_id ne null}">
+			<button class="btn btn-outline-danger" id="postLike"><span>${post.like_count}</span> 좋아요</button>
 		</c:if>
-		<c:if test="${sessionScope.user_id eq post.writer}">
+		<c:if test="${login_id eq post.writer}">
 			<a href="/post/updateForm/${post.post_num}" class="btn">수정</a>
 			<a href="/post/delete/${post.post_num}" class="btn">삭제</a>
 		</c:if>
@@ -75,49 +117,68 @@ background-color:#ffffff;
 </div>
 
 <hr/>
-세션 : <button onclick="isLike"()">${sessionScope.user_id }</button><h2>댓글</h2>
+<h3>댓글 <span id="replyCount">${post.replycount }</span>개</h3>
+
 	
 	<hr/>
 
 	<div id="replies"></div>
 	
 	<!-- 댓글 작성란 -->
-	<div>
-		<div>
-			REPLYER <input type="text" id="newReplyWriter"> 
+	<br/>
+	 <sec:authorize access="isAuthenticated()">
+		<div>			
+			<div>
+				REPLY TEXT <input type="text" id="newReplyText">
+				<button id="replyAddBtn">ADD REPLY</button>
+			</div>
 		</div>
-		<div>
-			REPLY TEXT <input type="text" id="newReplyText">
-		</div>
-		<button id="replyAddBtn">ADD REPLY</button>
-	</div>
+	</sec:authorize>
+	
+	<sec:authorize access="isAnonymous()">
+	<a href="http://localhost:8181/user/login">로그인</a>
+	</sec:authorize>
+	
 	<hr/>
 
-	
+		<!-- 본인 =  답글 수정 삭제 닫기
+			 본인x = 답글         닫기 -->
 	
 	<!-- 모달창 -->
 	<div id="modDiv" style="display:none;">
 		<div class="modal-title modalArea">
 		</div>
-		
 		<div class="btn_content modalArea">
-			<button type="button" id="reReplyBtn" class="modalArea">답글달기</button>
-			<button type="button" id="btn" class="modalArea">수정</button>
-			<button type="button" id="replyDelBtn" class="modalArea">삭제</button>
-			<button type="button" onclick="closeModal()" class="modalArea">닫기</button>	
-			
-			
+
+				<button type="button" id="reReplyBtn" class="modalArea">답글달기</button>	
+				<button type="button" onclick="closeModal()" class="modalArea">닫기</button>
+				<button type="button" id="btn" class="modalArea auth visually-hidden">수정</button>
+				<button type="button" id="replyDelBtn" class="modalArea auth visually-hidden">삭제</button>
 		</div>
 	</div>
-	
-	
-	
-</div>
-	
+
+</div> <!-- container -->
+ 
+ 
+</div> <!-- wrapper -->	
+
+<footer class="mx-0 py-2 w-100 border-top row justify-content-between">
+     <a href="/user/follow" class="col-2">팔로우</a>
+     <a href="#" class="col-2">채팅</a>
+     <a href="/post/newsfeed" class="col-2">피드</a>
+     <a href="#" class="col-2">커뮤</a>
+     <a href="/user/room/${login_id }" class="col-2">마이룸</a>
+</footer>
+
 	<!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
 	
+	let _csrf = '${_csrf.token}';
+    let _csrf_header = '${_csrf.headerName}';
+    let login_id = '${login_id}';
+
+    
 	/* 댓글 불러오는 로직 */
 	let post_num = ${post.post_num};
 
@@ -132,20 +193,22 @@ background-color:#ffffff;
 					// 시간
 					let timestamp = this.update_date;
 					let date = new Date(timestamp);
-					
 					let formattedTime = " 게시일 : " + date.getFullYear()
 										+ "/" + (date.getMonth()+1)
 										+ "/" + date.getDate()
 										+ "-" + date.getHours()
 										+":" + date.getMinutes()
 										+":" + date.getSeconds()
+										+ '&nbsp;&nbsp;&nbsp;';
 										
-										+ '&nbsp;&nbsp;&nbsp;'
-										+"<a type='button'href='/report/reply/${reply.reply_num}' >🚨</a>"
-										+ '&nbsp;'
+										if(!(this.reply_id == login_id)){
+											formattedTime += "<a type='button'href='/report/reply/"+this.reply_num+"' >🚨</a>";
+										}
+										
+										formattedTime += '&nbsp;';
 									//	+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 										
-					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong>@"
+					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>@"
 						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
 						+ "<div class='reply_content'>" + this.reply_content 
 						+ "</div>"
@@ -167,13 +230,11 @@ background-color:#ffffff;
 	 
 	 /* 댓글 작성 후 댓글작성란 비우는 로직 */
 	 function refresh(){
-		 $("#newReplyWriter").val("");
 		 $("#newReplyText").val("");	 
 	 }
 	 
 	 // 기본댓글 작성하는곳
 	 $("#replyAddBtn").on("click", function(){
-			var reply_id = $("#newReplyWriter").val();
 			var reply_content = $("#newReplyText").val();
 			
 			$.ajax({
@@ -184,14 +245,18 @@ background-color:#ffffff;
 					"X-HTTP-Method-Override" : "POST"
 				},
 				dataType : 'text',
+				beforeSend: function(xhr){
+	                xhr.setRequestHeader(_csrf_header, _csrf);
+	            },
 				data : JSON.stringify({
 					post_num : post_num,
-					reply_id : reply_id,
+					reply_id : login_id,
 					reply_content : reply_content
 				}),
 				success : function(result){
 					if(result == 'OK'){
 						alert("등록되었습니다.");
+						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 반영 로직
 						getAllList();
 						refresh();
 					}
@@ -203,16 +268,26 @@ background-color:#ffffff;
 				}
 				
 			});
-			
 		});
 	 
 	// 선택한 댓글 외부에서 사용 ///////////////////
 	 	let select = "";
 	 	
-	// 이벤트 위임
+	// 모달 이벤트 위임
 	 let modalArea = false; // 모달 열려있는지 확인
 
 	 $("#replies").on("click", ".modalBtn", function(){
+
+		 let reply_id = $(this).siblings(".reply_id").html();
+	     
+	     console.log("reply_id = "+reply_id+" , login_id = " + login_id);
+	     if(("@"+login_id) == reply_id){
+	         $(".auth").removeClass("visually-hidden");
+	     } else{
+	         $(".auth").addClass("visually-hidden");
+
+	     }
+		 
 		let replytag=$(this).parent();
 	 	console.log(replytag);
 		
@@ -224,7 +299,9 @@ background-color:#ffffff;
 		
 		$(".modal-title").html(reply_num);
 		$("#reply").val(reply_content);
+
 		$("#modDiv").show("slow");
+		
 		modalArea = true; // 모달 열려있음
 		if(modalArea){
 			$('html').click(function(e) {
@@ -256,10 +333,14 @@ background-color:#ffffff;
 			},
 			
 			dataType : 'text',
+			beforeSend: function(xhr){
+                xhr.setRequestHeader(_csrf_header, _csrf);
+            },
 			success : function(result){
 				console.log("result: " + result);
 				if(result == 'SUCCESS'){
 					alert("삭제 되었습니다.");
+					$("#replyCount").html(parseInt($("#replyCount").html())-1);
 					$("#modDiv").hide("slow");
 					getAllList();
 				}
@@ -281,6 +362,7 @@ background-color:#ffffff;
 		
 	 // 수정사항 저장 버튼
 	 function replyMod(){
+		 
 		$(".modalBtn").toggleClass("modalBtn");
 		let reply_num = $(".modal-title").html();
 		let reply_content = $(".reply").val();
@@ -291,6 +373,9 @@ background-color:#ffffff;
 				"Content-Type" : "application/json",
 				"X-HTTP-Method-Override" : "PATCH" 
 			},	
+			beforeSend: function(xhr){
+                xhr.setRequestHeader(_csrf_header, _csrf);
+            },
 			contentType:"application/json", // json 자료를 추가로 입력받기 때문에
 			data: JSON.stringify({reply_content:reply_content}),
 			dataType : 'text',
@@ -333,9 +418,7 @@ background-color:#ffffff;
 	document.getElementById('content').innerHTML = linkedContent;
 		
 		
-	// 좋아요 유무 확인
- 	let user_id = '${sessionScope.user_id}';
-	
+	// 좋아요 유무 확인	
 	 function isLike(){
 		 $.ajax({
 				type : 'post',
@@ -345,13 +428,16 @@ background-color:#ffffff;
 					"X-HTTP-Method-Override" : "POST"
 				},
 				dataType : 'text',
+				beforeSend: function(xhr){
+	                xhr.setRequestHeader(_csrf_header, _csrf);
+	            },
 				data : JSON.stringify({
 					post_num : post_num,
-					user_id : user_id
+					user_id : login_id
 				}),
 				success : function(result){
 					if(result != ""){
-						$("#postLike").addClass("post-liked");
+ 						$("#postLike").addClass("post-liked");
 						$("#postLike").removeClass("post-like");
 						$("#postLike").addClass("btn-danger");
 						$("#postLike").removeClass("btn-outline-danger");
@@ -370,7 +456,14 @@ background-color:#ffffff;
 
 	// 좋아요 버튼 클릭 시 
 	 $("#postLike").on("click", function(){
-			console.log($(".post-like").val());
+			let likeCount = $("#postLike").children().html();
+			console.log(parseInt(likeCount));
+			if($("#postLike").hasClass("post-like")){
+				$("#postLike").children().html(parseInt(likeCount)+1);
+			} else{
+				$("#postLike").children().html(parseInt(likeCount)-1);
+			}
+			
 			$.ajax({
 				type : 'post',
 				url : '/post/like',
@@ -379,12 +472,16 @@ background-color:#ffffff;
 					"X-HTTP-Method-Override" : "POST"
 				},
 				dataType : 'text',
+				beforeSend: function(xhr){
+	                xhr.setRequestHeader(_csrf_header, _csrf);
+	            },
 				data : JSON.stringify({
 					post_num : post_num,
-					user_id : user_id
+					user_id : login_id
 				}),
 				success : function(result){
 					if(result == 'OK'){
+						console.log(result)
 						isLike();
 					}
 				}

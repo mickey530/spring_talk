@@ -13,4 +13,5 @@ public class PostVO {
 	private Date w_date;
 	private Date m_date;
 	private int replycount;
+	private long like_count;
 }

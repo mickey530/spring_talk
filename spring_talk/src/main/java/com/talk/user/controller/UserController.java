@@ -31,6 +31,8 @@ import com.talk.user.service.AuthService;
 import com.talk.user.service.BanService;
 import com.talk.user.service.BanServiceImpl;
 import com.talk.user.service.FollowService;
+import com.talk.post.domain.Criteria;
+import com.talk.post.domain.PostVO;
 import com.talk.post.service.TagService;
 import com.talk.reply.domain.ReplyVO;
 import com.talk.user.service.FollowServiceImpl;
@@ -79,7 +81,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/room/{user_id}")
-    public String insertTest(@PathVariable String user_id, Model model) {
+    public String room(@PathVariable String user_id, Model model) {
         UserVO user = userService.selectById(user_id);
         model.addAttribute("user", user);
         return "user/room";
@@ -94,6 +96,27 @@ public class UserController {
 		
 		return "user/getAllUsers";
 	}
+	
+	@GetMapping(value="/follow")
+	public void follow() {
+	}
+	
+	@GetMapping(value="/followed/{user_id}", produces= {
+//			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<List<FollowVO>> followed(@PathVariable String user_id){
+	
+	ResponseEntity<List<FollowVO>> entity= null;
+	
+	try {
+		entity = new ResponseEntity<>(followService.selectIdsByFollowed(user_id), HttpStatus.OK);
+	}catch(Exception e) {
+		e.printStackTrace();
+		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+		return entity;
+	}
+	
 	
 	@GetMapping(value="/update")
 	public String update(String uid,

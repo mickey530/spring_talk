@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.talk.post.domain.Criteria;
+import com.talk.post.domain.FollowCriteria;
 import com.talk.post.domain.PostVO;
 import com.talk.post.domain.UserCriteria;
 import com.talk.post.mapper.PostLikeMapper;
@@ -56,6 +57,13 @@ public class PostServiceImpl implements PostService{
 	public List<PostVO> getUserPost(UserCriteria cri) {
 		return postMapper.getUserPost(cri);
 	}
+
+	@Override
+	public List<PostVO> getFollowingPost(FollowCriteria cri) {
+		return postMapper.getFollowingPost(cri);
+	}
+	
+
 	
 
 }

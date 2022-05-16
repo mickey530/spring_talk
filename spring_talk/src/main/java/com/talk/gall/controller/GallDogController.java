@@ -32,7 +32,7 @@ public class GallDogController {
 	@PostMapping("/detail")
 	public String insert(GallDogVO vo) {
 		service.insert(vo);
-		return "gall/postDetail"; // 나중에 뉴스피드로 리다이렉트 예정
+		return "gall/postDetail"; 
 	}
 	
 	@GetMapping("/detail/{board_num}")
@@ -43,10 +43,9 @@ public class GallDogController {
 	}
 	
 	@GetMapping("delete/{board_num}")
-	public String delete(@PathVariable long board_num) {
+	public void delete(@PathVariable long board_num) {
 		service.delete(board_num);
 		log.info(board_num + "번 게시글 삭제되었습니다.");
-		return "gall/delete";
 	}
 	
 	@GetMapping("updateForm/{board_num}")

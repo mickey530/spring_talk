@@ -3,12 +3,9 @@ package com.talk.report.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -201,8 +198,9 @@ public class ReportController {
 	@GetMapping("/reportPostDetail/{report_pnum}")
 	public String reportPostDetail(@PathVariable Long report_pnum, Model model) {
 		ReportPostVO post = reportPostService.select(report_pnum);
-		Long report_post_num = post.getReport_post_num();
 		model.addAttribute("post", post);
+		
+		Long report_post_num = post.getReport_post_num();
 		
 		PostVO postvo = postService.select(report_post_num);
 		model.addAttribute("postvo", postvo);
@@ -215,9 +213,10 @@ public class ReportController {
 	@GetMapping("/reportReplyDetail/{report_rnum}")
 	public String reportReplyDetail(@PathVariable Long report_rnum, Model model) {
 		ReportReplyVO reply = reportReplyService.select(report_rnum);
-		Long report_reply_num = reply.getReport_reply_num();
 		model.addAttribute("reply", reply);
 
+		Long report_reply_num = reply.getReport_reply_num();
+		
 		ReplyVO replyvo = replyService.getselect(report_reply_num);
 		model.addAttribute("replyvo", replyvo);
 		
