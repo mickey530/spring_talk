@@ -20,10 +20,14 @@
 	<update id="update">
 		UPDATE gall_dog
 			SET 
-		title=#{board_title}, content=#{board_content}, m_date=SYSDATE 
+		board_title=#{board_title}, board_content=#{board_content}, m_date=SYSDATE 
 			WHERE 
 		board_num=#{board_num}
 	</update>
+	
+	<select id="allList" resultType="com.talk.gall.domain.GallDogVO">
+		SELECT * FROM gall_dog
+		ORDER BY board_num DESC
+	</select>
+	
 </mapper>
-
-<!-- PostMapper.xml을 참조 -->

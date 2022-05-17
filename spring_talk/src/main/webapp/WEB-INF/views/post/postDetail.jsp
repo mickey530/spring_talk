@@ -125,14 +125,15 @@ background-color:#ffffff;
 <hr/>
 <h3>댓글 <span id="replyCount">${post.replycount }</span>개</h3>
 
-	
-	<hr/>
+<hr/>
 
 	<div id="replies"></div>
-	
+<br/>	
+<button id="more" class="btn btn-outline-secondary btn-sm" onclick="getReplyList()">와 ! 댓글 ! 더보기!</button>
+
 	<!-- 댓글 작성란 -->
 	<div id="replyBar" class="mx-0 py-2 w-100 row justify-content-between">
-		<hr/>
+		<br/>
 		
 		 <sec:authorize access="isAuthenticated()">
 			<div>			
@@ -190,12 +191,14 @@ background-color:#ffffff;
 
     
 	/* 댓글 불러오는 로직 */
-	let post_num = ${post.post_num};
+	let page_num = 0;
+	let post_num = '${post.post_num}';
+	let replyList = "";
 
-	 function getAllList(){
-		$.getJSON("/replies/all/" + post_num, function(data){
+	 function getReplyList(){
+		page_num += 1;
+		$.getJSON("/replies/all/" + post_num + "?page_num=" + page_num, function(data){
 
-			var str = "";
 			console.log(data);
 			
 			$(data).each(
@@ -218,10 +221,10 @@ background-color:#ffffff;
 										formattedTime += '&nbsp;';
 									//	+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 										
-					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>@"
-						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
-						+ "<div class='reply_content'>" + this.reply_content 
-						+ "</div>"
+					replyList += "<div class='replyLi p-2' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>@"
+						+ this.reply_id + "</strong> - " /* + formattedTime */
+						+ "<span class='reply_content'>" + this.reply_content 
+						+ "</span>"
 						+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
 						+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 						
@@ -233,10 +236,10 @@ background-color:#ffffff;
 						
 				});
 		
-			$("#replies").html(str);			
+			$("#replies").html(replyList);			
 		});
 	 }
-	 getAllList();
+	 getReplyList();
 	 
 	 /* 댓글 작성 후 댓글작성란 비우는 로직 */
 	 function refresh(){
@@ -280,7 +283,7 @@ background-color:#ffffff;
 					if(result == 'OK'){
 						alert("등록되었습니다.");
 						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 반영 로직
-						getAllList();
+						/* getAllList(); */
 						refresh();
 					}
 					
@@ -325,7 +328,7 @@ background-color:#ffffff;
 
 		$("#modDiv").show("slow");
 		
-		modalArea = true; // 모달 열려있음
+		modalArea = true;
 		if(modalArea){
 			$('html').click(function(e) {
 				if(!$(e.target).hasClass("modalArea")) {
@@ -341,7 +344,7 @@ background-color:#ffffff;
 	 // 모달 닫기
 	 function closeModal(){
 		 $("#modDiv").hide("slow");
-		 modalArea = false;
+		 /* modalArea = false; */
 		 console.log("근데 이게 자꾸 찍힘;;")
 	 };
 	 
@@ -364,8 +367,11 @@ background-color:#ffffff;
 				if(result == 'SUCCESS'){
 					alert("삭제 되었습니다.");
 					$("#replyCount").html(parseInt($("#replyCount").html())-1);
+					$(this).hide("slow");
+					console.log(select.parent());
+					select.parent().hide("slow");
 					$("#modDiv").hide("slow");
-					getAllList();
+					/* getAllList(); */
 				}
 			}
 		});

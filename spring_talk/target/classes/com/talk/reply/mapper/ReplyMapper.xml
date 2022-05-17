@@ -6,10 +6,16 @@
 	<mapper namespace="com.talk.reply.mapper.ReplyMapper">
 
 		<select id="getList" resultType="com.talk.reply.domain.ReplyVO">
-			SELECT * FROM reply
+<!-- 			SELECT * FROM reply
 				WHERE post_num = #{post_num}
 				START WITH parent_num IS NULL
-				CONNECT BY PRIOR reply_num = parent_num
+				CONNECT BY PRIOR reply_num = parent_num -->
+  				<![CDATA[
+  				SELECT * FROM
+					(SELECT /*+ INDEX_DESC(reply pk_reply_reply_num) */ rownum rn, reply.* FROM reply WHERE post_num = #{post_num} AND rownum <= #{page_num}*#{number})
+				WHERE rn > (#{page_num}-1)*#{number}
+				]]>
+		
 		</select>
 		
 		<insert id="create">

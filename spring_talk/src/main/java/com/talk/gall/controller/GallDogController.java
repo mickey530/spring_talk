@@ -88,7 +88,7 @@ public class GallDogController {
 	@GetMapping("delete/{board_num}")
 	public String delete(@PathVariable long board_num) {
 		service.delete(board_num);
-		replyservice.delete(board_num);
+		replyservice.removeReply(board_num);
 		return "gall/dogList";
 	}
 	
