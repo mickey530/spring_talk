@@ -148,6 +148,7 @@ footer {
 	 function more(){
 		page_num += 1;
 		$.getJSON("/post/newsfeed?page_num=" + page_num, function(data){
+			post = $(".postList").html();			
 
 			console.log(data);
 			
@@ -162,14 +163,7 @@ footer {
 						console.log("좋아요 개수" + this.like_count); */
 						
  						isLike(this.post_num);
- 				}
-/* 				
-				<div class='mb-3'>
-				  <label class='form-label'>댓글 달기</label>
-				  <input class='form-control' rows='1'></input>
-				</div>
-			 */
-			
+ 				}			
 			
 			);
 			$(".postList").html(post);			
@@ -221,14 +215,18 @@ footer {
 	 
 		// 좋아요 버튼 클릭 시 
 		 $(".postList").on("click", ".postLike", function(){
-				
 			 let post_num = $(this).parent()[0].dataset.post_num;
 			 let thisPost = $("#postNum_"+ post_num);
 			 let likeNum = parseInt(thisPost.html().substr(1, 1));
-			 if(thisPost.hasClass("post-liked")){
+/* 			 if(thisPost.hasClass("post-liked")){
 				 thisPost.html("♡" + (likeNum - 1))
 			 } if(thisPost.hasClass("post-like")){
 				 thisPost.html("♡" + (likeNum + 1))
+			 } */
+ 			 if($(this).hasClass("post-liked")){
+				 $(this).html("♡" + (likeNum - 1))
+			 } if($(this).hasClass("post-like")){
+				 $(this).html("♡" + (likeNum + 1))
 			 }
 			 console.log(post_num);
 				$.ajax({
