@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.talk.post.domain.Criteria;
+import com.talk.reply.domain.ReplyCriteria;
 import com.talk.reply.domain.ReplyLikeVO;
 import com.talk.reply.domain.ReplyVO;
 import com.talk.reply.service.ReplyAtService;
@@ -60,12 +62,12 @@ public class ReplyController {
 	@GetMapping(value="/all/{post_num}",produces= {MediaType.APPLICATION_XML_VALUE,
 													MediaType.APPLICATION_JSON_UTF8_VALUE})
 	
-	public ResponseEntity<List<ReplyVO>>list(@PathVariable("post_num")Long post_num){
+	public ResponseEntity<List<ReplyVO>>list(@PathVariable("post_num")Long post_num, ReplyCriteria cri){
 		
 		ResponseEntity<List<ReplyVO>> entity= null;
 		
 		try {
-			entity = new ResponseEntity<>(service.listReply(post_num),HttpStatus.OK);
+			entity = new ResponseEntity<>(service.listReply(cri),HttpStatus.OK);
 		}catch(Exception e) {
 			e.printStackTrace();
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);

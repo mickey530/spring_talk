@@ -2,12 +2,13 @@ package com.talk.reply.mapper;
 
 import java.util.List;
 
+import com.talk.reply.domain.ReplyCriteria;
 import com.talk.reply.domain.ReplyVO;
 
 public interface ReplyMapper {
 
 
-	public List<ReplyVO> getList(Long board_num); // 불러오기
+	public List<ReplyVO> getList(ReplyCriteria cri); // 불러오기
 	
 	public void create(ReplyVO vo); // 작성하기
 	

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.talk.post.mapper.PostMapper;
+import com.talk.reply.domain.ReplyCriteria;
 import com.talk.reply.domain.ReplyVO;
 import com.talk.reply.mapper.ReplyMapper;
 
@@ -19,8 +20,8 @@ public class ReplyServiceImpl implements ReplyService {
 	private PostMapper postmapper;
 
 	@Override
-	public List<ReplyVO> listReply(Long board_num) {		
-		return mapper.getList(board_num);
+	public List<ReplyVO> listReply(ReplyCriteria cri) {		
+		return mapper.getList(cri);
 	}
 
 
