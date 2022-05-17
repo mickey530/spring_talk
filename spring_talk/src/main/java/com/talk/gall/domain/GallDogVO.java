@@ -15,4 +15,5 @@ public class GallDogVO {
 	private Date m_date;
 	private int replycount;
 	private long like_count;
+	private int hit; // 보류
 }

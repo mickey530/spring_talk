@@ -67,7 +67,7 @@ public class GallDogController {
 	// 게시글 목록
 	@GetMapping("/dogList")
 	public String dogList(Model model) {
-		List<GallDogVO> dogList = service.allList(0);
+		List<GallDogVO> dogList = service.allList();
 		model.addAttribute("dogList", dogList);
 		return "gall/dogList";
 	}
@@ -79,6 +79,7 @@ public class GallDogController {
 	public String detail(@PathVariable long board_num, Model model) {
 		GallDogVO dog = service.select(board_num);
 		model.addAttribute("dog", dog);
+		service.upHit(board_num);
 		return "gall/dogDetail";
 	}
 
@@ -107,6 +108,8 @@ public class GallDogController {
 		return "redirect:gall/detail/" + board_num;
 	
 	}	
+	
+	// 조회수
 	
 	// 좋아요 확인
 		@ResponseBody

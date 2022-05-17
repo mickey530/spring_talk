@@ -30,10 +30,17 @@
 		ORDER BY board_num DESC
 	</select>
 	
-	<update id=" updateReplyCount">
+	<update id="updateReplyCount">
 		UPDATE gall_dog
 			 SET
 		replycount = replycount + #{amount} WHERE board_num = #{board_num}
+	</update>
+	
+	<!--조회수  -->
+	<update id="upHit">
+		UPDATE gall_dog
+			SET
+		hit = (hit + 1) WHERE board_num= #{board_num}
 	</update>
 	
 </mapper>

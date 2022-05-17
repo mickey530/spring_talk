@@ -65,6 +65,11 @@ background-color:#ffffff;
 </style>
 </head>
 <body>
+
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.user.user_id" var="login_id"/> 	
+</sec:authorize>
+
 	<div class="container" >
 
 	<div>
@@ -133,7 +138,7 @@ background-color:#ffffff;
 	let board_num = ${dog.board_num};
 
 	 function getAllList(){
-		$.getJSON("/replies/all/" + board_num, function(data){
+		$.getJSON("/gellreplies/all/" + board_num, function(data){
 
 			var str = "";
 			console.log(data);
@@ -141,8 +146,13 @@ background-color:#ffffff;
 			$(data).each(
 				function() {
 					// 시간
-					let timestamp = this.update_date;
+					
+					let timestamp = this.m_date;
+					
+					console.log("timestamp : " + timestamp);
+					
 					let date = new Date(timestamp);
+					console.log("date : " + date);
 					let formattedTime = " 게시일 : " + date.getFullYear()
 										+ "/" + (date.getMonth()+1)
 										+ "/" + date.getDate()
@@ -156,7 +166,7 @@ background-color:#ffffff;
 									//	+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 										
 					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>@"
-						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
+						+ this.writer + "</strong> - " + formattedTime + "<br>"
 						+ "<div class='reply_content'>" + this.reply_content 
 						+ "</div>"
 						+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
@@ -181,7 +191,7 @@ background-color:#ffffff;
 			
 			$.ajax({
 				type : 'post',
-				url : '/replies',
+				url : '/gellreplies',
 				headers : {
 					"Content-Type" : "application/json",
 					"X-HTTP-Method-Override" : "POST"
@@ -192,11 +202,11 @@ background-color:#ffffff;
 	            },
 				data : JSON.stringify({
 					board_num : board_num,
-					reply_id : login_id,
+					writer : login_id,
 					reply_content : reply_content
 				}),
 				success : function(result){
-					if(result == 'OK'){
+					if(result == 'SUCCESS'){
 						alert("등록되었습니다.");
 						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 반영 로직
 						getAllList();
@@ -268,7 +278,7 @@ background-color:#ffffff;
 		let reply_num = $(".modal-title").html();
 		$.ajax({
 			type : 'delete',
-			url : '/replies/' + reply_num,
+			url : '/gellreplies/' + reply_num,
 			header : {
 				"X-HTTP-Method-Override" : "DELETE"
 			},
@@ -309,7 +319,7 @@ background-color:#ffffff;
 		let reply_content = $(".reply").val();
 		$.ajax({
 			type : 'patch', 
-			url : '/replies/' + reply_num,
+			url : '/gellreplies/' + reply_num,
 			header : {
 				"Content-Type" : "application/json",
 				"X-HTTP-Method-Override" : "PATCH" 
@@ -327,6 +337,9 @@ background-color:#ffffff;
 					getAllList(); //수정된 댓글 반영한 새 댓글목록 갱신
 				}
 			}
+		});
+		}
+            
             
          // 좋아요 유무 확인	
        	 function isLike(){
@@ -362,7 +375,7 @@ background-color:#ffffff;
        				/* error도 설정 가능 */
        			});
        	 }
-       	 
+       	
 
        	// 좋아요 버튼 클릭 시 
        	 $("#boardLike").on("click", function(){

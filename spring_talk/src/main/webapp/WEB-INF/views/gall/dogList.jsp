@@ -16,20 +16,22 @@
 		      <thead>
 		        <tr>
 		          <th>게시글 번호</th>
-		          <th>글쓴이</th>
 		          <th>제목</th>
+		          <th>글쓴이</th>
 		          <th>올린날짜</th>
 		          <th>수정날짜</th>
+		          <th>조회수</th>
 		        </tr>
 		      </thead>
 		      <tbody>
 		        <c:forEach var="dog" items="${dogList }">
 		          <tr>
-		          	<td><a href="/galldog/detail/${dog.board_num }">${dog.board_num }</a></td>
-		            <td>${dog.writer }</td>
-		            <td>${dog.board_title }</td>	            
+		          	<td><a href="/galldog/detail/${dog.board_num }">${dog.board_num }</a></td>		  
+		            <td><a href="/galldog/detail/${dog.board_num }">${dog.board_title }[${dog.replycount}]</a></td>
+		            <td>${dog.writer }</td>	            
 		            <td>${dog.w_date }</td>
 		            <td>${dog.m_date }</td>
+		            <td>${dog.hit }</td>
 		          </tr>
 		        </c:forEach>
 		      </tbody>

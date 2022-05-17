@@ -11,7 +11,7 @@
 	</select>
 	
 	<insert id="create">
-		INSERT IN TO gall_dog_reply 
+		INSERT INTO gall_dog_reply 
 		(reply_num, board_num, reply_content, writer)
 			VALUES
 		(reply_num.nextval, #{board_num}, #{reply_content}, #{writer})
