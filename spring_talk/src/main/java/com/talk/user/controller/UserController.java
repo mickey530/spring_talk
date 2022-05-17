@@ -96,9 +96,17 @@ public class UserController {
 		
 		return "user/getAllUsers";
 	}
-	
+
 	@GetMapping(value="/follow")
 	public void follow() {
+	}
+
+	@GetMapping(value="/freind")
+	public void freind() {
+	}
+
+	@GetMapping(value="/favorite")
+	public void favorite() {
 	}
 	
 	@GetMapping(value="/followed/{user_id}", produces= {
@@ -269,11 +277,11 @@ public class UserController {
 	//팔로우, 밴 단
 
 
-	// select follow
-	@GetMapping(value="/getFollower/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+	// count follower
+	@GetMapping(value="/countFollower/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
 													MediaType.APPLICATION_JSON_UTF8_VALUE})
 	
-	public ResponseEntity<Integer> followerList(@PathVariable("user_id")String user_id){
+	public ResponseEntity<Integer> countFollower(@PathVariable("user_id")String user_id){
 		
 		ResponseEntity<Integer> entity= null;
 		
@@ -283,15 +291,33 @@ public class UserController {
 			e.printStackTrace();
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		System.out.println("followerList : "+ entity);
+		System.out.println("countFollower : "+ entity);
 		return entity;
 	}
 
-	// select follow
-	@GetMapping(value="/getFollow/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+	// select follower
+	@GetMapping(value="/getFollowerList/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
 													MediaType.APPLICATION_JSON_UTF8_VALUE})
 	
-	public ResponseEntity<Integer>followedList(@PathVariable("user_id")String user_id){
+	public ResponseEntity<List<FollowVO>> getFollower(@PathVariable("user_id")String user_id){
+		
+		ResponseEntity<List<FollowVO>> entity= null;
+		
+		try {
+			entity = new ResponseEntity<>(followService.selectIdsByFollower(user_id),HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("getFollower : "+ entity);
+		return entity;
+	}
+
+	// count followed
+	@GetMapping(value="/countFollowed/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<Integer>countFollowed(@PathVariable("user_id")String user_id){
 		
 		ResponseEntity<Integer> entity= null;
 		
@@ -301,15 +327,93 @@ public class UserController {
 			e.printStackTrace();
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		System.out.println("followedList : "+ entity);
+		System.out.println("countFollowed : "+ entity);
 		return entity;
 	}
+
+
+
+	// select followed
+	@GetMapping(value="/getFollowedList/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<List<FollowVO>> getFollowed(@PathVariable("user_id")String user_id){
+		
+		ResponseEntity<List<FollowVO>> entity= null;
+		
+		try {
+			entity = new ResponseEntity<>(followService.selectIdsByFollowed(user_id),HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("getFollowed : "+ entity);
+		return entity;
+	}
+
+	// select followed
+	@GetMapping(value="/getFreindList/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<List<UserVO>> getFriendList(@PathVariable("user_id")String user_id){
+		
+		ResponseEntity<List<UserVO>> entity= null;
+		
+		try {
+			entity = new ResponseEntity<>(followService.getFriendList(user_id),HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("getFriendList : "+ entity);
+		return entity;
+	}
+	
+	// select followed
+	@GetMapping(value="/getFavoriteList/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<List<UserVO>> getFavoriteList(@PathVariable("user_id")String user_id){
+		
+		ResponseEntity<List<UserVO>> entity= null;
+		
+		try {
+			entity = new ResponseEntity<>(followService.getFavoriteList(user_id),HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("getFriendList : "+ entity);
+		return entity;
+	}
+	
+
+	//  update favorite
+	@PostMapping(value="/checkFavorite",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<String> checkFavorite(@RequestBody FollowVO vo){
+		
+		ResponseEntity<String> entity= null;
+			System.out.println("checkFavorite : "+vo.toString());
+				try {
+					followService.update(vo);
+					entity = new ResponseEntity<>("checkFavorite favorite Success",HttpStatus.OK);
+				}catch(DataIntegrityViolationException e) {
+					e.printStackTrace();
+					System.out.println("error : "+e);
+					entity = new ResponseEntity<>("checkFavorite favorite Failed",HttpStatus.BAD_REQUEST);
+				}
+		System.out.println("banedList : "+ entity);
+		return entity;
+	}
+	
 	
 	//  select ban
 	@GetMapping(value="/getBan/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
 													MediaType.APPLICATION_JSON_UTF8_VALUE})
 	
-	public ResponseEntity<Integer> banList(@PathVariable("user_id")String user_id){
+	public ResponseEntity<Integer> countBan(@PathVariable("user_id")String user_id){
 		
 		ResponseEntity<Integer> entity= null;
 		
@@ -327,7 +431,7 @@ public class UserController {
 	@GetMapping(value="/getBaned/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
 													MediaType.APPLICATION_JSON_UTF8_VALUE})
 	
-	public ResponseEntity<Integer> banedList(@PathVariable("user_id")String user_id){
+	public ResponseEntity<Integer> countBaned(@PathVariable("user_id")String user_id){
 		
 		ResponseEntity<Integer> entity= null;
 		

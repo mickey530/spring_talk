@@ -13,5 +13,6 @@ public class GallDogVO {
 	private String writer;
 	private Date w_date;
 	private Date m_date;
-
+	private int replycount;
+	private long like_count;
 }

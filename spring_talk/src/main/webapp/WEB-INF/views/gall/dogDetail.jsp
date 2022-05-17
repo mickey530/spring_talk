@@ -1,12 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">   
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-
+    <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">   
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,33 +21,11 @@
 body {width:100%;}
 .container{width : 100%}
 
- #wrapper{
-    height: auto;
-    min-height: 100%;
-    padding-bottom: 121px;
- }
  a{
  	text-decoration:none;
  	text-align:center;
  	}
-#replyBar{
-       display: flex !important;
-       background-color:white;
-       position: fixed;
-       bottom: 50px;
-       left: 0px;
-}
-footer {
-       display: flex !important;
-       position: fixed;
-       bottom: 0px;
-       width: 100%;
-       height: 50px;
-       font-size: 15px;
-       align-items: center;
-       background-color: white;
-       z-index: 2;
-       }
+
 #modDiv, #modDiv2{
 position:fixed;
 z-index:100;
@@ -90,40 +65,24 @@ background-color:#ffffff;
 </style>
 </head>
 <body>
-<sec:authorize access="isAuthenticated()">
-	<sec:authentication property="principal.user.user_id" var="login_id"/> 	
-</sec:authorize>
+	<div class="container" >
 
-<div id="wrapper">
-	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
-		<span class="col-11">${login_id }'s post</span>
-		<a href="/post/insert" class="col-1 text-left text-white">+</a>
-	</header>
-
-<div class="container">
-
-
-
-<div>
-	<h2>게시글</h2>
-	<p>작성자 : ${post.writer }</p>
-	<p>제목 : ${post.title }</p>
-	<p id="content">내용 : ${post.content }</p>
 	<div>
-		<c:if test="${login_id ne null}">
-			<button class="btn btn-outline-danger" id="postLike"><span>${post.like_count}</span> 좋아요</button>
+		<h2>${dog.board_num  }번 게시글</h2>
+		<p>작성자 : ${dog.writer }</p>
+		<p>제목 : ${dog.board_title }</p>
+		<p id="content">내용 : ${dog.board_content }</p>
+	<div>		
+		<c:if test="${login_id eq dog.writer}">
+			<a href="/galldog/updateForm/${dog.board_num}" class="btn btn-dark">수정</a>
+			<a href="/galldog/delete/${dog.board_num}" class="btn btn-danger">삭제</a>
 		</c:if>
-		<c:if test="${login_id eq post.writer}">
-			<a href="/post/updateForm/${post.post_num}" class="btn">수정</a>
-			<a href="/post/delete/${post.post_num}" class="btn">삭제</a>
-		</c:if>
-		<a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>
-		
+		<!-- <a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>  -->		
 	</div>
-</div>
+	</div>
 
 <hr/>
-<h3>댓글 <span id="replyCount">${post.replycount }</span>개</h3>
+<h3>댓글 <span id="replyCount">${dog.replycount }</span>개</h3>
 
 	
 	<hr/>
@@ -131,35 +90,27 @@ background-color:#ffffff;
 	<div id="replies"></div>
 	
 	<!-- 댓글 작성란 -->
-	<div id="replyBar" class="mx-0 py-2 w-100 row justify-content-between">
-		<hr/>
-		
-		 <sec:authorize access="isAuthenticated()">
-			<div>			
-				<div>
-					<input id="newReplyText" onkeyup="enterkey()" class="form-control" type="text" placeholder="댓글!" aria-label="default input example">
- 					<!-- <input type="text" id="newReplyText"> -->
-					<!-- <button id="replyAddBtn">ADD REPLY</button> -->
-				</div>
+	<br/>
+	 <sec:authorize access="isAuthenticated()">
+		<div>			
+			<div>
+				REPLY TEXT <input type="text" id="newReplyText">
+				<button id="replyAddBtn">ADD REPLY</button>
 			</div>
-		</sec:authorize>
-		
-		<sec:authorize access="isAnonymous()">
+		</div>
+	</sec:authorize>
+	
+	<sec:authorize access="isAnonymous()">
 		<a href="http://localhost:8181/user/login">로그인</a>
-		</sec:authorize>
-		<br/>
-	</div>
+	</sec:authorize>
 	
+	<hr/>
 
-		<!-- 본인 =  답글 수정 삭제 닫기
-			 본인x = 답글         닫기 -->
-	
 	<!-- 모달창 -->
 	<div id="modDiv" style="display:none;">
 		<div class="modal-title modalArea">
 		</div>
 		<div class="btn_content modalArea">
-
 				<button type="button" id="reReplyBtn" class="modalArea">답글달기</button>	
 				<button type="button" onclick="closeModal()" class="modalArea">닫기</button>
 				<button type="button" id="btn" class="modalArea auth visually-hidden">수정</button>
@@ -168,17 +119,6 @@ background-color:#ffffff;
 	</div>
 
 </div> <!-- container -->
- 
- 
-</div> <!-- wrapper -->	
-
-<footer class="mx-0 py-2 w-100 border-top row justify-content-between">
-     <a href="/user/follow" class="col-2">팔로우</a>
-     <a href="#" class="col-2">채팅</a>
-     <a href="/post/newsfeed" class="col-2">피드</a>
-     <a href="#" class="col-2">커뮤</a>
-     <a href="/user/room/${login_id }" class="col-2">마이룸</a>
-</footer>
 
 	<!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
@@ -190,10 +130,10 @@ background-color:#ffffff;
 
     
 	/* 댓글 불러오는 로직 */
-	let post_num = ${post.post_num};
+	let board_num = ${dog.board_num};
 
 	 function getAllList(){
-		$.getJSON("/replies/all/" + post_num, function(data){
+		$.getJSON("/replies/all/" + board_num, function(data){
 
 			var str = "";
 			console.log(data);
@@ -211,9 +151,6 @@ background-color:#ffffff;
 										+":" + date.getSeconds()
 										+ '&nbsp;&nbsp;&nbsp;';
 										
-										if(!(this.reply_id == login_id)){
-											formattedTime += "<a type='button'href='/report/reply/"+this.reply_num+"' >🚨</a>";
-										}
 										
 										formattedTime += '&nbsp;';
 									//	+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
@@ -223,14 +160,9 @@ background-color:#ffffff;
 						+ "<div class='reply_content'>" + this.reply_content 
 						+ "</div>"
 						+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
-						+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
+						+"<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
 						
-						+ "</div>";						
-						
-						
-						
-						
-						
+						+ "</div>";												
 				});
 		
 			$("#replies").html(str);			
@@ -244,20 +176,7 @@ background-color:#ffffff;
 	 }
 	 
 	 // 기본댓글 작성하는곳
-	 
-	 function enterkey() {
-        if (window.event.keyCode == 13) {
- 
-             // 엔터키가 눌렸을 때 실행할 내용
-              reply();
-        }
-}
-
-
-	 
-	 
-	 
-	function reply(){
+	 $("#replyAddBtn").on("click", function(){
 			var reply_content = $("#newReplyText").val();
 			
 			$.ajax({
@@ -272,7 +191,7 @@ background-color:#ffffff;
 	                xhr.setRequestHeader(_csrf_header, _csrf);
 	            },
 				data : JSON.stringify({
-					post_num : post_num,
+					board_num : board_num,
 					reply_id : login_id,
 					reply_content : reply_content
 				}),
@@ -291,7 +210,7 @@ background-color:#ffffff;
 				}
 				
 			});
-		};
+		});
 	 
 	// 선택한 댓글 외부에서 사용 ///////////////////
 	 	let select = "";
@@ -342,7 +261,6 @@ background-color:#ffffff;
 	 function closeModal(){
 		 $("#modDiv").hide("slow");
 		 modalArea = false;
-		 console.log("근데 이게 자꾸 찍힘;;")
 	 };
 	 
 	 // 삭제
@@ -409,108 +327,76 @@ background-color:#ffffff;
 					getAllList(); //수정된 댓글 반영한 새 댓글목록 갱신
 				}
 			}
-		});
-	 };
-	 
+            
+         // 좋아요 유무 확인	
+       	 function isLike(){
+       		 $.ajax({
+       				type : 'post',
+       				url : '/galldog/islike',
+       				headers : {
+       					"Content-Type" : "application/json",
+       					"X-HTTP-Method-Override" : "POST"
+       				},
+       				dataType : 'text',
+       				beforeSend: function(xhr){
+       	                xhr.setRequestHeader(_csrf_header, _csrf);
+       	            },
+       				data : JSON.stringify({
+       					board_num : board_num,
+       					user_id : login_id
+       				}),
+       				success : function(result){
+       					if(result != ""){
+        					$("#boardLike").addClass("board-liked");
+       						$("#boardLike").removeClass("board-like");
+       						$("#boardLike").addClass("btn-danger");
+       						$("#boardLike").removeClass("btn-outline-danger");
+       					} else{
+       						$("#boardLike").addClass("board-like");
+       						$("#boardLike").removeClass("board-liked");
+       						$("#boardLike").addClass("btn-outline-danger");
+       						$("#boardLike").removeClass("btn-danger");
+       					}
+       					
+       				}
+       				/* error도 설정 가능 */
+       			});
+       	 }
+       	 
 
-	 
-
-	 
-
-	 // 답글달기
-
-	 
-	 </script>
-	 
-	<script type="text/javascript">
-	// 해시태그에 a태그 붙이기
-	// html 안에 'content'라는 아이디를 content 라는 변수로 정의한다.
-	var content = document.getElementById('content').innerHTML;
-	console.log(content)
-	var splitedArray = content.split(' '); // 공백을 기준으로 문자열을 자른다.
-	var linkedContent = '';
-	for(var word in splitedArray)
-	{
-	  word = splitedArray[word];
-	   if(word.indexOf('#') == 0) // # 문자를 찾는다.
-	   {
-	      word = '<a href=\#>'+word+'</a>'; 
-	   }
-	   linkedContent += word+' ';
-	}
-	document.getElementById('content').innerHTML = linkedContent;
-		
-		
-	// 좋아요 유무 확인	
-	 function isLike(){
-		 $.ajax({
-				type : 'post',
-				url : '/post/islike',
-				headers : {
-					"Content-Type" : "application/json",
-					"X-HTTP-Method-Override" : "POST"
-				},
-				dataType : 'text',
-				beforeSend: function(xhr){
-	                xhr.setRequestHeader(_csrf_header, _csrf);
-	            },
-				data : JSON.stringify({
-					post_num : post_num,
-					user_id : login_id
-				}),
-				success : function(result){
-					if(result != ""){
- 						$("#postLike").addClass("post-liked");
-						$("#postLike").removeClass("post-like");
-						$("#postLike").addClass("btn-danger");
-						$("#postLike").removeClass("btn-outline-danger");
-					} else{
-						$("#postLike").addClass("post-like");
-						$("#postLike").removeClass("post-liked");
-						$("#postLike").addClass("btn-outline-danger");
-						$("#postLike").removeClass("btn-danger");
-					}
-					
-				}
-				/* error도 설정 가능 */
-			});
-	 } isLike()
-	 
-
-	// 좋아요 버튼 클릭 시 
-	 $("#postLike").on("click", function(){
-			let likeCount = $("#postLike").children().html();
-			console.log(parseInt(likeCount));
-			if($("#postLike").hasClass("post-like")){
-				$("#postLike").children().html(parseInt(likeCount)+1);
-			} else{
-				$("#postLike").children().html(parseInt(likeCount)-1);
-			}
-			
-			$.ajax({
-				type : 'post',
-				url : '/post/like',
-				headers : {
-					"Content-Type" : "application/json",
-					"X-HTTP-Method-Override" : "POST"
-				},
-				dataType : 'text',
-				beforeSend: function(xhr){
-	                xhr.setRequestHeader(_csrf_header, _csrf);
-	            },
-				data : JSON.stringify({
-					post_num : post_num,
-					user_id : login_id
-				}),
-				success : function(result){
-					if(result == 'OK'){
-						console.log(result)
-						isLike();
-					}
-				}
-			});
-		});
-</script>
-
+       	// 좋아요 버튼 클릭 시 
+       	 $("#boardLike").on("click", function(){
+       			let likeCount = $("#boardLike").children().html();
+       			console.log(parseInt(likeCount));
+       			if($("#boardLike").hasClass("board-like")){
+       				$("#boardLike").children().html(parseInt(likeCount)+1);
+       			} else{
+       				$("#boardLike").children().html(parseInt(likeCount)-1);
+       			}
+       			
+       			$.ajax({
+       				type : 'post',
+       				url : '/galldog/like',
+       				headers : {
+       					"Content-Type" : "application/json",
+       					"X-HTTP-Method-Override" : "POST"
+       				},
+       				dataType : 'text',
+       				beforeSend: function(xhr){
+       	                xhr.setRequestHeader(_csrf_header, _csrf);
+       	            },
+       				data : JSON.stringify({
+       					board_num : board_num,
+       					user_id : login_id
+       				}),
+       				success : function(result){
+       					if(result == 'OK'){
+       						console.log(result)
+       						isLike();
+       					}
+       				}
+       			});
+       		});	 
+	 </script>	
 </body>
 </html>

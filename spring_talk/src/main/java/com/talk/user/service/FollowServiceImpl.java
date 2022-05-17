@@ -27,6 +27,30 @@ public class FollowServiceImpl implements FollowService {
 	}
 
 	@Override
+	public List<UserVO> getFollowerList(String user_id) {
+		
+		return FollowMapper.getFollowerList(user_id);
+	}
+
+	@Override
+	public List<UserVO> getFollowedList(String user_id) {
+		return FollowMapper.getFollowedList(user_id);
+	}
+
+	@Override
+	public List<UserVO> getFriendList(String user_id) {
+		// TODO Auto-generated method stub
+		return FollowMapper.getFriendList(user_id);
+	}
+
+	@Override
+	public List<UserVO> getFavoriteList(String user_id) {
+		// TODO Auto-generated method stub
+		return FollowMapper.getFavoriteList(user_id);
+	}
+
+
+	@Override
 	public int countFollower(String user_id) {
 		return FollowMapper.countFollower(user_id);
 	}
@@ -52,8 +76,8 @@ public class FollowServiceImpl implements FollowService {
 	}
 
 	public void update(FollowVO vo) {
+		System.out.println("update FollowVO : " + vo.toString());
 		FollowMapper.update(vo);
 	}
-
 
 }
