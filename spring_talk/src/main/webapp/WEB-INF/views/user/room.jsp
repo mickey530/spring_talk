@@ -18,10 +18,28 @@
     min-height: 100%;
     padding-bottom: 50px;
  }
+ 
+ #sideMenu > ul > li > a{
+ 	color: white;
+ }
  a{
  	text-decoration:none;
  	text-align:center;
  	}
+ 	
+ 	#sideMenu > ul{
+ 		display: none;
+ 	}
+ 	
+ 	#sideMenu > ul > li{
+ 		list-style: none;
+ 	}
+ 	
+ 	#modDiv{width: 100%;max-width: 600px;
+margin: 0 auto;
+padding:10px;
+box-sizing: border-box;
+background-color: blanchedalmond;}
 
 footer {
        display: flex !important;
@@ -33,7 +51,8 @@ footer {
        align-items: center;
        background-color: white;
        z-index: 2;
-       }
+       float:left;
+}
 </style>
 </head>
 <body>
@@ -45,6 +64,14 @@ footer {
 	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
 		<span class="col-11">${user_id }'s room</span>
 		<a href="/post/insert" class="col-1 text-left text-white">+</a>
+		<div id="sideMenu"> 
+			<a>MENU</a>
+			<ul>
+				<li><a href="/user/follow/${login_id}" }>follower</a></li>
+				<li><a href="/user/freind">fff</a></li>
+				<li><a href="/user/favorite">favorite</a></li>
+			</ul>
+		</div>
 	</header>
 
 <div class="container">
@@ -55,16 +82,14 @@ footer {
 	</c:if>
 	
 	
-	
-	
 	<hr/>
 	
 	<div class="container">
 		<div class="post row">
 	
 		</div>
-	</div>
 	
+	<hr/>
 	<button id="more" onclick="more()">more</button>
 	
 
@@ -76,6 +101,8 @@ footer {
       <a href="#" class="col-2">커뮤</a>
       <a href="/user/room/${login_id }" class="col-2">마이룸</a>
 </footer> 
+
+</div>
 <!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>	
 
@@ -111,13 +138,105 @@ footer {
 	 
 	 let login_id = '${login_id}';
 	 function followerNum(){
-		$.getJSON("/user/getFollow/" + user_id, function(data){
+			$.getJSON("/user/countFollower/" + user_id, function(data){
 
-			console.log(data)
-		
-			$("#followNum").html(data);			
+				console.log(data)
+			
+				$("#followNum").html(data);			
+			});
+		 }
+		 
+
+
+	 function getFollower(){
+		$.getJSON("/user/getFollowerList/" + user_id, function(data){
+			
+			var follower = "";
+
+			console.log("getFollowerList : ");
+			console.log(data);
+			
+			$(data).each(
+				function() {
+						follower += "<div class='col-2' data-follower='"+this.follower+"'><p class='follower'>"
+						+ "<a href='/user/room/" + this.follower + "'>"
+						+ this.follower +"</a></p>";
+
+						console.log("favorite "+this.follower+" : "+this.favorite);
+						
+						if(this.favorite == 'Y'){
+
+							follower += "<button class='btn btn-sm btn-danger favorite'>☆ 즐겨찾기</button>";
+						}
+						else{
+
+							follower += "<button class='btn btn-sm btn-outline-danger favorite'>☆ 즐겨찾기</button>";
+						}
+						
+						follower += "</div><br/>"
+				});
+			$(".followerList").html(follower);			
 		});
 	 }
+	 getFollower();
+
+	 function getFreindList(){
+		$.getJSON("/user/getFreindList/" + user_id, function(data){
+			
+			var follower = "";
+
+			console.log("getFollowedList : ");
+			console.log(data);
+			
+			$(data).each(
+				function() {
+						follower += "<div class='col-2'><p class='freind'>"
+						+ "<a href='/user/room/" + this.user_id + "'>"
+						+ this.user_name +"</a></p></div><br/>"
+						if(this.favorite == 'Y'){
+
+							follower += "<button class='btn btn-sm btn-danger favorite'>☆ 즐겨찾기</button>";
+						}
+						else{
+
+							follower += "<button class='btn btn-sm btn-outline-danger favorite'>☆ 즐겨찾기</button>";
+						}
+						
+				});
+			$(".freindList").html(follower);			
+		});
+	 }
+	 getFreindList();
+
+	 function getFavoriteList(){
+		$.getJSON("/user/getFavoriteList/" + user_id, function(data){
+			
+			var follower = "";
+
+			console.log("getFollowedList : ");
+			console.log(data);
+			
+			$(data).each(
+				function() {
+						follower += "<div class='col-2'><p class='favorite'>"
+						+ "<a href='/user/room/" + this.user_id + "'>"
+						+ this.user_name +"</a></p></div><br/>";
+						
+						if(this.favorite == 'Y'){
+
+							follower += "<button class='btn btn-sm btn-danger favorite'>☆ 즐겨찾기</button>";
+						}
+						else{
+
+							follower += "<button class='btn btn-sm btn-outline-danger favorite'>☆ 즐겨찾기</button>";
+						}
+						
+				});
+			$(".favoriteList").html(follower);			
+		});
+	 }
+	 getFavoriteList();
+	 
 	 followerNum();
 
 	 // 로딩 끝나고
@@ -170,8 +289,60 @@ footer {
 				}
 			});
 		});
-	 
+
+	 $(".followerList").on("click", ".favorite", function(){
+		 let follower = $(this).parent()[0].dataset.follower;
 		 
+		 
+		 
+		 let favorite = '';
+
+		 if($(this).hasClass('btn-danger') === true){
+
+			 favorite = 'N';
+		 }else{
+			 favorite = 'Y';
+		 }	
+			 
+		 $(this).toggleClass( 'btn-outline-danger' );
+		 $(this).toggleClass( 'btn-danger' );
+
+		 console.log("login_id : " + login_id);
+		 console.log("followed : " + follower);
+		 console.log("favorite : " + favorite);
+
+		 $.ajax({
+				type : 'post',
+				url : '/user/checkFavorite',
+				headers : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "POST"
+				},
+				dataType : 'text',
+				data : JSON.stringify({
+					follower : follower, // 로그인 아이디
+					followed : login_id, // 차단할 아이디
+					favorite : favorite
+				}),
+				beforeSend: function(xhr){
+	                xhr.setRequestHeader(_csrf_header, _csrf);
+	            },
+				success : function(result){
+					console.log(result);
+				}
+			});
+	 });
+	 
+	 
+	$("#sideMenu > a").click(function(){
+		var subMenu = $(this).next("ul");
+
+		if(subMenu.is(":visible")){
+			subMenu.slideUp();
+		}else{
+			subMenu.slideDown();
+		}
+	});
 	 
 	 </script>
 	

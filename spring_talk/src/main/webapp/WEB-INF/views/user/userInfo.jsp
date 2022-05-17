@@ -101,7 +101,7 @@
 
 	// 팔로워 정보 가져오기
 	function getFollower(){
-		$.getJSON("/user/getFollower/${userInfo.user_id }" , function(data){
+		$.getJSON("/user/countFollower/${userInfo.user_id }" , function(data){
 			$("#follower").html(data);
 		});
 	}

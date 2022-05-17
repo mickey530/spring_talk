@@ -16,6 +16,41 @@
 			WHERE followed = #{user_id}
 	</select>
 	 
+	 
+	<select id="getFollowerList" resultType="com.talk.user.domain.UserVO">
+		
+		
+		SELECT user_num,user_id,user_age,user_name,last_name FROM user_info
+			WHERE user_id in (
+				select follower from follow where followed = #{user_id})
+	</select>
+	 
+	<select id="getFollowedList" resultType="com.talk.user.domain.UserVO">
+		
+		
+		SELECT user_num,user_id,user_age,user_name,last_name FROM user_info
+			WHERE user_id in (
+				select followed from follow where follower = #{user_id})
+	</select>
+	
+	
+	<select id="getFriendList" resultType="com.talk.user.domain.UserVO">
+		
+		SELECT user_num,user_id,user_age,user_name,last_name from user_info
+        where user_id in
+			(select fed.follower
+				FROM
+					(select * from follow where followed = #{user_id}) fed inner JOIN 
+		            (select * from follow where follower = #{user_id}) fer 
+		            on fed.follower = fer.followed)
+	</select>
+	
+	<select id="getFavoriteList" resultType="com.talk.user.domain.UserVO">
+		SELECT user_num,user_id,user_age,user_name,last_name FROM user_info
+			WHERE user_id in (
+				select follower from follow where followed = #{user_id} and favorite = 'Y')
+	</select>
+	 
 	<select id="countFollower" resultType="int">
 		
 		SELECT count(*) FROM follow
@@ -44,14 +79,13 @@
 	</insert >
 	
 	<update id="update">
-		
-		UPDATE follow 
-			SET 
-		favorite = #{favorite}
-			WHERE (
-				follower = #{follower} and
+		update follow set  
+			favorite =#{favorite} 
+			where (
+				follower = #{follower} and 
 				followed = #{followed}
-			)
+				)
+
 	</update>
 	
 </mapper>
