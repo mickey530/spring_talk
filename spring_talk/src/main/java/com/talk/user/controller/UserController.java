@@ -125,28 +125,6 @@ public class UserController {
 		return entity;
 	}
 	
-	
-	@GetMapping(value="/follow")
-	public void follow() {
-	}
-	
-	@GetMapping(value="/followed/{user_id}", produces= {
-//			MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<FollowVO>> followed(@PathVariable String user_id){
-	
-	ResponseEntity<List<FollowVO>> entity= null;
-	
-	try {
-		entity = new ResponseEntity<>(followService.selectIdsByFollowed(user_id), HttpStatus.OK);
-	}catch(Exception e) {
-		e.printStackTrace();
-		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-	}
-		return entity;
-	}
-	
-	
 	@GetMapping(value="/update")
 	public String update(String uid,
 			Model model) {
