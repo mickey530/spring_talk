@@ -26,7 +26,8 @@ public interface GallDogMapper {
 			@Param("amount") int amount);
 	
 	public int countPageNum(SearchCriteria cri);
-	
+	// 조회수
+		public void upHit(long board_num);
 }
 
 // PostMapper.java 참조
