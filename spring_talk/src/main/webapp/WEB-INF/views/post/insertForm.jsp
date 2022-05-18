@@ -62,6 +62,17 @@ footer {
         z-index: 2;
         }
 </style>
+<script>
+$(document).ready(function(){
+    if (!('url' in window) && ('webkitURL' in window)) {
+        window.URL = window.webkitURL;
+    }
+
+    $('#camera').change(function(e){
+        $('#pic').attr('src', URL.createObjectURL(e.target.files[0]));
+    });
+});
+</script>
 
 </head>
 <body>
@@ -88,9 +99,11 @@ footer {
 		<input type="submit" value="글쓰기">
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 	</form>
-<div class="mb-3">
-  
-</div>
+	
+    <input type="file" id="camera" name="camera" capture="camera" accept="image/*" />
+    <br />
+
+    <img id="pic" style="width:100%;" />
 
 <div class="mb-3">
   
