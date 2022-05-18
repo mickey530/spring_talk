@@ -16,25 +16,27 @@
 		      <thead>
 		        <tr>
 		          <th>게시글 번호</th>
-		          <th>글쓴이</th>
 		          <th>제목</th>
+		          <th>글쓴이</th>
 		          <th>올린날짜</th>
 		          <th>수정날짜</th>
+		          <th>조회수</th>
 		        </tr>
 		      </thead>
 		      <tbody>
 		        <c:forEach var="dog" items="${dogList }">
 		          <tr>
-		          	<td><a href="/galldog/detail/${dog.board_num }">${dog.board_num }</a></td>
-		            <td>${dog.writer }</td>
-		            <td>${dog.board_title }</td>	            
+		          	<td><a href="/gall/detail/${dog.board_num }">${dog.board_num }</a></td>		  
+		            <td><a href="/gall/detail/${dog.board_num }">${dog.board_title }[${dog.replycount}]</a></td>
+		            <td>${dog.writer }</td>	            
 		            <td>${dog.w_date }</td>
 		            <td>${dog.m_date }</td>
+		            <td>${dog.hit }</td>
 		          </tr>
 		        </c:forEach>
 		      </tbody>
 		    </table>
-		    <a href="/galldog/insert" class="btn btn-warning">게시글 작성</a><hr/>
+		    <a href="/gall/insert" class="btn btn-warning">게시글 작성</a><hr/>
 		    
 		    ${pageMaker }<br/>
 		    
@@ -55,14 +57,14 @@
     		
 		    <c:if test="${pageMaker.next }">
 		  		<li class="page-item">
-		  			<a class="page-link" href="/galldog/dogList?pageNum=${pageMaker.endPage + 1}&searchType=${pageMaker.cri.searchType}&keyword=${pageMaker.cri.keyword}">다음</a>
+		  			<a class="page-link" href="/gall/dogList?pageNum=${pageMaker.endPage + 1}&searchType=${pageMaker.cri.searchType}&keyword=${pageMaker.cri.keyword}">다음</a>
 		  		</li>
 		  	</c:if>
 		  			  
 		  </ul>
 		  <div class="row">
 		  	<!-- 검색창 부분 -->
-		  	<form action="/galldog/dogList" method="get">
+		  	<form action="/gall/dogList" method="get">
 		  		<!-- select태그를 이용해서 클릭해 검색조건을 선택하도록 처리 -->
 		  		<select name="searchType">		  		
 		  			<!-- 검색조건을 option태그를 이용해 만들기 -->
