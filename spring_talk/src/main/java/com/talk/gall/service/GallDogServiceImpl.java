@@ -4,11 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.talk.gall.domain.GallDogVO;
+import com.talk.gall.domain.SearchCriteria;
 import com.talk.gall.mapper.GallDogMapper;
 import com.talk.gall.mapper.GallDogReplyMapper;
-import com.talk.post.domain.UserCriteria;
 
 @Service
 public class GallDogServiceImpl implements GallDogService {
@@ -29,6 +30,7 @@ public class GallDogServiceImpl implements GallDogService {
 		return gallDogMapper.select(board_num);
 	}
 
+	@Transactional
 	@Override
 	public void delete(long board_num) {
 		gallDogMapper.delete(board_num);
@@ -50,6 +52,12 @@ public class GallDogServiceImpl implements GallDogService {
 	public void upHit(long board_num) {
 		gallDogMapper.upHit(board_num);
 		
+	}
+
+	@Override
+	public int countPageNum(SearchCriteria cri) {
+		// TODO Auto-generated method stub
+		return gallDogMapper.countPageNum(cri);
 	}
 }	
 

@@ -35,11 +35,9 @@ public class GallReplyController {
 		ResponseEntity<String>entity = null;
 		
 		try {
-			System.out.println("gellreplies : "+vo.toString());
 			service.addReply(vo);
 			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 		}catch(Exception e) {
-			System.out.println(e);
 			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		return entity;

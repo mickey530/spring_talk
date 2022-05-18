@@ -12,7 +12,7 @@
 	<sec:authorize access="isAuthenticated()">
 		<sec:authentication property="principal.user.user_id" var="login_id"/>
 	</sec:authorize>
-	<form action="/galldog/update" method="get">
+	<form action="/galldog/update" method="post">
 		<input type="hidden" name="board_num" value="${dog.board_num }">
 		<input type="hidden" value="${login_id }" readonly><br/>
 		제목 : <input type="text" name="board_title" value="${dog.board_title }"><br/>

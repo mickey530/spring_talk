@@ -11,7 +11,7 @@
 	</select>
 	
 	<insert id="create">
-		INSERT INTO gall_dog_reply 
+		INSERT IN TO gall_dog_reply 
 		(reply_num, board_num, reply_content, writer)
 			VALUES
 		(reply_num.nextval, #{board_num}, #{reply_content}, #{writer})
@@ -38,7 +38,6 @@
 		 delete from gall_dog_reply
 		 	WHERE board_num = #{board_num}
 	</delete>
-
 
 </mapper>
 	
