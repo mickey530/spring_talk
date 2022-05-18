@@ -111,6 +111,22 @@ public class ReplyController {
 	
 }
 	
+	@GetMapping(value="/sequence",produces= {MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+
+	public ResponseEntity<Long> getReplySequence(){
+	
+	ResponseEntity<Long> entity= null;
+	
+	try {
+	entity = new ResponseEntity<>(service.getReplySequence(),HttpStatus.OK);
+	}catch(Exception e) {
+	e.printStackTrace();
+	entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	return entity;
+	}
+	
 	// 좋아요 누른사람 리싀트
 //	@GetMapping(value="/all/{post_num}",produces = {MediaType.APPLICATION_XML_VALUE,
 //													MediaType.APPLICATION_JSON_UTF8_VALUE})
