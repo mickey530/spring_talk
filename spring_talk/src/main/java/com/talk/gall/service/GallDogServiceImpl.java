@@ -44,8 +44,14 @@ public class GallDogServiceImpl implements GallDogService {
 	}
 
 	@Override
-	public List<GallDogVO> allList(long board_num) {
-		return gallDogMapper.allList(board_num);
+	public List<GallDogVO> allList() {
+		return gallDogMapper.allList();
+	}
+
+	@Override
+	public void upHit(long board_num) {
+		gallDogMapper.upHit(board_num);
+		
 	}
 
 	@Override

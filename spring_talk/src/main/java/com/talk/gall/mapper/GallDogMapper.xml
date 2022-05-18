@@ -88,6 +88,13 @@
 		]]>
 	</select>
 	
+	<!--조회수  -->
+    <update id="upHit">
+        UPDATE gall_dog
+            SET
+        hit = (hit + 1) WHERE board_num= #{board_num}
+    </update>
+	
 	
 	
 </mapper>

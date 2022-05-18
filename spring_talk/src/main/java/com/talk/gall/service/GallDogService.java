@@ -15,7 +15,9 @@ public interface GallDogService {
 	
 	public void delete(long board_num);
 	
-	public List<GallDogVO> allList(long board_num);
+	public List<GallDogVO> allList();
+	
+	public void upHit(long board_num);
 	
 	public int countPageNum(SearchCriteria cri);
 	
