@@ -509,7 +509,6 @@ public class UserController {
 	// 소셜 로그인
 	@RequestMapping(value="/naverLogin", method = RequestMethod.GET)
 	public String login(HttpSession session) {
-		NaverLoginBO naverLoginBO = new NaverLoginBO();
 		String naverAuthUrl = naverLoginBO.getAuthorizationUrl(session);
 		session.setAttribute("url", naverAuthUrl);
 		return "redirect:/customLogin";

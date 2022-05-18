@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Built-By: 프레시고메이(가든-서비스)
-Build-Jdk: 11.0.14.1
-Created-By: Maven Integration for Eclipse
-
