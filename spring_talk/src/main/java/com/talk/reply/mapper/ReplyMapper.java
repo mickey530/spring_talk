@@ -24,4 +24,5 @@ public interface ReplyMapper {
 	
 	public void deleteAllReplies(Long post_num);
 	
+	public long getReplySequence();
 }

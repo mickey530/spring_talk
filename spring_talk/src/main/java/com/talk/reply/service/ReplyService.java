@@ -19,5 +19,7 @@ public interface ReplyService {
 	public void removeAllReply(Long post_num); 
 	
 	public ReplyVO getselect(long reply_num);
+	
+	public long getReplySequence();
 
 }

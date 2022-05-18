@@ -56,6 +56,12 @@ public class ReplyServiceImpl implements ReplyService {
 	public ReplyVO getselect(long reply_num) {
 		return mapper.select(reply_num);
 	}
+
+
+	@Override
+	public long getReplySequence() {
+		return mapper.getReplySequence();
+	}
 	
 	
 	

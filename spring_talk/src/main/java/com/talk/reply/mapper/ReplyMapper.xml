@@ -56,4 +56,7 @@
 				WHERE post_num = #{post_num}
 		</delete>
 
+		<select id="getReplySequence" resultType="long">
+			SELECT last_number FROM user_sequences WHERE SEQUENCE_NAME = 'REPLY_NUM'
+		</select>
 	</mapper>
