@@ -29,7 +29,7 @@ import lombok.extern.log4j.Log4j;
 
 @Controller
 @Log4j
-@RequestMapping("/galldog")
+@RequestMapping("/gall")
 public class GallDogController {
 	
 	@Autowired
