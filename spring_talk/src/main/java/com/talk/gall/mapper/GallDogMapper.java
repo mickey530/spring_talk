@@ -8,6 +8,10 @@ import com.talk.gall.domain.SearchCriteria;
 import com.talk.gall.domain.GallDogVO;
 
 public interface GallDogMapper {
+	
+	// 조회수
+    public void upHit(long board_num);
+
 
 	public void insert(GallDogVO vo);
 	
@@ -17,7 +21,7 @@ public interface GallDogMapper {
 	
 	public void update(GallDogVO vo);
 	
-	public List<GallDogVO> allList(long board_num);
+	public List<GallDogVO> allList();
 	
 	public void updateReplyCount(@Param("board_num") Long board_num,
 			@Param("amount") int amount);
