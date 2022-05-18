@@ -8,6 +8,10 @@ import com.talk.gall.domain.SearchCriteria;
 import com.talk.gall.domain.GallDogVO;
 
 public interface GallDogMapper {
+	
+	// 조회수
+    public void upHit(long board_num);
+
 
 	public void insert(GallDogVO vo);
 	
