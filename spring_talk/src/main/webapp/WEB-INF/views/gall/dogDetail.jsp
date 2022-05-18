@@ -21,45 +21,45 @@
 body {width:100%;}
 .container{width : 100%}
 
+
  a{
  	text-decoration:none;
  	text-align:center;
+ 	color: black;
  	}
-
+#replyBar{
+       display: flex !important;
+       background-color:white;
+       position: fixed;
+       bottom: 50px;
+       left: 0px;
+}
+footer {
+       display: flex !important;
+       position: fixed;
+       bottom: 0px;
+       width: 100%;
+       height: 50px;
+       font-size: 15px;
+       align-items: center;
+       background-color: white;
+       z-index: 2;
+       }
 #modDiv, #modDiv2{
 position:fixed;
 z-index:100;
-bottom:0 ; left:0;
+bottom:50 ; left:0;
 width: 100%;
-margin: 0 auto;
-padding:10px;
-box-sizing: border-box;
-background-color:#fff;}
+opacity : 0.95;
+}
 	     
+#modDiv .btn-outline-dark{
+	border: none;
+}
 
-.btn_content{width: 100%;
-border-radius: 5px;
-background-color: #fff;;}
-
-.btn_content button{
-display: block;	
-width: 100%;
-background-color: blueviolet;
-border: 0;
-padding: 10px;
-border-bottom: 1px solid #ddd;
-background-color: transparent;}
-
-.btn_content button:last-child{border-bottom: 0;}
 
 
 .btn_content button:hover{background-color: #484848; color: #fff;}
-
-.button{
-border:0;
-outline: none;
-background-color:#ffffff;
-}
 
     
 </style>
@@ -88,19 +88,23 @@ background-color:#ffffff;
 
 <hr/>
 <h3>댓글 <span id="replyCount">${dog.replycount }</span>개</h3>
+	<hr/>	
 
 	
-	<hr/>
 
 	<div id="replies"></div>
-	
-	<!-- 댓글 작성란 -->
 	<br/>
+	<button id="more" class="btn btn-outline-secondary btn-sm" onclick="getReplyList()">와 ! 댓글 ! 더보기!</button>
+	<!-- 댓글 작성란 -->
+	<div id="replyBar" class="mx-0 py-2 w-100 row justify-content-between">
+		<br/>
+	
 	 <sec:authorize access="isAuthenticated()">
 		<div>			
 			<div>
-				REPLY TEXT <input type="text" id="newReplyText">
-				<button id="replyAddBtn">ADD REPLY</button>
+			<input id="newReplyText" onkeyup="enterkey()" class="form-control" type="text" placeholder="댓글!" aria-label="default input example">
+				<!-- REPLY TEXT <input type="text" id="newReplyText">
+				<button id="replyAddBtn">ADD REPLY</button> -->
 			</div>
 		</div>
 	</sec:authorize>
@@ -108,22 +112,38 @@ background-color:#ffffff;
 	<sec:authorize access="isAnonymous()">
 		<a href="http://localhost:8181/user/login">로그인</a>
 	</sec:authorize>
+	<br/>
 	
-	<hr/>
+</div>
 
 	<!-- 모달창 -->
 	<div id="modDiv" style="display:none;">
-		<div class="modal-title modalArea">
+		<div class="modal-title visually-hidden">
 		</div>
-		<div class="btn_content modalArea">
-				<button type="button" id="reReplyBtn" class="modalArea">답글달기</button>	
-				<button type="button" onclick="closeModal()" class="modalArea">닫기</button>
-				<button type="button" id="btn" class="modalArea auth visually-hidden">수정</button>
-				<button type="button" id="replyDelBtn" class="modalArea auth visually-hidden">삭제</button>
+			<div class="modal-dialog" role="document">
+		<div class="modal-content rounded-6 shadow">
+		
+		<div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+			<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 " id="reReplyBtn" >답글달기</button>	
+			<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="btn">수정</button>
+			<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="replyDelBtn">삭제</button>
+			<button type="button" class="btn btn-lg btn-outline-dark w-100 mx-0 modalArea" onclick="closeModal()">닫기</button>
 		</div>
 	</div>
-
+</div>
+</div>
 </div> <!-- container -->
+
+<footer class="mx-0 py-2 w-100 border-top row justify-content-between">
+     <a href="/user/follow" class="col-2">팔로우</a>
+     <a href="#" class="col-2">채팅</a>
+     <a href="/post/newsfeed" class="col-2">피드</a>
+     <a href="#" class="col-2">커뮤</a>
+     <a href="/user/room/${login_id }" class="col-2">마이룸</a>
+</footer>
+
+
+
 
 	<!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
@@ -135,9 +155,10 @@ background-color:#ffffff;
 
     
 	/* 댓글 불러오는 로직 */
-	let board_num = ${dog.board_num};
-
+	let board_num = '${dog.board_num}';
+/* 여어어어어어기 */
 	 function getAllList(){
+		 
 		$.getJSON("/gallreplies/all/" + board_num, function(data){
 
 			var str = "";
@@ -161,15 +182,19 @@ background-color:#ffffff;
 										+":" + date.getSeconds()
 										+ '&nbsp;&nbsp;&nbsp;';
 										
+										if(!(this.reply_id == login_id)){
+											formattedTime += "<a type='button'href='/report/reply/"+this.reply_num+"' >🚨</a>";
+										}
+					
 										
 										formattedTime += '&nbsp;';
 									//	+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 										
-					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>@"
-						+ this.writer + "</strong> - " + formattedTime + "<br>"
-						+ "<div class='reply_content'>" + this.reply_content 
-						+ "</div>"
-						+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
+					str += "<div class='replyLi p-2' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>"
+						+ "<a href='/user/room/" + this.writer + "'>@"+this.writer + "</a></strong> : " /* + formattedTime */
+						+ "<span class='reply_content'>" + this.reply_content 
+						+ "</span>"
+						+ "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>"
 						+"<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
 						
 						+ "</div>";												
@@ -186,8 +211,28 @@ background-color:#ffffff;
 	 }
 	 
 	 // 기본댓글 작성하는곳
-	 $("#replyAddBtn").on("click", function(){
+	 
+	  function enterkey() {
+        if (window.event.keyCode == 13) {
+ 
+             // 엔터키가 눌렸을 때 실행할 내용
+              reply();
+        }
+}
+	// 댓글 시퀀스 가져오는 함수 선언
+		let sequence = "";
+		function getReplySequence(){
+			$.getJSON("/gallreplies/sequence", function(data){
+				sequence = data;
+			});
+		 }
+	 
+		function reply(){
 			var reply_content = $("#newReplyText").val();
+			getReplySequence(); // 시퀀스 번호 가져오기
+	 
+	// $("#replyAddBtn").on("click", function(){
+		//	var reply_content = $("#newReplyText").val();
 			
 			$.ajax({
 				type : 'post',
@@ -209,7 +254,16 @@ background-color:#ffffff;
 					if(result == 'SUCCESS'){
 						alert("등록되었습니다.");
 						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 반영 로직
-						getAllList();
+						$("#replies").prepend(
+								"<div class='replyLi p-2' data-reply_num='" + sequence + "'><strong class='reply_id'>@"
+								+ login_id + "</strong> : "
+								+ "<span class='reply_content'>" + reply_content 
+								+ "</span>"
+								+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
+								+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
+								
+								+ "</div>"		
+					)
 						refresh();
 					}
 					
@@ -220,7 +274,7 @@ background-color:#ffffff;
 				}
 				
 			});
-		});
+		};
 	 
 	// 선택한 댓글 외부에서 사용 ///////////////////
 	 	let select = "";
@@ -230,7 +284,7 @@ background-color:#ffffff;
 
 	 $("#replies").on("click", ".modalBtn", function(){
 
-		 let reply_id = $(this).siblings(".reply_id").html();
+		 let reply_id = $(this).siblings(".reply_id").children().html();
 	     
 	     console.log("reply_id = "+reply_id+" , login_id = " + login_id);
 	     if(("@"+login_id) == reply_id){
@@ -252,7 +306,7 @@ background-color:#ffffff;
 		$(".modal-title").html(reply_num);
 		$("#reply").val(reply_content);
 
-		$("#modDiv").show("slow");
+		$("#modDiv").show(400);
 		
 		modalArea = true; // 모달 열려있음
 		if(modalArea){
@@ -269,7 +323,7 @@ background-color:#ffffff;
 	
 	 // 모달 닫기
 	 function closeModal(){
-		 $("#modDiv").hide("slow");
+		 $("#modDiv").hide("400");
 		 modalArea = false;
 	 };
 	 
@@ -277,7 +331,7 @@ background-color:#ffffff;
 	 $("#replyDelBtn").on("click", function(){
 		let reply_num = $(".modal-title").html();
 		$.ajax({
-			type : 'delete',
+			type : 'DELETE',
 			url : '/gallreplies/' + reply_num,
 			header : {
 				"X-HTTP-Method-Override" : "DELETE"
@@ -292,8 +346,11 @@ background-color:#ffffff;
 				if(result == 'SUCCESS'){
 					alert("삭제 되었습니다.");
 					$("#replyCount").html(parseInt($("#replyCount").html())-1);
+					$(this).hide("slow");
+					console.log(select.parent());
+					select.parent().hide();
 					$("#modDiv").hide("slow");
-					getAllList();
+					 /* getAllList();  */
 				}
 			}
 		});
@@ -314,7 +371,7 @@ background-color:#ffffff;
 	 // 수정사항 저장 버튼
 	 function replyMod(){
 		 
-		$(".modalBtn").toggleClass("modalBtn");
+		$(".memu").toggleClass("modalBtn");
 		let reply_num = $(".modal-title").html();
 		let reply_content = $(".reply").val();
 		$.ajax({
@@ -334,12 +391,36 @@ background-color:#ffffff;
 				console.log("result: " + result);
 				if(result == 'SUCCESS'){
 					alert("수정되었습니다.");
-					getAllList(); //수정된 댓글 반영한 새 댓글목록 갱신
+					select.html(reply_content);
+					$(".menu").addClass("modalBtn");
+					modalarea = false;
+					/* getAllList(); */ //수정된 댓글 반영한 새 댓글목록 갱신 
 				}
 			}
 		});
-		}
-            
+		};
+		
+		// 답글달기
+		</script>
+        
+        
+        <script type="text/javascript"> 
+        var content = document.getElementById('content').innerHTML;
+    	console.log(content)
+    	var splitedArray = content.split(' '); // 공백을 기준으로 문자열을 자른다.
+    	var linkedContent = '';
+    	for(var word in splitedArray)
+    	{
+    	  word = splitedArray[word];
+    	   if(word.indexOf('#') == 0) // # 문자를 찾는다.
+    	   {
+    	      word = '<a href=\#>'+word+'</a>'; 
+    	   }
+    	   linkedContent += word+' ';
+    	}
+    	document.getElementById('content').innerHTML = linkedContent;
+    		
+    		
             
          // 좋아요 유무 확인	
        	 function isLike(){
@@ -374,7 +455,7 @@ background-color:#ffffff;
        				}
        				/* error도 설정 가능 */
        			});
-       	 }
+       	 } isLike()
        	
 
        	// 좋아요 버튼 클릭 시 
