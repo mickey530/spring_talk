@@ -79,8 +79,8 @@ background-color:#ffffff;
 		<p id="content">내용 : ${dog.board_content }</p>
 	<div>		
 		<c:if test="${login_id eq dog.writer}">
-			<a href="/galldog/updateForm/${dog.board_num}" class="btn btn-dark">수정</a>
-			<a href="/galldog/delete/${dog.board_num}" class="btn btn-danger">삭제</a>
+			<a href="/gall/updateForm/${dog.board_num}" class="btn btn-dark">수정</a>
+			<a href="/gall/delete/${dog.board_num}" class="btn btn-danger">삭제</a>
 		</c:if>
 		<!-- <a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>  -->		
 	</div>

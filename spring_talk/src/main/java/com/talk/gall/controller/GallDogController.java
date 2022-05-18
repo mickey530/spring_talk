@@ -29,7 +29,7 @@ import lombok.extern.log4j.Log4j;
 
 @Controller
 @Log4j
-@RequestMapping("/galldog")
+@RequestMapping("/gall")
 public class GallDogController {
 	
 	@Autowired
@@ -85,6 +85,7 @@ public class GallDogController {
 	public String detail(@PathVariable long board_num, Model model) {
 		GallDogVO dog = service.select(board_num);
 		model.addAttribute("dog", dog);
+		service.upHit(board_num);
 		return "gall/dogDetail";
 	}
 

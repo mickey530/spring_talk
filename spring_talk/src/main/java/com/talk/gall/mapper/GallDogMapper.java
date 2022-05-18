@@ -12,7 +12,6 @@ public interface GallDogMapper {
 	// 조회수
     public void upHit(long board_num);
 
-
 	public void insert(GallDogVO vo);
 	
 	public GallDogVO select(long board_num);
