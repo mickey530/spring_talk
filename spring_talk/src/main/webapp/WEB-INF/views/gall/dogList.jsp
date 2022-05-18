@@ -35,6 +35,50 @@
 		      </tbody>
 		    </table>
 		    <a href="/galldog/insert" class="btn btn-warning">게시글 작성</a><hr/>
+		    
+		    ${pageMaker }<br/>
+		    
+		    <!-- 이전 페이지 버튼 보일지 결정하는 부분 -->
+		    <ul class="pagination justify-content-center">		  
+		  	<c:if test="${pageMaker.prev }">
+		  		<li class="page-item">
+		  			<a class="page-link" href="/dogList?pageNum=${pageMaker.startPage - 1}&searchType=${pageMaker.cri.searchType}&keyword=${pageMaker.cri.keyword}">이전</a>
+		  		</li>
+		  	</c:if>
+		  	
+		  	<!-- 밑에 깔아줄 버튼들 -->
+		  	<c:forEach var="idx" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">
+    			<li class="page-item ${pageMaker.cri.pageNum eq idx ? 'active' : '' }">
+    				<a class="page-link" href="/dogList?pageNum=${idx }&searchType=${pageMaker.cri.searchType}&keyword=${pageMaker.cri.keyword}">${idx }</a>
+    			</li>
+    		</c:forEach>
+    		
+		    <c:if test="${pageMaker.next }">
+		  		<li class="page-item">
+		  			<a class="page-link" href="/galldog/dogList?pageNum=${pageMaker.endPage + 1}&searchType=${pageMaker.cri.searchType}&keyword=${pageMaker.cri.keyword}">다음</a>
+		  		</li>
+		  	</c:if>
+		  			  
+		  </ul>
+		  <div class="row">
+		  	<!-- 검색창 부분 -->
+		  	<form action="/galldog/dogList" method="get">
+		  		<!-- select태그를 이용해서 클릭해 검색조건을 선택하도록 처리 -->
+		  		<select name="searchType">		  		
+		  			<!-- 검색조건을 option태그를 이용해 만들기 -->
+		  			<option value="n">-</option>
+		  			<option value="t" ${pageMaker.cri.searchType eq 't' ? 'selected' : ''}>제목</option>
+		  			<option value="c" ${pageMaker.cri.searchType eq 'c' ? 'selected' : ''}>본문</option>
+		  			<option value="w" ${pageMaker.cri.searchType eq 'w' ? 'selected' : ''}>글쓴이</option>
+		  			<option value="tc" ${pageMaker.cri.searchType eq 'tc' ? 'selected' : ''}>제목+본문</option>
+		  			<option value="cw" ${pageMaker.cri.searchType eq 'cw' ? 'selected' : ''}>본문+글쓴이</option>
+		  			<option value="tcw" ${pageMaker.cri.searchType eq 'tcw' ? 'selected' : ''}>제목+본문+글쓴이</option>
+		  		</select>
+		  		<input type="text" name="keyword" placeholder="검색어" value="${pageMaker.cri.keyword }">
+		  		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+		  		<input type="submit" value="검색">
+		  	</form>
+		  </div>
 	</div>
 </body>
 </html>
