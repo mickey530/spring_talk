@@ -138,7 +138,7 @@ background-color:#ffffff;
 	let board_num = ${dog.board_num};
 
 	 function getAllList(){
-		$.getJSON("/gellreplies/all/" + board_num, function(data){
+		$.getJSON("/gallreplies/all/" + board_num, function(data){
 
 			var str = "";
 			console.log(data);
@@ -191,7 +191,7 @@ background-color:#ffffff;
 			
 			$.ajax({
 				type : 'post',
-				url : '/gellreplies',
+				url : '/gallreplies',
 				headers : {
 					"Content-Type" : "application/json",
 					"X-HTTP-Method-Override" : "POST"
@@ -278,7 +278,7 @@ background-color:#ffffff;
 		let reply_num = $(".modal-title").html();
 		$.ajax({
 			type : 'delete',
-			url : '/gellreplies/' + reply_num,
+			url : '/gallreplies/' + reply_num,
 			header : {
 				"X-HTTP-Method-Override" : "DELETE"
 			},
@@ -319,7 +319,7 @@ background-color:#ffffff;
 		let reply_content = $(".reply").val();
 		$.ajax({
 			type : 'patch', 
-			url : '/gellreplies/' + reply_num,
+			url : '/gallreplies/' + reply_num,
 			header : {
 				"Content-Type" : "application/json",
 				"X-HTTP-Method-Override" : "PATCH" 

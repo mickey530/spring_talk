@@ -29,7 +29,7 @@ public interface GallDogMapper {
 			@Param("amount") int amount);
 	
 	public int countPageNum(SearchCriteria cri);
-	
+
 }
 
 // PostMapper.java 참조
