@@ -27,18 +27,27 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler{
 		
 		
 		 HttpSession session = request.getSession();
+		 
+		 if(session != null) {
+	         String redirectUrl = (String) session.getAttribute("prevPage");
+	
+			 String a = (String)(session.getAttribute("username"));
+			 String b = (String)(session.getAttribute("userid"));
+			 String c = (String)(session.getAttribute("uid"));
+			 String d = (String)(session.getAttribute("user_id"));
+			 String e = (String)(session.getAttribute("user_name"));
+	
+			 System.out.println("username : " + a );
+			 System.out.println("userid : " + b );
+			 System.out.println("uid : " + c );
+			 System.out.println("user_id : " + d );
+			 System.out.println("user_name : " + e );
+			 System.out.println("redirectUrl : " + redirectUrl );
 
-		 String a = (String)(session.getAttribute("username"));
-		 String b = (String)(session.getAttribute("userid"));
-		 String c = (String)(session.getAttribute("uid"));
-		 String d = (String)(session.getAttribute("user_id"));
-		 String e = (String)(session.getAttribute("user_name"));
-
-		 System.out.println("username : " + a );
-		 System.out.println("userid : " + b );
-		 System.out.println("uid : " + c );
-		 System.out.println("user_id : " + d );
-		 System.out.println("user_name : " + e );
+			 if (redirectUrl != null) {
+	             session.removeAttribute("prevPage");
+	         } 
+		 }
 
 //			session.setAttribute("user_id", vo.getUser_id());
 //			session.setAttribute("user_name", vo.getUser_name()); 
@@ -48,19 +57,17 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler{
 			authList.add(ga.getAuthority());
 			System.out.println("CustomLoginSuccessHandler : " + ga.getAuthority());
 		}
-		
+
+        response.sendRedirect("user/getAllUsers");
 		if(authList.contains("ROLE_ADMIN")) {
-			response.sendRedirect("/user/userInfo");
 			return;
 		}
 		
 		if(authList.contains("ROLE_MEMBER")) {
-			response.sendRedirect("/user/userInfo");
 			return;
 		}
 		
 		if(authList.contains("ROLE_ALL")) {
-			response.sendRedirect("user/userInfo");
 			return;
 		}
 	}

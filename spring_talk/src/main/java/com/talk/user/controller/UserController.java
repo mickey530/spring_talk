@@ -240,10 +240,11 @@ public class UserController {
 	}
 
 	@PostMapping(value="/login")
-	public void loginUser(String uid, String upw) {
+	public void loginUser(String uid, String upw, HttpServletRequest request) {
 		System.out.println("login post ");
 		System.out.println("uid : " + uid);
 		System.out.println("upw : " + upw);
+			
 
 		UserVO userInfo = userService.loginCheck(uid, upw);
 		
@@ -267,10 +268,10 @@ public class UserController {
 	@PostMapping(value="/logout")
 	public String logoutPost(HttpSession session) {
 
-
+		System.out.println("컨트롤러 로그아웃");
 		session.invalidate(); 
 
-		return "redirect:/user/";
+		return "redirect:/user";
 	}
 
 	
