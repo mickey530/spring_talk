@@ -3,7 +3,7 @@ package com.talk.gall.service;
 import java.util.List;
 
 import com.talk.gall.domain.GallDogVO;
-import com.talk.post.domain.UserCriteria;
+import com.talk.gall.domain.SearchCriteria;
 
 public interface GallDogService {
 
@@ -16,6 +16,8 @@ public interface GallDogService {
 	public void delete(long board_num);
 	
 	public List<GallDogVO> allList(long board_num);
+	
+	public int countPageNum(SearchCriteria cri);
 	
 	}
 

@@ -9,21 +9,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
+import com.talk.gall.domain.SearchCriteria;
 import com.talk.gall.domain.GallDogLikeVO;
 import com.talk.gall.domain.GallDogVO;
+import com.talk.gall.domain.PageMaker;
 import com.talk.gall.service.GallDogLikeService;
 import com.talk.gall.service.GallDogReplyService;
 import com.talk.gall.service.GallDogService;
-import com.talk.post.domain.PostLikeVO;
-import com.talk.post.domain.PostVO;
-import com.talk.post.domain.UserCriteria;
+
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.log4j.Log4j;
@@ -59,16 +58,23 @@ public class GallDogController {
 	@PostMapping("/insert")
 	public String insert(GallDogVO vo) {
 		service.insert(vo);
-		return "gall/dogList";
+		return "redirect:/gall/dogList";
 	}
 	
 	
 	
 	// 게시글 목록
 	@GetMapping("/dogList")
-	public String dogList(Model model) {
+	public String dogList(SearchCriteria cri, Model model) {
 		List<GallDogVO> dogList = service.allList(0);
 		model.addAttribute("dogList", dogList);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		int countPage = service.countPageNum(cri);
+		pageMaker.setTotalBoard(countPage);
+		model.addAttribute("pageMaker", pageMaker);
+		
 		return "gall/dogList";
 	}
 	
@@ -88,7 +94,7 @@ public class GallDogController {
 	@GetMapping("delete/{board_num}")
 	public String delete(@PathVariable long board_num) {
 		service.delete(board_num);
-		replyservice.delete(board_num);
+		replyservice.removeReply(board_num);
 		return "gall/dogList";
 	}
 	
@@ -104,7 +110,7 @@ public class GallDogController {
 	@PostMapping("update")
 	public String update(long board_num, GallDogVO vo) {
 		service.update(vo);
-		return "redirect:gall/detail/" + board_num;
+		return "redirect:/gall/detail/" + board_num;
 	
 	}	
 	
