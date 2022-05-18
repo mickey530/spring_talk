@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j;
 
 @Log4j
 @RestController
-@RequestMapping("/gellreplies")	
+@RequestMapping("/gallreplies")	
 public class GallReplyController {
 	
 	@Autowired
