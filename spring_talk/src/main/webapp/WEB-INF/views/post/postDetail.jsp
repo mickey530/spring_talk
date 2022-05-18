@@ -180,6 +180,10 @@ opacity : 0.95;
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
 	
+	if(!window.matchMedia('(prefers-color-scheme: dark)').matches){
+	} // 다크모드인지 확인
+
+	
 	let _csrf = '${_csrf.token}';
     let _csrf_header = '${_csrf.headerName}';
     let login_id = '${login_id}';
