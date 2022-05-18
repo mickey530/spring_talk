@@ -23,7 +23,10 @@
 *{margin: 0;padding: 0;list-style: none;;}
 body {width:100%;}
 .container{width : 100%}
-
+.darkMode{
+	background-color: black;
+	color : white;
+}
  #wrapper{
     height: auto;
     min-height: 100%;
@@ -180,9 +183,25 @@ opacity : 0.95;
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
 	
-	if(!window.matchMedia('(prefers-color-scheme: dark)').matches){
-	} // 다크모드인지 확인
-
+	// 사용 중 다크모드 감지
+	window.matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', event => {
+		if (event.matches) {
+			$(".container").addClass("darkMode");
+			$("footer").addClass("darkMode");
+			$("#wrapper").addClass("darkMode");
+		} else {
+			$(".container").removeClass("darkMode");
+			$("footer").removeClass("darkMode");
+			$("#rapper").removeClass("darkMode");
+		}
+		})
+	// 다크모드 감지
+	if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+		$(".container").addClass("darkMode");
+	}
+	
+	
 	
 	let _csrf = '${_csrf.token}';
     let _csrf_header = '${_csrf.headerName}';
@@ -320,7 +339,7 @@ opacity : 0.95;
 
 	 $("#replies").on("click", ".modalBtn", function(){
 
-		 let reply_id = $(this).siblings(".reply_id").html();
+		 let reply_id = $(this).siblings(".reply_id").children().html();
 	     
 	     console.log("reply_id = "+reply_id+" , login_id = " + login_id);
 	     if(("@"+login_id) == reply_id){
@@ -355,6 +374,7 @@ opacity : 0.95;
 		
 		// select 에 저장 //////////////////////
 		select = $(this).siblings(".reply_content");
+		console.log("??? : " + select.html())
 	 });
 	
 	 // 모달 닫기

@@ -79,8 +79,8 @@ background-color:#ffffff;
 		<p id="content">내용 : ${dog.board_content }</p>
 	<div>		
 		<c:if test="${login_id eq dog.writer}">
-			<a href="/galldog/updateForm/${dog.board_num}" class="btn btn-dark">수정</a>
-			<a href="/galldog/delete/${dog.board_num}" class="btn btn-danger">삭제</a>
+			<a href="/gall/updateForm/${dog.board_num}" class="btn btn-dark">수정</a>
+			<a href="/gall/delete/${dog.board_num}" class="btn btn-danger">삭제</a>
 		</c:if>
 		<!-- <a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>  -->		
 	</div>
@@ -138,7 +138,7 @@ background-color:#ffffff;
 	let board_num = ${dog.board_num};
 
 	 function getAllList(){
-		$.getJSON("/gellreplies/all/" + board_num, function(data){
+		$.getJSON("/gallreplies/all/" + board_num, function(data){
 
 			var str = "";
 			console.log(data);
@@ -191,7 +191,7 @@ background-color:#ffffff;
 			
 			$.ajax({
 				type : 'post',
-				url : '/gellreplies',
+				url : '/gallreplies',
 				headers : {
 					"Content-Type" : "application/json",
 					"X-HTTP-Method-Override" : "POST"
@@ -278,7 +278,7 @@ background-color:#ffffff;
 		let reply_num = $(".modal-title").html();
 		$.ajax({
 			type : 'delete',
-			url : '/gellreplies/' + reply_num,
+			url : '/gallreplies/' + reply_num,
 			header : {
 				"X-HTTP-Method-Override" : "DELETE"
 			},
@@ -319,7 +319,7 @@ background-color:#ffffff;
 		let reply_content = $(".reply").val();
 		$.ajax({
 			type : 'patch', 
-			url : '/gellreplies/' + reply_num,
+			url : '/gallreplies/' + reply_num,
 			header : {
 				"Content-Type" : "application/json",
 				"X-HTTP-Method-Override" : "PATCH" 
