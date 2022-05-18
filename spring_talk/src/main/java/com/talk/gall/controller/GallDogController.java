@@ -66,7 +66,7 @@ public class GallDogController {
 	// 게시글 목록
 	@GetMapping("/dogList")
 	public String dogList(SearchCriteria cri, Model model) {
-		List<GallDogVO> dogList = service.allList(0);
+		List<GallDogVO> dogList = service.allList();
 		model.addAttribute("dogList", dogList);
 		
 		PageMaker pageMaker = new PageMaker();
