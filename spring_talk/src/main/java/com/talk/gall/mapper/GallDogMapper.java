@@ -17,7 +17,7 @@ public interface GallDogMapper {
 	
 	public void update(GallDogVO vo);
 	
-	public List<GallDogVO> allList(long board_num);
+	public List<GallDogVO> allList();
 	
 	public void updateReplyCount(@Param("board_num") Long board_num,
 			@Param("amount") int amount);
