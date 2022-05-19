@@ -23,7 +23,6 @@
 *{margin: 0;padding: 0;list-style: none;;}
 body {width:100%;}
 .container{width : 100%}
-
  #wrapper{
     height: auto;
     min-height: 100%;
@@ -32,6 +31,7 @@ body {width:100%;}
  a{
  	text-decoration:none;
  	text-align:center;
+ 	color: black;
  	}
 #replyBar{
        display: flex !important;
@@ -54,38 +54,15 @@ footer {
 #modDiv, #modDiv2{
 position:fixed;
 z-index:100;
-bottom:0 ; left:0;
+bottom:50 ; left:0;
 width: 100%;
-margin: 0 auto;
-padding:10px;
-box-sizing: border-box;
-background-color:#fff;}
-	     
-
-.btn_content{width: 100%;
-border-radius: 5px;
-background-color: #fff;;}
-
-.btn_content button{
-display: block;	
-width: 100%;
-background-color: blueviolet;
-border: 0;
-padding: 10px;
-border-bottom: 1px solid #ddd;
-background-color: transparent;}
-
-.btn_content button:last-child{border-bottom: 0;}
-
-
-.btn_content button:hover{background-color: #484848; color: #fff;}
-
-.button{
-border:0;
-outline: none;
-background-color:#ffffff;
+opacity : 0.95;
 }
-
+	     
+#modDiv .btn-outline-dark{
+	border: none;
+}
+.btn_content button:hover{background-color: #484848; color: #fff;}
     
 </style>
 </head>
@@ -96,7 +73,7 @@ background-color:#ffffff;
 
 <div id="wrapper">
 	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
-		<span class="col-11">${login_id }'s post</span>
+		<span class="col-11">${post.writer }'s post</span>
 		<a href="/post/insert" class="col-1 text-left text-white">+</a>
 	</header>
 
@@ -125,14 +102,15 @@ background-color:#ffffff;
 <hr/>
 <h3>댓글 <span id="replyCount">${post.replycount }</span>개</h3>
 
-	
-	<hr/>
+<hr/>
 
 	<div id="replies"></div>
-	
+<br/>	
+<button id="more" class="btn btn-outline-secondary btn-sm" onclick="getReplyList()">와 ! 댓글 ! 더보기!</button>
+
 	<!-- 댓글 작성란 -->
 	<div id="replyBar" class="mx-0 py-2 w-100 row justify-content-between">
-		<hr/>
+		<br/>
 		
 		 <sec:authorize access="isAuthenticated()">
 			<div>			
@@ -156,16 +134,28 @@ background-color:#ffffff;
 	
 	<!-- 모달창 -->
 	<div id="modDiv" style="display:none;">
-		<div class="modal-title modalArea">
+		<div class="modal-title visually-hidden">
 		</div>
-		<div class="btn_content modalArea">
+		  <div class="modal-dialog" role="document">
+    <div class="modal-content rounded-6 shadow">
 
-				<button type="button" id="reReplyBtn" class="modalArea">답글달기</button>	
-				<button type="button" onclick="closeModal()" class="modalArea">닫기</button>
-				<button type="button" id="btn" class="modalArea auth visually-hidden">수정</button>
-				<button type="button" id="replyDelBtn" class="modalArea auth visually-hidden">삭제</button>
-		</div>
+    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 " id="reReplyBtn" >답글달기</button>	
+		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="btn">수정</button>
+		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="replyDelBtn">삭제</button>
+		<button type="button" class="btn btn-lg btn-outline-dark w-100 mx-0 modalArea" onclick="closeModal()">닫기</button>
+  	</div>
+    </div>
+  </div>
 	</div>
+
+
+
+
+
+
+
+
 
 </div> <!-- container -->
  
@@ -184,18 +174,20 @@ background-color:#ffffff;
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
 	
+	if(!window.matchMedia('(prefers-color-scheme: dark)').matches){
+	} // 다크모드인지 확인
+	
 	let _csrf = '${_csrf.token}';
     let _csrf_header = '${_csrf.headerName}';
     let login_id = '${login_id}';
-
     
 	/* 댓글 불러오는 로직 */
-	let post_num = ${post.post_num};
-
-	 function getAllList(){
-		$.getJSON("/replies/all/" + post_num, function(data){
-
-			var str = "";
+	let page_num = 0;
+	let post_num = '${post.post_num}';
+	let replyList = "";
+	 function getReplyList(){
+		page_num += 1;
+		$.getJSON("/replies/all/" + post_num + "?page_num=" + page_num, function(data){
 			console.log(data);
 			
 			$(data).each(
@@ -218,11 +210,11 @@ background-color:#ffffff;
 										formattedTime += '&nbsp;';
 									//	+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 										
-					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>@"
-						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
-						+ "<div class='reply_content'>" + this.reply_content 
-						+ "</div>"
-						+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
+					replyList += "<div class='replyLi p-2' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>"
+						+ "<a href='/user/room/" + this.reply_id + "'>@" + this.reply_id + "</a></strong> : " /* + formattedTime */
+						+ "<span class='reply_content'>" + this.reply_content 
+						+ "</span>"
+						+ "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>"
 						+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 						
 						+ "</div>";						
@@ -233,10 +225,10 @@ background-color:#ffffff;
 						
 				});
 		
-			$("#replies").html(str);			
+			$("#replies").html(replyList);			
 		});
 	 }
-	 getAllList();
+	 getReplyList();
 	 
 	 /* 댓글 작성 후 댓글작성란 비우는 로직 */
 	 function refresh(){
@@ -252,14 +244,18 @@ background-color:#ffffff;
               reply();
         }
 }
-
-
-	 
+	// 댓글 시퀀스 가져오는 함수 선언
+	let sequence = "";
+	function getReplySequence(){
+		$.getJSON("/replies/sequence", function(data){
+			sequence = data;
+		});
+	 }
 	 
 	 
 	function reply(){
 			var reply_content = $("#newReplyText").val();
-			
+			getReplySequence(); // 시퀀스 번호 가져오기
 			$.ajax({
 				type : 'post',
 				url : '/replies',
@@ -279,8 +275,18 @@ background-color:#ffffff;
 				success : function(result){
 					if(result == 'OK'){
 						alert("등록되었습니다.");
-						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 반영 로직
-						getAllList();
+						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 + 반영 로직
+						$("#replies").prepend(
+								"<div class='replyLi p-2' data-reply_num='" + sequence + "'><strong class='reply_id'>@"
+								+ login_id + "</strong> : "
+								+ "<span class='reply_content'>" + reply_content 
+								+ "</span>"
+								+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
+								+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
+								
+								+ "</div>"		
+						
+						)
 						refresh();
 					}
 					
@@ -297,10 +303,8 @@ background-color:#ffffff;
 	 	let select = "";
 	 	
 	// 모달 이벤트 위임
-	 let modalArea = false; // 모달 열려있는지 확인
-
+	 var modalArea = false; // 모달 열려있는지 확인
 	 $("#replies").on("click", ".modalBtn", function(){
-
 		 let reply_id = $(this).siblings(".reply_id").html();
 	     
 	     console.log("reply_id = "+reply_id+" , login_id = " + login_id);
@@ -308,7 +312,6 @@ background-color:#ffffff;
 	         $(".auth").removeClass("visually-hidden");
 	     } else{
 	         $(".auth").addClass("visually-hidden");
-
 	     }
 		 
 		let replytag=$(this).parent();
@@ -322,10 +325,9 @@ background-color:#ffffff;
 		
 		$(".modal-title").html(reply_num);
 		$("#reply").val(reply_content);
-
-		$("#modDiv").show("slow");
+		$("#modDiv").show(400);
 		
-		modalArea = true; // 모달 열려있음
+		modalArea = true;
 		if(modalArea){
 			$('html').click(function(e) {
 				if(!$(e.target).hasClass("modalArea")) {
@@ -340,14 +342,17 @@ background-color:#ffffff;
 	
 	 // 모달 닫기
 	 function closeModal(){
-		 $("#modDiv").hide("slow");
+		 $("#modDiv").hide("400");
 		 modalArea = false;
 		 console.log("근데 이게 자꾸 찍힘;;")
 	 };
 	 
 	 // 삭제
 	 $("#replyDelBtn").on("click", function(){
-		let reply_num = $(".modal-title").html();
+		 
+		let reply_num = select.html();
+
+		 console.log("삭제할 댓글 번호 : " + reply_num)
 		$.ajax({
 			type : 'delete',
 			url : '/replies/' + reply_num,
@@ -363,9 +368,12 @@ background-color:#ffffff;
 				console.log("result: " + result);
 				if(result == 'SUCCESS'){
 					alert("삭제 되었습니다.");
-					$("#replyCount").html(parseInt($("#replyCount").html())-1);
+					$("#replyCount").html(parseInt($("#replyCount").html())-1); // 댓글 개수 - 반영 로직
+					$(this).hide("slow");
+					console.log(select.parent());
+					select.parent().hide();
 					$("#modDiv").hide("slow");
-					getAllList();
+					/* getAllList(); */
 				}
 			}
 		});
@@ -373,20 +381,20 @@ background-color:#ffffff;
 	 
 	 // 수정버튼
 	 $("#btn").click(function(){
+		 	console.log("select : " + select);
 			closeModal();
 			$(".modalBtn").toggleClass("modalBtn");
 			let replyText = select.html();
 			let input = "<input type='text' class='reply' value='"+ replyText +"'>"
 			
 			let modify = "<button type='button' onclick='replyMod()'>저장</button>";
-
 			select.html(input + modify);
 		})
 		
 	 // 수정사항 저장 버튼
 	 function replyMod(){
 		 
-		$(".modalBtn").toggleClass("modalBtn");
+		$(".menu").toggleClass("modalBtn");
 		let reply_num = $(".modal-title").html();
 		let reply_content = $(".reply").val();
 		$.ajax({
@@ -406,19 +414,17 @@ background-color:#ffffff;
 				console.log("result: " + result);
 				if(result == 'SUCCESS'){
 					alert("수정되었습니다.");
-					getAllList(); //수정된 댓글 반영한 새 댓글목록 갱신
+					select.html(reply_content);
+					$(".menu").addClass("modalBtn");
+					modalarea = false;
 				}
 			}
 		});
 	 };
 	 
-
 	 
-
 	 
-
 	 // 답글달기
-
 	 
 	 </script>
 	 
@@ -476,7 +482,6 @@ background-color:#ffffff;
 			});
 	 } isLike()
 	 
-
 	// 좋아요 버튼 클릭 시 
 	 $("#postLike").on("click", function(){
 			let likeCount = $("#postLike").children().html();

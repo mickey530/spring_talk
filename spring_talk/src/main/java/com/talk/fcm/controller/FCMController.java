@@ -14,30 +14,8 @@ import lombok.extern.log4j.Log4j;
 @Controller
 public class FCMController {
 
-	@GetMapping("/all")
+	@GetMapping("/")
 	public void doAll() {
-		System.out.println("doAll");
+		System.out.println("asdf");
 	}
-	
-	@GetMapping("/member")
-	public void doMember() {
-		System.out.println("doMember");
-	}
-	
-	@GetMapping("/admin")
-	public void doAdmin() {
-		System.out.println("doAdmin");
-	}
-
-	@GetMapping("/login")
-	public void login() {
-		System.out.println("login");
-	}
-
-
-	@GetMapping("/logout")
-	public void logout() {
-		System.out.println("logout");
-	}
-	
 }
