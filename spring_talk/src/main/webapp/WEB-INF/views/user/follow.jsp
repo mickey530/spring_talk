@@ -20,6 +20,15 @@ body {width:100%;}
     min-height: 100%;
     padding-bottom: 50px;
  }
+ 
+ li{
+ 	list-style: none;
+ }
+ 
+ .followMenu > ul{
+ 	display: none;
+ }
+ 
  a{
  	text-decoration:none;
  	text-align:center;
@@ -59,22 +68,29 @@ footer {
 </div> -->
 
 
-		<div class="subTitle">
-		팔로우하는 사람
-		</div>
-		<div class="followerList">
-		</div>
-	<hr/>
-		<div class="subTitle">
-		맞팔된 사람 목록
-		</div>
-		<div class="freindList">
+		<div class="followerList followMenu">
+		
+			<div class="subTitle">
+				<a>팔로우하는 사람</a>
+			</div>			
+			<ul></ul>
 		</div>
 	<hr/>
-		<div class="subTitle">
-		즐겨찾기
+		<div class="freindList followMenu">
+		
+			<div class="subTitle">
+			
+				<a>맞팔된 사람 목록</a>
+			</div>
+			<ul></ul>
 		</div>
-		<div class="favoriteList">
+	<hr/>
+		<div class="favoriteList followMenu">
+		
+			<div class="subTitle">
+				<a>즐겨찾기</a>
+			</div>
+			<ul></ul>
 		</div>
 	</div>
 	
@@ -156,7 +172,7 @@ footer {
 			
 			$(data).each(
 				function() {
-						follower += "<div class='col-4' data-follower='"+this.follower+"'><p class='follower'>"
+						follower += "<li><div class='col-4' data-follower='"+this.follower+"'><p class='follower'>"
 						+ "<a href='/user/room/" + this.follower + "'>"
 						+ this.follower +"</a></p>"
 						+ "<button class='col-4 btn btn-sm btn-primary'>팔로잉</button>";
@@ -171,9 +187,9 @@ footer {
 							follower += "<button class='btn btn-sm btn-outline-danger favorite'>☆ 즐겨찾기</button>";
 						}
 						
-						follower += "</div><br/>"
+						follower += "</div></li><br/>"
 				});
-			$(".followerList").html(follower);			
+			$(".followerList > ul").html(follower);			
 		});
 	 }
 	 getFollower();
@@ -188,11 +204,11 @@ footer {
 			
 			$(data).each(
 				function() {
-						follower += "<div class='col-2'><p class='freind'>"
+						follower += "<li><div class='col-2'><p class='freind'>"
 						+ "<a href='/user/room/" + this.user_id + "'>"
-						+ this.user_name +"</a></p></div><br/>"
+						+ this.user_name +"</a></p></div></li><br/>"
 				});
-			$(".freindList").html(follower);			
+			$(".freindList > ul").html(follower);			
 		});
 	 }
 	 getFreindList();
@@ -207,11 +223,11 @@ footer {
 			
 			$(data).each(
 				function() {
-						follower += "<div class='col-2'><p class='favorite'>"
+						follower += "<li><div class='col-2'><p class='favorite'>"
 						+ "<a href='/user/room/" + this.user_id + "'>"
-						+ this.user_name +"</a></p></div><br/>"
+						+ this.user_name +"</a></p></div></li><br/>"
 				});
-			$(".favoriteList").html(follower);			
+			$(".favoriteList > ul").html(follower);			
 		});
 	 }
 	 getFavoriteList();
@@ -309,6 +325,19 @@ footer {
 				}
 			});
 	 });
+	 
+
+
+	 $(".followMenu").on("click", ".subTitle", function(){
+			var subMenu = $(this).next("ul");
+
+			if(subMenu.is(":visible")){
+				subMenu.slideUp();
+			}else{
+				subMenu.slideDown();
+			}
+		});
+		 
 	 
 	 
 	 </script>

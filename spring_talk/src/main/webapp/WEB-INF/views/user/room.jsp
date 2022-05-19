@@ -64,14 +64,6 @@ footer {
 	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
 		<span class="col-11">${user_id }'s room</span>
 		<a href="/post/insert" class="col-1 text-left text-white">+</a>
-		<div id="sideMenu"> 
-			<a>MENU</a>
-			<ul>
-				<li><a href="/user/follow/${login_id}" }>follower</a></li>
-				<li><a href="/user/freind">fff</a></li>
-				<li><a href="/user/favorite">favorite</a></li>
-			</ul>
-		</div>
 	</header>
 
 <div class="container">
@@ -332,18 +324,6 @@ footer {
 				}
 			});
 	 });
-	 
-	 
-	$("#sideMenu > a").click(function(){
-		var subMenu = $(this).next("ul");
-
-		if(subMenu.is(":visible")){
-			subMenu.slideUp();
-		}else{
-			subMenu.slideDown();
-		}
-	});
-	 
 	 </script>
 	
 	

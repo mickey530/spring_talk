@@ -37,13 +37,13 @@ public class CustomUserDetailsService implements UserDetailsService{
 
 		UserVO vo = authmapper.getUserAuth(user_id);
 		
-		System.out.println("user info : " + vo.toString());
 		
 		SecurityUser su;
 		if(vo == null) {
 			System.out.println("vo == null");
 			su= null;
 		} else {
+			System.out.println("user info : " + vo.toString());
 			System.out.println("vo != null");
 			su= new SecurityUser(vo);
 		}
