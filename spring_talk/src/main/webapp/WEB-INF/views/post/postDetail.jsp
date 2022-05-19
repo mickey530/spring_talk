@@ -244,11 +244,12 @@ opacity : 0.95;
 						+ "<span class='reply_content'>" + this.reply_content 
 						+ "</span>"
 						+ "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>"
-						+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
+						+"<button class='btn btn-outline-danger replyLike' id='replyNum_" + this.reply_num + "'>좋아요</button>"
 						
 						+ "</div>";						
 						
-						
+						isLike(this.reply_num);
+
 						
 						
 						
@@ -314,7 +315,7 @@ opacity : 0.95;
 								+ "<span class='reply_content'>" + reply_content 
 								+ "</span>"
 								+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
-								+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
+								+"<button class='btn btn-outline-danger replyLike'>좋아요</button>"
 								
 								+ "</div>"		
 						
@@ -456,6 +457,79 @@ opacity : 0.95;
 			}
 		});
 	 };
+		// 댓글 좋아요 유무 확인	
+	  function isLike(reply_num){
+		 $.ajax({
+				type : 'post',
+				url : '/replies/islike',
+				headers : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "POST"
+				},
+				dataType : 'text',
+				beforeSend: function(xhr){
+	                xhr.setRequestHeader(_csrf_header, _csrf);
+	            },
+				data : JSON.stringify({
+					reply_num : reply_num,
+					user_id : login_id
+				}),
+				success : function(result){
+					 let thisReply = $("#replyNum_"+ reply_num);
+					 /* let likeNum = parseInt(thisPost.html().substr(1, 1));
+					 thisReply.html("♡" + likeNum) */
+					if(result != ""){
+						thisReply.addClass("reply-liked");
+						thisReply.removeClass("reply-like");
+						thisReply.addClass("btn-danger");
+						thisReply.removeClass("btn-outline-danger");
+					} else{
+						thisReply.addClass("reply-like");
+						thisReply.removeClass("reply-liked");
+						thisReply.addClass("btn-outline-danger");
+						thisReply.removeClass("btn-danger");
+					}
+					
+				}
+			});
+	 } 
+	 
+	 
+	//  댓글 좋아요 버튼 클릭 시 
+	 $("#replies").on("click", ".replyLike", function(){
+		 let reply_num = $(this).parent()[0].dataset.reply_num;
+		 console.log("reply_num : " + reply_num);
+		 /* let thisPost = $("#postNum_"+ post_num); */
+		 /* let likeNum = parseInt(thisPost.html().substr(1, 1)); */
+
+/* 			 if($(this).hasClass("reply-liked")){
+			 $(this).html("♡" + (likeNum - 1))
+		 } if($(this).hasClass("reply-like")){
+			 $(this).html("♡" + (likeNum + 1))
+		 } */
+			$.ajax({
+				type : 'post',
+				url : '/replies/like',
+				headers : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "POST"
+				},
+				dataType : 'text',
+				beforeSend: function(xhr){
+	                xhr.setRequestHeader(_csrf_header, _csrf);
+	            },
+				data : JSON.stringify({
+					reply_num : reply_num,
+					login_id : login_id
+				}),
+				success : function(result){
+					if(result == 'OK'){
+							/* isLike(reply_num); */
+					}
+				}
+			});
+		});
+	 
 	 
 
 	 
@@ -465,9 +539,8 @@ opacity : 0.95;
 	 // 답글달기
 
 	 
-	 </script>
-	 
-	<script type="text/javascript">
+// 포스트 관련 ////////////////////////////////////////////////////////////////////////
+
 	// 해시태그에 a태그 붙이기
 	// html 안에 'content'라는 아이디를 content 라는 변수로 정의한다.
 	var content = document.getElementById('content').innerHTML;
@@ -486,7 +559,7 @@ opacity : 0.95;
 	document.getElementById('content').innerHTML = linkedContent;
 		
 		
-	// 좋아요 유무 확인	
+	// 포스트 좋아요 유무 확인	
 	 function isLike(){
 		 $.ajax({
 				type : 'post',
@@ -522,7 +595,7 @@ opacity : 0.95;
 	 } isLike()
 	 
 
-	// 좋아요 버튼 클릭 시 
+	// 포스트 좋아요 버튼 클릭 시 
 	 $("#postLike").on("click", function(){
 			let likeCount = $("#postLike").children().html();
 			console.log(parseInt(likeCount));
