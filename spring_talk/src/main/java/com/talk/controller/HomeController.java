@@ -161,7 +161,6 @@ public class HomeController {
 				userService.insert(user);
 			}else {
 				System.out.println("유저 존재?");
-				return "redirect:/user";
 			}
 			SecurityUser securityUser = new SecurityUser(user);
 			
