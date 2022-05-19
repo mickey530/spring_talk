@@ -1,18 +1,26 @@
 package com.talk.user.controller;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,17 +28,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
+import com.talk.user.domain.MemberVO;
 import com.talk.user.domain.UserVO;
 import com.talk.user.mapper.AuthMapper;
 import com.talk.user.service.AuthService;
 import com.talk.user.service.BanService;
 import com.talk.user.service.BanServiceImpl;
 import com.talk.user.service.FollowService;
+import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.talk.naver.NaverLoginBO;
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostVO;
 import com.talk.post.service.TagService;
@@ -57,6 +69,9 @@ public class UserController {
 	
 	@Autowired
 	private AuthService authService;
+	
+	@Autowired
+	private NaverLoginBO naverLoginBO;
 	
 	//user단
 	
@@ -493,4 +508,56 @@ public class UserController {
 		System.out.println(entity);
 		return entity;
 	}
+	
+	// 소셜 로그인
+	@RequestMapping(value="/naverLogin", method = RequestMethod.GET)
+	public String login(HttpSession session) {
+		String naverAuthUrl = naverLoginBO.getAuthorizationUrl(session);
+		session.setAttribute("url", naverAuthUrl);
+		return "secu/customLogin";
+	}
+	/* 
+	@RequestMapping(value="/naver/login", method = {RequestMethod.GET, RequestMethod.POST})
+	public String callback(Model model, @RequestParam String code, @RequestParam String state, HttpSession session) throws IOException, ParseException{
+		OAuth2AccessToken oauthToken;
+		oauthToken = naverLoginBO.getAccessToken(session, code, state);
+		
+		apiResult = naverLoginBO.getUserProfile(oauthToken);
+		
+		JSONParser parser = new JSONParser();
+		Object obj = parser.parse(apiResult);
+		
+		JSONObject response_obj = (JSONObject) jsonObj.get("reponse");
+		System.out.println("파싱해온 API :" + response_obj);
+		
+		String id = (String) response_obj.get("id");
+		String email = (String) response_obj.get("email");
+		String userName = (String) response_obj.get("nickname");
+		
+		MemberVO user = new MemberVO();
+		List<AuthVO> authList = new ArrayList<AuthVO>();
+		AuthVO auth = new AuthVO();
+		UUID uuid = UUID.randomUUID();
+		auth.setUser_id("NAVER_" + id);
+		auth.setAuthority("ROLE_MEMBER");
+		authList.add(auth);
+		
+		user.setUserId("NAVER_" + id);
+		user.setAuthList(authList);
+		user.setUserPw(uuid.toString());
+		user.setUserName(userName);
+		System.out.println("insert하기 전 마지막 체크 : " + user);
+		
+		if(service.read(user.getUserId() == null){
+			service.insert(user);
+		}
+		CustomUser customUser = new CustomUser(user);
+		
+		Authentication authentication = new UsernamePasswordAuthenticationToken(customUser, null,customUser.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		return "redirect/secu/user/member";
+	}
+	*/
+	
 }
