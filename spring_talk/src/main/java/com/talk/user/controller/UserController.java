@@ -1,18 +1,26 @@
 package com.talk.user.controller;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,17 +28,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
+import com.talk.user.domain.MemberVO;
+import com.talk.user.domain.SecurityUser;
 import com.talk.user.domain.UserVO;
 import com.talk.user.mapper.AuthMapper;
 import com.talk.user.service.AuthService;
 import com.talk.user.service.BanService;
 import com.talk.user.service.BanServiceImpl;
 import com.talk.user.service.FollowService;
+import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.talk.naver.NaverLoginBO;
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.PostVO;
 import com.talk.post.service.TagService;
@@ -38,6 +51,7 @@ import com.talk.reply.domain.ReplyVO;
 import com.talk.user.service.FollowServiceImpl;
 import com.talk.user.service.UserService;
 import com.talk.user.service.UserServiceImpl;
+import com.talk.naver.NaverLoginBO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -57,7 +71,9 @@ public class UserController {
 	
 	@Autowired
 	private AuthService authService;
-	
+
+	@Autowired
+	private NaverLoginBO naverLoginBO;
 	//user단
 	
 	@GetMapping(value={ "/", ""})
@@ -494,5 +510,78 @@ public class UserController {
 		}
 		System.out.println(entity);
 		return entity;
+	}
+	
+
+	// 소셜 로그인
+	@RequestMapping(value="/naverLogin", method = RequestMethod.GET)
+	public String login(HttpSession session) {
+		String naverAuthUrl = naverLoginBO.getAuthorizationUrl(session);
+		session.setAttribute("url", naverAuthUrl);
+		return "secu/customLogin";
+	}
+	
+	
+
+	// 네이버 로그인 결과를 DB에 적재하고 권한을 발급하는 메서드
+	@RequestMapping (value="/naver/login", method = {RequestMethod.GET, RequestMethod.POST})
+	public String callback(Model model, @RequestParam String code, @RequestParam String state, HttpSession session) throws IOException, ParseException{
+		OAuth2AccessToken oauthToken;
+		oauthToken = naverLoginBO.getAccessToken(session, code, state);
+		
+		// 1. 로그인 사용자 정보 읽어오기
+		String apiResult = naverLoginBO.getUserProfile(oauthToken);
+		
+		// 2. String형식인 apiResult를 json형태로 전환
+		JSONParser parser = new JSONParser();
+		Object obj=null;
+		try {
+			obj = parser.parse(apiResult);
+		} catch (org.json.simple.parser.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(obj == null) {
+			return "redirect:/user/naverLogin";
+		}
+		
+		JSONObject jsonObj = (JSONObject) obj;
+		
+		// 3. 데이터 파싱
+		// TOP레벨 단계 _response 파싱
+		JSONObject response_obj = (JSONObject) jsonObj.get("reponse");
+		System.out.println("파싱해온 API :" + response_obj);
+		
+		// response의 nickname값 파싱
+		String id = (String) response_obj.get("id");
+		String email = (String) response_obj.get("email");
+		String userName = (String) response_obj.get("nickname");
+		
+		UserVO user = new UserVO();
+		List<AuthVO> authList = new ArrayList<AuthVO>();
+		AuthVO auth = new AuthVO();
+		UUID uuid = UUID.randomUUID();
+		auth.setUser_id("NAVER_" + id);
+		auth.setAuthority("ROLE_MEMBER");
+		authList.add(auth);
+		
+		user.setUser_id("NAVER_" + id);
+		user.setAvos(authList);
+		user.setUser_pw(uuid.toString());
+		user.setUser_name(userName);
+		System.out.println("insert하기 전 마지막 체크 : " + user);
+		
+		// DB에 해당 유저가 없을 경우 join으로
+		if(userService.selectById(id)==null){
+			userService.insert(user);
+		}		
+		SecurityUser securityUser = new SecurityUser(user);
+		
+		// 시큐리티 권한 직접 세팅
+		Authentication authentication = new UsernamePasswordAuthenticationToken(securityUser, null,securityUser.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		return "redirect:/user/getAllUsers";
 	}
 }
