@@ -70,6 +70,9 @@ public class UserController {
 	@Autowired
 	private AuthService authService;
 	
+	@Autowired
+	private NaverLoginBO naverLoginBO;
+	
 	//user단
 	
 	@GetMapping(value={ "/", ""})
@@ -511,11 +514,11 @@ public class UserController {
 	public String login(HttpSession session) {
 		String naverAuthUrl = naverLoginBO.getAuthorizationUrl(session);
 		session.setAttribute("url", naverAuthUrl);
-		return "redirect:/customLogin";
+		return "secu/customLogin";
 	}
-	/* ㄴ
+	/* 
 	@RequestMapping(value="/naver/login", method = {RequestMethod.GET, RequestMethod.POST})
-	public String calaback(Model model, @RequestParam String code, @RequestParam String state, HttpSession session) throws IOException, ParseException{
+	public String callback(Model model, @RequestParam String code, @RequestParam String state, HttpSession session) throws IOException, ParseException{
 		OAuth2AccessToken oauthToken;
 		oauthToken = naverLoginBO.getAccessToken(session, code, state);
 		
