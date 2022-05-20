@@ -35,8 +35,8 @@
 		</if>
 	</sql>
 
-	<insert id="insert">
-		INSERT INTO gall_dog (board_num, board_title, board_content, writer)
+	<insert id="insert" parameterType="string">
+		INSERT INTO ${gall_name} (board_num, board_title, board_content, writer)
 			VALUES
 		(board_num.nextval, #{board_title}, #{board_content}, #{writer})
 	</insert>

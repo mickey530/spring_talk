@@ -51,14 +51,14 @@ public class GallDogController {
 	
 	
 	// 게시글 작성
-	@GetMapping("/insert")
-	public String insert() {
+	@GetMapping("/insert/{gall_name}")
+	public String insert(@PathVariable("gall_name") String gall_name) {
 		return "gall/insertForm";
 	}
-	@PostMapping("/insert")
-	public String insert(GallDogVO vo) {
+	@PostMapping("/insert/{gall_name}")
+	public String insert(@PathVariable("gall_name") String gall_name, GallDogVO vo) {
 		service.insert(vo);
-		return "redirect:/gall/dogList";
+		return "/gall/dogList";
 	}
 	
 	

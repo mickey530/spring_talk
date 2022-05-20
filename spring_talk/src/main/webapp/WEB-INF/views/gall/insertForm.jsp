@@ -12,8 +12,8 @@
 	<sec:authorize access="isAuthenticated()">
 		<sec:authentication property="principal.user.user_id" var="login_id"/>
 	</sec:authorize>
-	
-	<form action="/gall/insert" method="post">
+	${gall_name}
+	<form action="/gall/insert/${gall_name} " method="post">
 		<input type="hidden" name="writer" value="${login_id }"><br/>
 		<input type="text" name="board_title" placeholder="제목"><br/>
 		<textarea name="board_content" 	 placeholder="내용"></textarea><br/>
