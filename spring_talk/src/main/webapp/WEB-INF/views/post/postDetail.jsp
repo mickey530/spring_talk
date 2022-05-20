@@ -97,11 +97,15 @@ opacity : 0.95;
 	<p id="content">내용 : ${post.content }</p>
 	<div>
 		<c:if test="${login_id ne null}">
-			<button class="btn btn-outline-danger" id="postLike"><span>${post.like_count}</span> 좋아요</button>
+			<button class="btn btn-outline-danger" id="postLike"><span>${post.like_count}</span>♡</button>
 		</c:if>
 		<c:if test="${login_id eq post.writer}">
 			<a href="/post/updateForm/${post.post_num}" class="btn">수정</a>
-			<a href="/post/delete/${post.post_num}" class="btn">삭제</a>
+			
+			<form action="/post/delete/${post.post_num}" method="post">
+				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+				<input type="submit" class="btn" value="삭제">
+			</form>
 		</c:if>
 		<a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>
 		
@@ -150,7 +154,7 @@ opacity : 0.95;
 
     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
 		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 " id="reReplyBtn" >답글달기</button>	
-		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="btn">수정</button>
+		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 auth visually-hidden" id="btn">수정</button>
 		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="replyDelBtn">삭제</button>
 		<button type="button" class="btn btn-lg btn-outline-dark w-100 mx-0 modalArea" onclick="closeModal()">닫기</button>
   	</div>
@@ -175,7 +179,7 @@ opacity : 0.95;
      <a href="/user/follow" class="col-2">팔로우</a>
      <a href="#" class="col-2">채팅</a>
      <a href="/post/newsfeed" class="col-2">피드</a>
-     <a href="#" class="col-2">커뮤</a>
+     <a href="/gall/gallList" class="col-2">커뮤</a>
      <a href="/user/room/${login_id }" class="col-2">마이룸</a>
 </footer>
 
@@ -216,7 +220,7 @@ opacity : 0.95;
 	 function getReplyList(){
 		page_num += 1;
 		$.getJSON("/replies/all/" + post_num + "?page_num=" + page_num, function(data){
-
+			replyList = $("#replies").html();
 			console.log(data);
 			
 			$(data).each(
@@ -239,16 +243,16 @@ opacity : 0.95;
 										formattedTime += '&nbsp;';
 									//	+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 										
-					replyList += "<div class='replyLi p-2' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>"
-						+ "<a href='/user/room/" + this.reply_id + "'>@" + this.reply_id + "</a></strong> : " /* + formattedTime */
-						+ "<span class='reply_content'>" + this.reply_content 
-						+ "</span>"
-						+ "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>"
-						+"<button class='btn btn-outline-danger replyLike' id='replyNum_" + this.reply_num + "'>좋아요</button>"
+					replyList += "<div class='replyLi p-2 row' data-reply_num='" + this.reply_num + "'><div class='col-10'><strong class='reply_id'>"
+						+ "<a href='/user/room/" + this.reply_id + "'>@" + this.reply_id + "</a> </strong>" /* + formattedTime */
+						+ "<span class='reply_content modalBtn modalArea'>" + this.reply_content 
+						+ "</span></div><div class='col-2'>"
+						/* + "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>" */
+						+ "<button class='btn btn-outline-danger replyLike' id='replyNum_" + this.reply_num + "'>"+this.like_count+"♡</button>"
 						
-						+ "</div>";						
+						+ "</div></div>";						
 						
-						isLike(this.reply_num);
+						isReplyLike(this.reply_num);
 
 						
 						
@@ -273,7 +277,7 @@ opacity : 0.95;
              // 엔터키가 눌렸을 때 실행할 내용
               reply();
         }
-}
+	}
 	// 댓글 시퀀스 가져오는 함수 선언
 	let sequence = "";
 	function getReplySequence(){
@@ -310,14 +314,13 @@ opacity : 0.95;
 						alert("등록되었습니다.");
 						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 + 반영 로직
 						$("#replies").prepend(
-								"<div class='replyLi p-2' data-reply_num='" + sequence + "'><strong class='reply_id'>@"
-								+ login_id + "</strong> : "
-								+ "<span class='reply_content'>" + reply_content 
-								+ "</span>"
-								+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
-								+"<button class='btn btn-outline-danger replyLike'>좋아요</button>"
-								
-								+ "</div>"		
+								"<div class='replyLi p-2 row' data-reply_num='" + sequence + "'><div class='col-10'><strong class='reply_id'>"
+								+ "<a href='/user/room/" + login_id + "'>@" + login_id + "</a></strong> " /* + formattedTime */
+								+ "<span class='reply_content modalBtn modalArea'>" + reply_content
+								+ "</span></div><div class='col-2'>"
+								/* + "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>" */
+								+ "<button class='btn btn-outline-danger reply-like replyLike' id='replyNum_" + sequence + "'>"+0+"♡</button>"
+								+ "</div></div>"
 						
 						)
 						refresh();
@@ -374,7 +377,7 @@ opacity : 0.95;
 		 }
 		
 		// select 에 저장 //////////////////////
-		select = $(this).siblings(".reply_content");
+		select = $(this);
 		console.log("??? : " + select.html())
 	 });
 	
@@ -413,25 +416,30 @@ opacity : 0.95;
 			}
 		});
 	 });
-	 
+	 let likeBackup = "";
 	 // 수정버튼
 	 $("#btn").click(function(){
 		 	console.log("select : " + select);
 			closeModal();
 			$(".modalBtn").toggleClass("modalBtn");
 			let replyText = select.html();
-			let input = "<input type='text' class='reply' value='"+ replyText +"'>"
+			console.log("select"+select)
+			let input = "<input type='text' class='reply form-control' value='"+ replyText +"'>"
+			let modify = "<button type='button' class='btn btn-outline-success' onclick='replyMod()'>✓</button>";
 			
-			let modify = "<button type='button' onclick='replyMod()'>저장</button>";
-
-			select.html(input + modify);
+			likeBackup = select.parent().siblings()[0].innerHTML;
+			select.parent().children(".reply_id").hide()
+			select.html(input);
+			select.parent().siblings()[0].innerHTML = modify;
 		})
 		
 	 // 수정사항 저장 버튼
+	 
 	 function replyMod(){
 		 
-		$(".menu").toggleClass("modalBtn");
-		let reply_num = $(".modal-title").html();
+		$(".reply_content").toggleClass("modalBtn");
+		let reply_num = select.parent().parent().attr("data-reply_num");
+		console.log("잡히나"+reply_num)
 		let reply_content = $(".reply").val();
 		$.ajax({
 			type : 'patch', 
@@ -451,14 +459,16 @@ opacity : 0.95;
 				if(result == 'SUCCESS'){
 					alert("수정되었습니다.");
 					select.html(reply_content);
-					$(".menu").addClass("modalBtn");
-					modalarea = false;
+					select.parent().children(".reply_id").show()
+					select.parent().siblings()[0].innerHTML = likeBackup;
+					$(".reply_content").addClass("modalBtn");
+					$("#modDiv").hide(); // 수정사항 저장하는 순간 자꾸 모달 튀어나와서 그냥 막아버림
 				}
 			}
 		});
 	 };
 		// 댓글 좋아요 유무 확인	
-	  function isLike(reply_num){
+	  function isReplyLike(reply_num){
 		 $.ajax({
 				type : 'post',
 				url : '/replies/islike',
@@ -472,12 +482,12 @@ opacity : 0.95;
 	            },
 				data : JSON.stringify({
 					reply_num : reply_num,
-					user_id : login_id
+					login_id : login_id
 				}),
 				success : function(result){
 					 let thisReply = $("#replyNum_"+ reply_num);
-					 /* let likeNum = parseInt(thisPost.html().substr(1, 1));
-					 thisReply.html("♡" + likeNum) */
+					 let postLikeNum = parseInt(thisReply.html().substring(-1));
+					 thisReply.html(postLikeNum + "♡")
 					if(result != ""){
 						thisReply.addClass("reply-liked");
 						thisReply.removeClass("reply-like");
@@ -497,16 +507,15 @@ opacity : 0.95;
 	 
 	//  댓글 좋아요 버튼 클릭 시 
 	 $("#replies").on("click", ".replyLike", function(){
-		 let reply_num = $(this).parent()[0].dataset.reply_num;
-		 console.log("reply_num : " + reply_num);
-		 /* let thisPost = $("#postNum_"+ post_num); */
-		 /* let likeNum = parseInt(thisPost.html().substr(1, 1)); */
-
-/* 			 if($(this).hasClass("reply-liked")){
-			 $(this).html("♡" + (likeNum - 1))
+		 let reply_num = $(this).parent().parent()[0].dataset.reply_num;
+		 let thisReply = $("#replyNum_"+ reply_num);
+		 let replyLikeNum = parseInt(thisReply.html().substring(-1));
+		 console.log("뭔데" +$ (this));
+ 		 if($(this).hasClass("reply-liked")){
+			 $(this).html((replyLikeNum - 1) + "♡")
 		 } if($(this).hasClass("reply-like")){
-			 $(this).html("♡" + (likeNum + 1))
-		 } */
+			 $(this).html((replyLikeNum + 1) + "♡")
+		 }
 			$.ajax({
 				type : 'post',
 				url : '/replies/like',
@@ -524,7 +533,7 @@ opacity : 0.95;
 				}),
 				success : function(result){
 					if(result == 'OK'){
-							/* isLike(reply_num); */
+						isReplyLike(reply_num);
 					}
 				}
 			});
