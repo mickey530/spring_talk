@@ -12,11 +12,11 @@
 	<sec:authorize access="isAuthenticated()">
 		<sec:authentication property="principal.user.user_id" var="login_id"/>
 	</sec:authorize>
-	<form action="/gall/update" method="post">
-		<input type="hidden" name="board_num" value="${dog.board_num }">
+	<form action="/gall/update/${gall_name}/${board_num }" method="post">
+		<input type="hidden" name="board_num" value="${board.board_num }">
 		<input type="hidden" value="${login_id }" readonly><br/>
-		제목 : <input type="text" name="board_title" value="${dog.board_title }"><br/>
-		내용 : <textarea name="board_content" rows="20" cols="100">${dog.board_content }</textarea><br/> 
+		제목 : <input type="text" name="board_title" value="${board.board_title }"><br/>
+		내용 : <textarea name="board_content" rows="20" cols="100">${board.board_content }</textarea><br/> 
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 		<input type="submit" value="수정완료">
 	</form>

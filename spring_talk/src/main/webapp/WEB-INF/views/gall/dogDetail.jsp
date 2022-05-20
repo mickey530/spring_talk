@@ -79,8 +79,14 @@ opacity : 0.95;
 		<p id="content">내용 : ${dog.board_content }</p>
 	<div>		
 		<c:if test="${login_id eq dog.writer}">
-			<a href="/gall/updateForm/${dog.board_num}" class="btn btn-dark">수정</a>
-			<a href="/gall/delete/${dog.board_num}" class="btn btn-danger">삭제</a>
+		<form action="/gall/delete/${gall_name }/${dog.board_num}" method="post">
+			<input type="submit" value="삭제">
+			<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+		</form>
+		<form action="/gall/updateForm/${gall_name }/${dog.board_num}" method="get">
+			<input type="submit" value="수정">
+		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+		</form>
 		</c:if>
 		<!-- <a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>  -->		
 	</div>
@@ -152,6 +158,7 @@ opacity : 0.95;
 	let _csrf = '${_csrf.token}';
     let _csrf_header = '${_csrf.headerName}';
     let login_id = '${login_id}';
+    let
 
     
 	/* 댓글 불러오는 로직 */
@@ -211,32 +218,30 @@ opacity : 0.95;
 	 }
 	 
 	 // 기본댓글 작성하는곳
-	 
-	  function enterkey() {
-        if (window.event.keyCode == 13) {
- 
-             // 엔터키가 눌렸을 때 실행할 내용
-              reply();
-        }
-}
+
 	// 댓글 시퀀스 가져오는 함수 선언
+	/*
 		let sequence = "";
 		function getReplySequence(){
 			$.getJSON("/gallreplies/sequence", function(data){
 				sequence = data;
 			});
 		 }
-	 
+	 */
 		function reply(){
 			var reply_content = $("#newReplyText").val();
-			getReplySequence(); // 시퀀스 번호 가져오기
+			var gall_name_reply = "${dog.gall_name}+'_reply'";
+			console.log(gall_name_reply);
+			
+			
+			//getReplySequence(); // 시퀀스 번호 가져오기
 	 
 	// $("#replyAddBtn").on("click", function(){
 		//	var reply_content = $("#newReplyText").val();
 			
 			$.ajax({
 				type : 'post',
-				url : '/gallreplies',
+				url : '/gallreplies/'+${gall_name}+"/"+${dog.board_num},
 				headers : {
 					"Content-Type" : "application/json",
 					"X-HTTP-Method-Override" : "POST"
@@ -248,7 +253,9 @@ opacity : 0.95;
 				data : JSON.stringify({
 					board_num : board_num,
 					writer : login_id,
-					reply_content : reply_content
+					reply_content : reply_content,
+					gall_name_reply : 
+					
 				}),
 				success : function(result){
 					if(result == 'SUCCESS'){
@@ -276,6 +283,16 @@ opacity : 0.95;
 			});
 		};
 	 
+		 
+		  function enterkey() {
+	        if (window.event.keyCode == 13) {
+	 
+	             // 엔터키가 눌렸을 때 실행할 내용
+	              reply();
+	        }
+	}
+		
+		
 	// 선택한 댓글 외부에서 사용 ///////////////////
 	 	let select = "";
 	 	
@@ -444,8 +461,7 @@ opacity : 0.95;
         					$("#boardLike").addClass("board-liked");
        						$("#boardLike").removeClass("board-like");
        						$("#boardLike").addClass("btn-danger");
-       						$("#boardLike").removeClass("btn-outline-danger");
-       					} else{
+       						$("#boardLike").removeClass("/* -outline-danger"); */      					} else{
        						$("#boardLike").addClass("board-like");
        						$("#boardLike").removeClass("board-liked");
        						$("#boardLike").addClass("btn-outline-danger");
@@ -455,8 +471,8 @@ opacity : 0.95;
        				}
        				/* error도 설정 가능 */
        			});
-       	 } isLike()
-       	
+       	 } /* isLike()
+       	 */
 
        	// 좋아요 버튼 클릭 시 
        	 $("#boardLike").on("click", function(){
