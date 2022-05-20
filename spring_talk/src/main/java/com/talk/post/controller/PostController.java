@@ -77,7 +77,7 @@ public class PostController {
 		return "post/replyTest";
 	}
 	
-	@GetMapping("delete/{post_num}")
+	@PostMapping("delete/{post_num}")
 	public String delete(@PathVariable long post_num) {
 		replyService.removeAllReply(post_num);
 		service.delete(post_num);
