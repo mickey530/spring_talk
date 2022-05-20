@@ -19,8 +19,8 @@ public class GallDogReplyServiceImpl implements GallDogReplyService {
 	private GallDogMapper boardmapper;
 
 	@Override
-	public List<GallDogReplyVO> listReply(Long board_num) {
-		return replymapper.getList(board_num);
+	public List<GallDogReplyVO> listReply(GallDogReplyVO vo) {
+		return replymapper.getList(vo);
 	}
 
 	@Override
@@ -36,8 +36,8 @@ public class GallDogReplyServiceImpl implements GallDogReplyService {
 	}
 
 	@Override
-	public void removeReply(Long reply_num) {
-		replymapper.delete(reply_num);
+	public void removeReply(GallDogReplyVO vo) {
+		replymapper.delete(vo);
 	}
 	
 	

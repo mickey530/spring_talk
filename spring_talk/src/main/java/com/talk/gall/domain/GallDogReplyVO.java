@@ -17,6 +17,7 @@ public class GallDogReplyVO {
 	private Date w_date;
 	private Date m_date;
 	
+	private String gall_name_reply;
 	
 
 }

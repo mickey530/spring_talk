@@ -26,8 +26,8 @@
 		      <tbody>
 		        <c:forEach var="dog" items="${dogList }">
 		          <tr>
-		          	<td><a href="/gall/detail/${dog.board_num }">${dog.board_num }</a></td>		  
-		            <td><a href="/gall/detail/${dog.board_num }">${dog.board_title }[${dog.replycount}]</a></td>
+		          	<td>${dog.board_num}</td>		  
+		            <td><a href="/gall/detail/${gall_name}/${dog.board_num}">${dog.board_title}[${dog.replycount}]</a></td>
 		            <td>${dog.writer }</td>	            
 		            <td>${dog.w_date }</td>
 		            <td>${dog.m_date }</td>
@@ -36,7 +36,7 @@
 		        </c:forEach>
 		      </tbody>
 		    </table>
-		    <a href="/gall/insert" class="btn btn-warning">게시글 작성</a><hr/>
+		    <a href="/gall/insert/${gall_name}" class="btn btn-warning">게시글 작성</a><hr/>
 		    
 		    ${pageMaker }<br/>
 		    

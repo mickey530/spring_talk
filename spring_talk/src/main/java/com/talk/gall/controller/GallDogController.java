@@ -2,6 +2,7 @@ package com.talk.gall.controller;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,23 +51,23 @@ public class GallDogController {
 	
 	
 	
-	// 게시글 작성
-	@GetMapping("/insert/{gall_name}")
-	public String insert(@PathVariable("gall_name") String gall_name) {
+	// 게시글 작성 http://localhost:8181/gall/insert/gall_dog
+	@GetMapping("/insert/{gall_name}" )
+	public String insert(@PathVariable("gall_name") String gall_name, Model model) {
 		return "gall/insertForm";
 	}
 	@PostMapping("/insert/{gall_name}")
 	public String insert(@PathVariable("gall_name") String gall_name, GallDogVO vo) {
 		service.insert(vo);
-		return "/gall/dogList";
+		return "redirect:/gall/dogList/"+ gall_name;
 	}
 	
 	
 	
-	// 게시글 목록
-	@GetMapping("/dogList")
-	public String dogList(SearchCriteria cri, Model model) {
-		List<GallDogVO> dogList = service.allList();
+	// 게시글 목록 http://localhost:8181/gall/dogList/gall_dog
+	@GetMapping("/dogList/{gall_name}")
+	public String dogList(@PathVariable("gall_name") String gall_name, SearchCriteria cri, Model model) {
+		List<GallDogVO> dogList = service.allList(gall_name);
 		model.addAttribute("dogList", dogList);
 		
 		PageMaker pageMaker = new PageMaker();
@@ -79,11 +80,12 @@ public class GallDogController {
 	}
 	
 	
-	
-	// 게시글 상세
-	@GetMapping("/detail/{board_num}")
-	public String detail(@PathVariable long board_num, Model model) {
-		GallDogVO dog = service.select(board_num);
+	// 게시글 상세 http://localhost:8181/gall/detail/gall_dog
+	@GetMapping("/detail/{gall_name}/{board_num}")
+	public String detail(@PathVariable("gall_name") String gall_name,
+							@PathVariable("board_num") Long board_num, Model model, GallDogVO vo) {
+		GallDogVO dog = service.select(vo);
+		service.upHit(vo);
 		model.addAttribute("dog", dog);
 		return "gall/dogDetail";
 	}
@@ -91,26 +93,27 @@ public class GallDogController {
 	
 	
 	// 게시글 삭제
-	@GetMapping("delete/{board_num}")
-	public String delete(@PathVariable long board_num) {
-		service.delete(board_num);
-		replyservice.removeReply(board_num);
-		return "gall/dogList";
+	@PostMapping("delete/{gall_name}/{board_num}")
+	public String delete(@PathVariable long board_num, @PathVariable("gall_name") String gall_name, GallDogVO vo, Model model) {
+		service.delete(vo);
+		log.info(gall_name);
+		return "redirect:/gall/dogList/" + gall_name;
 	}
 	
 	
 	
 	// 게시글 수정
-	@GetMapping("updateForm/{board_num}")
-	public String updateForm(@PathVariable long board_num, Model model) {
-		GallDogVO dog = service.select(board_num);
-		model.addAttribute("dog", dog);
+	@GetMapping("updateForm/{gall_name}/{board_num}")
+	public String updateForm(@PathVariable("gall_name") String gall_name,
+			@PathVariable("board_num") Long board_num, Model model, GallDogVO vo) {
+			GallDogVO board = service.select(vo);
+			model.addAttribute("board", board);
 		return "gall/updateForm";
 	}
-	@PostMapping("update")
-	public String update(long board_num, GallDogVO vo) {
+	@PostMapping("update/{gall_name}/{board_num}")
+	public String update(@PathVariable ("gall_name")String gall_name, long board_num, GallDogVO vo) {
 		service.update(vo);
-		return "redirect:/gall/detail/" + board_num;
+		return "redirect:/gall/detail/" +gall_name+"/"+ board_num;
 	
 	}	
 	

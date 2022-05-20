@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class GallDogVO {
 	
+	private String gall_name;
+	
 	private long board_num;
 	private String board_title;
 	private String board_content;
