@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">   
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">   
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <!DOCTYPE html>
 <html>
 <head>
@@ -158,15 +159,19 @@ opacity : 0.95;
 	let _csrf = '${_csrf.token}';
     let _csrf_header = '${_csrf.headerName}';
     let login_id = '${login_id}';
-    let
 
     
 	/* 댓글 불러오는 로직 */
-	let board_num = '${dog.board_num}';
+	
+	/* 게시글 번호, 갤러리 이름, 갤러리 이름(댓글) 변수 선언 */
+	let board_num = '${dog.board_num}';	
+	let gall_name = '${gall_name}';
+	let gall_name_reply = '${gall_name}_reply';
+
 /* 여어어어어어기 */
 	 function getAllList(){
 		 
-		$.getJSON("/gallreplies/all/" + board_num, function(data){
+		$.getJSON("/gallreplies/all/" + gall_name_reply + "/" + board_num, function(data){
 
 			var str = "";
 			console.log(data);
@@ -206,7 +211,7 @@ opacity : 0.95;
 						
 						+ "</div>";												
 				});
-		
+			console.log("str : " + str);
 			$("#replies").html(str);			
 		});
 	 }
@@ -218,6 +223,14 @@ opacity : 0.95;
 	 }
 	 
 	 // 기본댓글 작성하는곳
+	 
+	 function enterkey() {
+	        if (window.event.keyCode == 13) {
+	 
+	             // 엔터키가 눌렸을 때 실행할 내용
+	              reply();
+	        }
+	}
 
 	// 댓글 시퀀스 가져오는 함수 선언
 	/*
@@ -229,19 +242,19 @@ opacity : 0.95;
 		 }
 	 */
 		function reply(){
-			var reply_content = $("#newReplyText").val();
-			var gall_name_reply = "${dog.gall_name}+'_reply'";
-			console.log(gall_name_reply);
+			console.log('${gall_name}')
+		 	var reply_content = $("#newReplyText").val();
+			console.log("갤네임"+gall_name_reply);
 			
 			
 			//getReplySequence(); // 시퀀스 번호 가져오기
 	 
-	// $("#replyAddBtn").on("click", function(){
-		//	var reply_content = $("#newReplyText").val();
+			// $("#replyAddBtn").on("click", function(){
+			//	var reply_content = $("#newReplyText").val();
 			
 			$.ajax({
 				type : 'post',
-				url : '/gallreplies/'+${gall_name}+"/"+${dog.board_num},
+				url : '/gallreplies/'+gall_name_reply+'/'+board_num,
 				headers : {
 					"Content-Type" : "application/json",
 					"X-HTTP-Method-Override" : "POST"
@@ -254,7 +267,7 @@ opacity : 0.95;
 					board_num : board_num,
 					writer : login_id,
 					reply_content : reply_content,
-					gall_name_reply : 
+					gall_name_reply : gall_name_reply
 					
 				}),
 				success : function(result){
@@ -284,13 +297,7 @@ opacity : 0.95;
 		};
 	 
 		 
-		  function enterkey() {
-	        if (window.event.keyCode == 13) {
-	 
-	             // 엔터키가 눌렸을 때 실행할 내용
-	              reply();
-	        }
-	}
+		  
 		
 		
 	// 선택한 댓글 외부에서 사용 ///////////////////
@@ -461,7 +468,8 @@ opacity : 0.95;
         					$("#boardLike").addClass("board-liked");
        						$("#boardLike").removeClass("board-like");
        						$("#boardLike").addClass("btn-danger");
-       						$("#boardLike").removeClass("/* -outline-danger"); */      					} else{
+       						$("#boardLike").removeClass("/* -outline-danger");
+       					} else{
        						$("#boardLike").addClass("board-like");
        						$("#boardLike").removeClass("board-liked");
        						$("#boardLike").addClass("btn-outline-danger");

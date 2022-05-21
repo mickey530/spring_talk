@@ -52,7 +52,6 @@ footer {
        align-items: center;
        background-color: white;
        z-index: 2;
-       float:left;
 }
 </style>
 </head>

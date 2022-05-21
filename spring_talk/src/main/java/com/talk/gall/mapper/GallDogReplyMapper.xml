@@ -4,14 +4,14 @@
 	
 	<mapper namespace="com.talk.gall.mapper.GallDogReplyMapper">
 	
-	<select id="getList" resultType="com.talk.gall.domain.GallDogReplyVO">
+	<select id="getList" parameterType="com.talk.gall.domain.GallDogReplyVO" resultType="com.talk.gall.domain.GallDogReplyVO">
 		SELECT * FROM ${gall_name_reply}
 			WHERE board_num = #{board_num}
 		ORDER BY reply_num DESC
 	</select>
 	
 	<insert id="create" parameterType="string">
-		INSERT INTO ${gall_name}_reply 
+		INSERT INTO ${gall_name_reply}
 		(reply_num, board_num, reply_content, writer)
 			VALUES
 		(reply_num.nextval, #{board_num}, #{reply_content}, #{writer})

@@ -30,7 +30,7 @@ public class GallReplyController {
 	
 	
 	// insert
-	@PostMapping(value="{gall_name}/{board_num}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	@PostMapping(value="/{gall_name_reply}/{board_num}", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> register(@RequestBody GallDogReplyVO vo){
 		ResponseEntity<String>entity = null;
 		
@@ -46,7 +46,7 @@ public class GallReplyController {
 	// select
 	@GetMapping(value="/all/{gall_name_reply}/{board_num}", produces = {MediaType.APPLICATION_XML_VALUE,
 													  MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<GallDogReplyVO>> list(@PathVariable("gall_name_reply") String gall_name_reply, @PathVariable("board_num")GallDogReplyVO vo){
+	public ResponseEntity<List<GallDogReplyVO>> list(@PathVariable("gall_name_reply") String gall_name_reply, @PathVariable("board_num")Long board_num){
 		ResponseEntity<List<GallDogReplyVO>>entity = null;
 		
 		try {

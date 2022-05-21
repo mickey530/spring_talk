@@ -87,6 +87,7 @@ public class GallDogController {
 		GallDogVO dog = service.select(vo);
 		service.upHit(vo);
 		model.addAttribute("dog", dog);
+		model.addAttribute("gall_name", gall_name);
 		return "gall/dogDetail";
 	}
 

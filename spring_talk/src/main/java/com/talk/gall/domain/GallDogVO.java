@@ -18,6 +18,4 @@ public class GallDogVO {
 	private int replycount;
 	private long like_count;
 	private int hit; // 보류
-	
-	private String gall_name;
 }
