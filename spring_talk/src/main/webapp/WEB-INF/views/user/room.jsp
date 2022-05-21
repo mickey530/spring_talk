@@ -25,6 +25,7 @@
  a{
  	text-decoration:none;
  	text-align:center;
+  	color: black;	
  	}
  	
  	#sideMenu > ul{
@@ -51,7 +52,6 @@ footer {
        align-items: center;
        background-color: white;
        z-index: 2;
-       float:left;
 }
 </style>
 </head>
@@ -86,15 +86,17 @@ footer {
 	
 
 </div>
+
+</div>
+
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
       <a href="/user/follow" class="col-2">팔로우</a>
       <a href="#" class="col-2">채팅</a>
       <a href="/post/newsfeed" class="col-2">피드</a>
-      <a href="#" class="col-2">커뮤</a>
-      <a href="/user/room/${login_id }" class="col-2">마이룸</a>
+      <a href="/gall/gallList" class="col-2">커뮤</a>
+      <a href="#" class="col-2">마이룸</a>
 </footer> 
 
-</div>
 <!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>	
 

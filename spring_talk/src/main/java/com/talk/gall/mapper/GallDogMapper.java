@@ -23,7 +23,7 @@ public interface GallDogMapper {
 	
 	public List<GallDogVO> allList(String gall_name);
 	
-	public void updateReplyCount(@Param("board_num") Long board_num,
+	public void updateReplyCount(@Param("gall_name") String gall_name, @Param("board_num") Long board_num,
 			@Param("amount") int amount);
 
 	public void updateLikeCount(@Param("board_num") Long board_num,

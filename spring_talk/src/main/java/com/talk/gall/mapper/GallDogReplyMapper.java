@@ -20,6 +20,6 @@ public interface GallDogReplyMapper {
 	// board_num 댓글을 다 삭제하는 쿼리문
 	public void deleteAllReplies(Long board_num);
 	
-	
+	public void updateLikeCount(GallDogReplyVO vo);
 
 }

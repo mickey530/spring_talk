@@ -44,11 +44,10 @@ public class GallReplyController {
 	}
 	
 	// select
-	@GetMapping(value="/all/{gall_name_reply}/{board_num}", produces = {MediaType.APPLICATION_XML_VALUE,
+	@GetMapping(value="/all/{gall_name}/{board_num}", produces = {MediaType.APPLICATION_XML_VALUE,
 													  MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<GallDogReplyVO>> list(@PathVariable("gall_name_reply") String gall_name_reply, @PathVariable("board_num")GallDogReplyVO vo){
+	public ResponseEntity<List<GallDogReplyVO>> list(@PathVariable("gall_name") String gall_name, @PathVariable("board_num") Long board_num, GallDogReplyVO vo){
 		ResponseEntity<List<GallDogReplyVO>>entity = null;
-		
 		try {
 			entity = new ResponseEntity<>(service.listReply(vo),HttpStatus.OK);
 		}catch(Exception e) {
@@ -58,8 +57,8 @@ public class GallReplyController {
 	}
 	
 	// delete
-		@DeleteMapping(value="/{gall_name_reply}/{reply_num}", produces = {MediaType.TEXT_PLAIN_VALUE})
-		public ResponseEntity<String>remove(@PathVariable("gall_name_reply") String gall_name_reply, @PathVariable("reply_num")GallDogReplyVO vo){ 
+		@DeleteMapping(value="/{gall_name}/{reply_num}/{board_num}", produces = {MediaType.TEXT_PLAIN_VALUE})
+		public ResponseEntity<String>remove(@PathVariable("gall_name") String gall_name, @PathVariable("reply_num") Long reply_num, @PathVariable("board_num") Long board_num, GallDogReplyVO vo){ 
 			ResponseEntity<String> entity = null;
 		try {
 			service.removeReply(vo);
@@ -74,13 +73,14 @@ public class GallReplyController {
 		//update
 		
 		@RequestMapping(method= {RequestMethod.PUT, RequestMethod.PATCH},
-				value="/{gall_name_reply}/{reply_num}",
+				value="/{gall_name}/{reply_num}",
 				consumes="application/json",
 				produces= {MediaType.TEXT_PLAIN_VALUE})
-		public ResponseEntity<String>modify(@RequestBody GallDogReplyVO vo,@PathVariable("gall_name_reply") String gall_name_reply, @PathVariable("reply_num") Long reply_num){
+		public ResponseEntity<String>modify(@RequestBody GallDogReplyVO vo, @PathVariable("gall_name") String gall_name, @PathVariable("reply_num") Long reply_num){
 			
 			ResponseEntity<String> entity = null;
 			try {
+	 			vo.setGall_name(gall_name);
 				vo.setReply_num(reply_num);
 				
 				service.modifyReply(vo);
