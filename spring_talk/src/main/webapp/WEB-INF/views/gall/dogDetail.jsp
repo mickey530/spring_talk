@@ -356,7 +356,7 @@ opacity : 0.95;
 		let reply_num = $(".modal-title").html();
 		$.ajax({
 			type : 'DELETE',
-			url : '/gallreplies/' + reply_num,
+			url : '/gallreplies/' + gall_name_reply + "/" + reply_num,
 			header : {
 				"X-HTTP-Method-Override" : "DELETE"
 			},
@@ -400,7 +400,7 @@ opacity : 0.95;
 		let reply_content = $(".reply").val();
 		$.ajax({
 			type : 'patch', 
-			url : '/gallreplies/' + reply_num,
+			url : '/gallreplies/'+ gall_name_reply + "/" + reply_num,
 			header : {
 				"Content-Type" : "application/json",
 				"X-HTTP-Method-Override" : "PATCH" 

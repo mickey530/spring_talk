@@ -17,7 +17,7 @@
 		(reply_num.nextval, #{board_num}, #{reply_content}, #{writer})
 	</insert>
 	
-	<select id="update" parameterType="com.talk.gall.domain.GallDogReplyVO" resultType="com.talk.gall.domain.GallDogReplyVO">
+	<select id="update" parameterType="string">
 		UPDATE ${gall_name_reply} 
 			SET	
 		reply_content = #{reply_content}, m_date = SYSDATE	
