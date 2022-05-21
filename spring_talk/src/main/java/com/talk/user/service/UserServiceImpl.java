@@ -79,20 +79,28 @@ public class UserServiceImpl implements UserService {
 		System.out.println("VO insert");
 		System.out.println(vo.toString());
 		
+
+		if(vo.getAvos() == null ) {
+			vo.setAvos(new ArrayList<AuthVO>());
+		}
+
 		if(vo.getAvos().size() < 1) {
 			AuthVO defaultVO = new AuthVO();
 			defaultVO.setUser_id(vo.getUser_id());
 			defaultVO.setAuthority("ROLE_ALL");
+			
+			
 			vo.getAvos().add(defaultVO);
 		}
 		
+
 		UserMapper.insert(vo);
 		
 
 		for(AuthVO auth : vo.getAvos()) {
 			System.out.println("insert auth : " + auth);
 		}
-		
+
 		authMapper.insertAuth(vo);
 	}
 

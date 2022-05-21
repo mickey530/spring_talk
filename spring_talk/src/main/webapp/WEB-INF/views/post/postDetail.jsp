@@ -23,10 +23,6 @@
 *{margin: 0;padding: 0;list-style: none;;}
 body {width:100%;}
 .container{width : 100%}
-.darkMode{
-	background-color: black;
-	color : white;
-}
  #wrapper{
     height: auto;
     min-height: 100%;
@@ -66,12 +62,7 @@ opacity : 0.95;
 #modDiv .btn-outline-dark{
 	border: none;
 }
-
-
-
 .btn_content button:hover{background-color: #484848; color: #fff;}
-
-
     
 </style>
 </head>
@@ -183,40 +174,20 @@ opacity : 0.95;
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 	<script type="text/javascript">
 	
-	// 사용 중 다크모드 감지
-	window.matchMedia('(prefers-color-scheme: dark)')
-    .addEventListener('change', event => {
-		if (event.matches) {
-			$(".container").addClass("darkMode");
-			$("footer").addClass("darkMode");
-			$("#wrapper").addClass("darkMode");
-		} else {
-			$(".container").removeClass("darkMode");
-			$("footer").removeClass("darkMode");
-			$("#rapper").removeClass("darkMode");
-		}
-		})
-	// 다크모드 감지
-	if(window.matchMedia('(prefers-color-scheme: dark)').matches){
-		$(".container").addClass("darkMode");
-	}
-	
-	
+	if(!window.matchMedia('(prefers-color-scheme: dark)').matches){
+	} // 다크모드인지 확인
 	
 	let _csrf = '${_csrf.token}';
     let _csrf_header = '${_csrf.headerName}';
     let login_id = '${login_id}';
-
     
 	/* 댓글 불러오는 로직 */
 	let page_num = 0;
 	let post_num = '${post.post_num}';
 	let replyList = "";
-
 	 function getReplyList(){
 		page_num += 1;
 		$.getJSON("/replies/all/" + post_num + "?page_num=" + page_num, function(data){
-
 			console.log(data);
 			
 			$(data).each(
@@ -244,12 +215,11 @@ opacity : 0.95;
 						+ "<span class='reply_content'>" + this.reply_content 
 						+ "</span>"
 						+ "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>"
-						+"<button class='btn btn-outline-danger replyLike' id='replyNum_" + this.reply_num + "'>좋아요</button>"
+						+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 						
 						+ "</div>";						
 						
-						isLike(this.reply_num);
-
+						
 						
 						
 						
@@ -281,14 +251,11 @@ opacity : 0.95;
 			sequence = data;
 		});
 	 }
-
-
 	 
 	 
 	function reply(){
 			var reply_content = $("#newReplyText").val();
 			getReplySequence(); // 시퀀스 번호 가져오기
-
 			$.ajax({
 				type : 'post',
 				url : '/replies',
@@ -315,7 +282,7 @@ opacity : 0.95;
 								+ "<span class='reply_content'>" + reply_content 
 								+ "</span>"
 								+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
-								+"<button class='btn btn-outline-danger replyLike'>좋아요</button>"
+								+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 								
 								+ "</div>"		
 						
@@ -337,17 +304,14 @@ opacity : 0.95;
 	 	
 	// 모달 이벤트 위임
 	 var modalArea = false; // 모달 열려있는지 확인
-
 	 $("#replies").on("click", ".modalBtn", function(){
-
-		 let reply_id = $(this).siblings(".reply_id").children().html();
+		 let reply_id = $(this).siblings(".reply_id").html();
 	     
 	     console.log("reply_id = "+reply_id+" , login_id = " + login_id);
 	     if(("@"+login_id) == reply_id){
 	         $(".auth").removeClass("visually-hidden");
 	     } else{
 	         $(".auth").addClass("visually-hidden");
-
 	     }
 		 
 		let replytag=$(this).parent();
@@ -361,7 +325,6 @@ opacity : 0.95;
 		
 		$(".modal-title").html(reply_num);
 		$("#reply").val(reply_content);
-
 		$("#modDiv").show(400);
 		
 		modalArea = true;
@@ -375,7 +338,6 @@ opacity : 0.95;
 		
 		// select 에 저장 //////////////////////
 		select = $(this).siblings(".reply_content");
-		console.log("??? : " + select.html())
 	 });
 	
 	 // 모달 닫기
@@ -387,7 +349,10 @@ opacity : 0.95;
 	 
 	 // 삭제
 	 $("#replyDelBtn").on("click", function(){
-		let reply_num = $(".modal-title").html();
+		 
+		let reply_num = select.html();
+
+		 console.log("삭제할 댓글 번호 : " + reply_num)
 		$.ajax({
 			type : 'delete',
 			url : '/replies/' + reply_num,
@@ -423,7 +388,6 @@ opacity : 0.95;
 			let input = "<input type='text' class='reply' value='"+ replyText +"'>"
 			
 			let modify = "<button type='button' onclick='replyMod()'>저장</button>";
-
 			select.html(input + modify);
 		})
 		
@@ -457,90 +421,14 @@ opacity : 0.95;
 			}
 		});
 	 };
-		// 댓글 좋아요 유무 확인	
-	  function isLike(reply_num){
-		 $.ajax({
-				type : 'post',
-				url : '/replies/islike',
-				headers : {
-					"Content-Type" : "application/json",
-					"X-HTTP-Method-Override" : "POST"
-				},
-				dataType : 'text',
-				beforeSend: function(xhr){
-	                xhr.setRequestHeader(_csrf_header, _csrf);
-	            },
-				data : JSON.stringify({
-					reply_num : reply_num,
-					user_id : login_id
-				}),
-				success : function(result){
-					 let thisReply = $("#replyNum_"+ reply_num);
-					 /* let likeNum = parseInt(thisPost.html().substr(1, 1));
-					 thisReply.html("♡" + likeNum) */
-					if(result != ""){
-						thisReply.addClass("reply-liked");
-						thisReply.removeClass("reply-like");
-						thisReply.addClass("btn-danger");
-						thisReply.removeClass("btn-outline-danger");
-					} else{
-						thisReply.addClass("reply-like");
-						thisReply.removeClass("reply-liked");
-						thisReply.addClass("btn-outline-danger");
-						thisReply.removeClass("btn-danger");
-					}
-					
-				}
-			});
-	 } 
 	 
 	 
-	//  댓글 좋아요 버튼 클릭 시 
-	 $("#replies").on("click", ".replyLike", function(){
-		 let reply_num = $(this).parent()[0].dataset.reply_num;
-		 console.log("reply_num : " + reply_num);
-		 /* let thisPost = $("#postNum_"+ post_num); */
-		 /* let likeNum = parseInt(thisPost.html().substr(1, 1)); */
-
-/* 			 if($(this).hasClass("reply-liked")){
-			 $(this).html("♡" + (likeNum - 1))
-		 } if($(this).hasClass("reply-like")){
-			 $(this).html("♡" + (likeNum + 1))
-		 } */
-			$.ajax({
-				type : 'post',
-				url : '/replies/like',
-				headers : {
-					"Content-Type" : "application/json",
-					"X-HTTP-Method-Override" : "POST"
-				},
-				dataType : 'text',
-				beforeSend: function(xhr){
-	                xhr.setRequestHeader(_csrf_header, _csrf);
-	            },
-				data : JSON.stringify({
-					reply_num : reply_num,
-					login_id : login_id
-				}),
-				success : function(result){
-					if(result == 'OK'){
-							/* isLike(reply_num); */
-					}
-				}
-			});
-		});
 	 
-	 
-
-	 
-
-	 
-
 	 // 답글달기
-
 	 
-// 포스트 관련 ////////////////////////////////////////////////////////////////////////
-
+	 </script>
+	 
+	<script type="text/javascript">
 	// 해시태그에 a태그 붙이기
 	// html 안에 'content'라는 아이디를 content 라는 변수로 정의한다.
 	var content = document.getElementById('content').innerHTML;
@@ -559,7 +447,7 @@ opacity : 0.95;
 	document.getElementById('content').innerHTML = linkedContent;
 		
 		
-	// 포스트 좋아요 유무 확인	
+	// 좋아요 유무 확인	
 	 function isLike(){
 		 $.ajax({
 				type : 'post',
@@ -594,8 +482,7 @@ opacity : 0.95;
 			});
 	 } isLike()
 	 
-
-	// 포스트 좋아요 버튼 클릭 시 
+	// 좋아요 버튼 클릭 시 
 	 $("#postLike").on("click", function(){
 			let likeCount = $("#postLike").children().html();
 			console.log(parseInt(likeCount));
