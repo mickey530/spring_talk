@@ -65,7 +65,7 @@ public class GallDogController {
 	
 	
 	// 게시글 목록 http://localhost:8181/gall/dogList/gall_dog
-	@GetMapping("/dogList/{gall_name}")
+	@GetMapping("/list/{gall_name}")
 	public String dogList(@PathVariable("gall_name") String gall_name, SearchCriteria cri, Model model) {
 		List<GallDogVO> dogList = service.allList(gall_name);
 		model.addAttribute("dogList", dogList);
@@ -153,7 +153,7 @@ public class GallDogController {
 		
 		
 		// 좋아요
-		@PostMapping(value="/like", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+		@PostMapping(value="/{gall_name}/like", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
 		public ResponseEntity <String> like(@RequestBody GallDogLikeVO vo){
 			ResponseEntity<String> entity= null;
 			try {

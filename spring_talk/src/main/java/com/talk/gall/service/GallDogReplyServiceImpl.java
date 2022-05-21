@@ -26,6 +26,7 @@ public class GallDogReplyServiceImpl implements GallDogReplyService {
 	@Override
 	public void addReply(GallDogReplyVO vo) {
 		replymapper.create(vo);
+		boardmapper.updateReplyCount(vo.getGall_name(), vo.getBoard_num(), 1);
 		
 	}
 
@@ -38,6 +39,8 @@ public class GallDogReplyServiceImpl implements GallDogReplyService {
 	@Override
 	public void removeReply(GallDogReplyVO vo) {
 		replymapper.delete(vo);
+//		boardmapper.updateReplyCount(vo.getGall_name(), vo.getBoard_num(), -1);
+
 	}
 	
 	

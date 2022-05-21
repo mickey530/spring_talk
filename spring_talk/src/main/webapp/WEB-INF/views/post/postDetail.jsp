@@ -390,7 +390,8 @@ opacity : 0.95;
 	 
 	 // 삭제
 	 $("#replyDelBtn").on("click", function(){
-		let reply_num = $(".modal-title").html();
+		let reply_num = select.parent().parent().attr("data-reply_num");
+		console.log("???" + reply_num);
 		$.ajax({
 			type : 'delete',
 			url : '/replies/' + reply_num,
@@ -407,11 +408,11 @@ opacity : 0.95;
 				if(result == 'SUCCESS'){
 					alert("삭제 되었습니다.");
 					$("#replyCount").html(parseInt($("#replyCount").html())-1); // 댓글 개수 - 반영 로직
+					console.log("??:"+ $(this))
 					$(this).hide("slow");
-					console.log(select.parent());
-					select.parent().hide();
+					console.log(select.parent().parent());
+					select.parent().parent().hide();
 					$("#modDiv").hide("slow");
-					/* getAllList(); */
 				}
 			}
 		});

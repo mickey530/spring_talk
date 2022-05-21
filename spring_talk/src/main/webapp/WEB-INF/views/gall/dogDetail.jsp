@@ -71,27 +71,36 @@ opacity : 0.95;
 	<sec:authentication property="principal.user.user_id" var="login_id"/> 	
 </sec:authorize>
 
-	<div class="container" >
+<div id="wrapper">
+	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
+		<span class="col-11">${dog.writer }'s post</span>
+		<a href="/post/insert" class="col-1 text-left text-white">+</a>
+	</header>
 
+	<div class="container" >
+<div>
+	<h2>${dog.board_num  }번 게시글</h2>
+	<p>작성자 : ${dog.writer }</p>
+	<p>제목 : ${dog.board_title }</p>
+	<p id="content">내용 : ${dog.board_content }</p>
 	<div>
-		<h2>${dog.board_num  }번 게시글</h2>
-		<p>작성자 : ${dog.writer }</p>
-		<p>제목 : ${dog.board_title }</p>
-		<p id="content">내용 : ${dog.board_content }</p>
-	<div>		
-		<c:if test="${login_id eq dog.writer}">
-		<form action="/gall/delete/${gall_name }/${dog.board_num}" method="post">
-			<input type="submit" value="삭제">
-			<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
-		</form>
-		<form action="/gall/updateForm/${gall_name }/${dog.board_num}" method="get">
-			<input type="submit" value="수정">
-		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
-		</form>
+		<c:if test="${login_id ne null}">
+			<button class="btn btn-outline-danger" id="postLike"><span>${post.like_count}</span>♡</button>
 		</c:if>
-		<!-- <a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>  -->		
+		<c:if test="${login_id eq dog.writer}">
+			<form action="/gall/updateForm/${gall_name }/${dog.board_num}" method="get">
+				<input type="submit" class="btn" value="수정">
+				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+			</form>
+			<form action="/gall/delete/${gall_name }/${dog.board_num}" method="post">
+				<input type="submit" class="btn" value="삭제">
+				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+			</form>
+		</c:if>
+		<%-- <a href="/report/post/${dog.board_num}" class="btn btn-outline-dark">신고🚨</a> --%>
+		
 	</div>
-	</div>
+</div>
 
 <hr/>
 <h3>댓글 <span id="replyCount">${dog.replycount }</span>개</h3>
@@ -141,6 +150,8 @@ opacity : 0.95;
 </div>
 </div> <!-- container -->
 
+</div> <!-- wrapper -->	
+
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
      <a href="/user/follow" class="col-2">팔로우</a>
      <a href="#" class="col-2">채팅</a>
@@ -171,7 +182,7 @@ opacity : 0.95;
 /* 여어어어어어기 */
 	 function getAllList(){
 		 
-		$.getJSON("/gallreplies/all/" + gall_name_reply + "/" + board_num, function(data){
+		$.getJSON("/gallreplies/all/" + gall_name + "/" + board_num, function(data){
 
 			var str = "";
 			console.log(data);
@@ -244,7 +255,7 @@ opacity : 0.95;
 		function reply(){
 			console.log('${gall_name}')
 		 	var reply_content = $("#newReplyText").val();
-			console.log("갤네임"+gall_name_reply);
+			console.log("갤네임"+gall_name);
 			
 			
 			//getReplySequence(); // 시퀀스 번호 가져오기
@@ -254,7 +265,7 @@ opacity : 0.95;
 			
 			$.ajax({
 				type : 'post',
-				url : '/gallreplies/'+gall_name_reply+'/'+board_num,
+				url : '/gallreplies/'+gall_name+'/'+board_num,
 				headers : {
 					"Content-Type" : "application/json",
 					"X-HTTP-Method-Override" : "POST"
@@ -267,7 +278,7 @@ opacity : 0.95;
 					board_num : board_num,
 					writer : login_id,
 					reply_content : reply_content,
-					gall_name_reply : gall_name_reply
+					gall_name : gall_name
 					
 				}),
 				success : function(result){
@@ -356,7 +367,7 @@ opacity : 0.95;
 		let reply_num = $(".modal-title").html();
 		$.ajax({
 			type : 'DELETE',
-			url : '/gallreplies/' + gall_name_reply + "/" + reply_num,
+			url : '/gallreplies/' + gall_name + "/" + reply_num + "/" + board_num,
 			header : {
 				"X-HTTP-Method-Override" : "DELETE"
 			},
@@ -400,7 +411,7 @@ opacity : 0.95;
 		let reply_content = $(".reply").val();
 		$.ajax({
 			type : 'patch', 
-			url : '/gallreplies/'+ gall_name_reply + "/" + reply_num,
+			url : '/gallreplies/'+ gall_name + "/" + reply_num,
 			header : {
 				"Content-Type" : "application/json",
 				"X-HTTP-Method-Override" : "PATCH" 
@@ -450,7 +461,7 @@ opacity : 0.95;
        	 function isLike(){
        		 $.ajax({
        				type : 'post',
-       				url : '/galldog/islike',
+       				url : '/gall/islike',
        				headers : {
        					"Content-Type" : "application/json",
        					"X-HTTP-Method-Override" : "POST"
@@ -494,7 +505,7 @@ opacity : 0.95;
        			
        			$.ajax({
        				type : 'post',
-       				url : '/galldog/like',
+       				url : '/{gall_name}/gall/like',
        				headers : {
        					"Content-Type" : "application/json",
        					"X-HTTP-Method-Override" : "POST"
@@ -504,6 +515,7 @@ opacity : 0.95;
        	                xhr.setRequestHeader(_csrf_header, _csrf);
        	            },
        				data : JSON.stringify({
+       					gall_name : gall_name,
        					board_num : board_num,
        					user_id : login_id
        				}),
