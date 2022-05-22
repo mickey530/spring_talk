@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">   
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">   
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,87 +16,111 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 <!-- 번들 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<!--http://localhost:8181/post/detail/102  -->
+<!--http://localhost:8181/galldog/detail/1 -->
 <style>
 *{margin: 0;padding: 0;list-style: none;;}
 body {width:100%;}
 .container{width : 100%}
 
+
  a{
  	text-decoration:none;
  	text-align:center;
+ 	color: black;
  	}
-
+#replyBar{
+       display: flex !important;
+       background-color:white;
+       position: fixed;
+       bottom: 50px;
+       left: 0px;
+}
+footer {
+       display: flex !important;
+       position: fixed;
+       bottom: 0px;
+       width: 100%;
+       height: 50px;
+       font-size: 15px;
+       align-items: center;
+       background-color: white;
+       z-index: 2;
+       }
 #modDiv, #modDiv2{
 position:fixed;
 z-index:100;
-bottom:0 ; left:0;
+bottom:50 ; left:0;
 width: 100%;
-margin: 0 auto;
-padding:10px;
-box-sizing: border-box;
-background-color:#fff;}
+opacity : 0.95;
+}
 	     
+#modDiv .btn-outline-dark{
+	border: none;
+}
 
-.btn_content{width: 100%;
-border-radius: 5px;
-background-color: #fff;;}
-
-.btn_content button{
-display: block;	
-width: 100%;
-background-color: blueviolet;
-border: 0;
-padding: 10px;
-border-bottom: 1px solid #ddd;
-background-color: transparent;}
-
-.btn_content button:last-child{border-bottom: 0;}
 
 
 .btn_content button:hover{background-color: #484848; color: #fff;}
-
-.button{
-border:0;
-outline: none;
-background-color:#ffffff;
-}
 
     
 </style>
 </head>
 <body>
-	<div class="container" >
 
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.user.user_id" var="login_id"/> 	
+</sec:authorize>
+
+<div id="wrapper">
+	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
+		<span class="col-11">${dog.writer }'s post</span>
+		<a href="/post/insert" class="col-1 text-left text-white">+</a>
+	</header>
+
+	<div class="container" >
+<div>
+	<h2>${dog.board_num  }번 게시글</h2>
+	<p>작성자 : ${dog.writer }</p>
+	<p>제목 : ${dog.board_title }</p>
+	<p id="content">내용 : ${dog.board_content }</p>
 	<div>
-		<h2>${dog.board_num  }번 게시글</h2>
-		<p>작성자 : ${dog.writer }</p>
-		<p>제목 : ${dog.board_title }</p>
-		<p id="content">내용 : ${dog.board_content }</p>
-	<div>		
-		<c:if test="${login_id eq dog.writer}">
-			<a href="/galldog/updateForm/${dog.board_num}" class="btn btn-dark">수정</a>
-			<a href="/galldog/delete/${dog.board_num}" class="btn btn-danger">삭제</a>
+		<c:if test="${login_id ne null}">
+			<button class="btn btn-outline-danger" id="postLike"><span>${post.like_count}</span>♡</button>
 		</c:if>
-		<!-- <a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>  -->		
+		<c:if test="${login_id eq dog.writer}">
+			<form action="/gall/updateForm/${gall_name }/${dog.board_num}" method="get">
+				<input type="submit" class="btn" value="수정">
+				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+			</form>
+			<form action="/gall/delete/${gall_name }/${dog.board_num}" method="post">
+				<input type="submit" class="btn" value="삭제">
+				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+			</form>
+		</c:if>
+		<%-- <a href="/report/post/${dog.board_num}" class="btn btn-outline-dark">신고🚨</a> --%>
+		
 	</div>
-	</div>
+</div>
 
 <hr/>
 <h3>댓글 <span id="replyCount">${dog.replycount }</span>개</h3>
+	<hr/>	
 
 	
-	<hr/>
 
 	<div id="replies"></div>
-	
-	<!-- 댓글 작성란 -->
 	<br/>
+	<button id="more" class="btn btn-outline-secondary btn-sm" onclick="getReplyList()">와 ! 댓글 ! 더보기!</button>
+	<!-- 댓글 작성란 -->
+	<div id="replyBar" class="mx-0 py-2 w-100 row justify-content-between">
+		<br/>
+	
 	 <sec:authorize access="isAuthenticated()">
 		<div>			
 			<div>
-				REPLY TEXT <input type="text" id="newReplyText">
-				<button id="replyAddBtn">ADD REPLY</button>
+			<input id="newReplyText" onkeyup="enterkey()" class="form-control" type="text" placeholder="댓글!" aria-label="default input example">
+				<!-- REPLY TEXT <input type="text" id="newReplyText">
+				<button id="replyAddBtn">ADD REPLY</button> -->
 			</div>
 		</div>
 	</sec:authorize>
@@ -103,22 +128,40 @@ background-color:#ffffff;
 	<sec:authorize access="isAnonymous()">
 		<a href="http://localhost:8181/user/login">로그인</a>
 	</sec:authorize>
+	<br/>
 	
-	<hr/>
+</div>
 
 	<!-- 모달창 -->
 	<div id="modDiv" style="display:none;">
-		<div class="modal-title modalArea">
+		<div class="modal-title visually-hidden">
 		</div>
-		<div class="btn_content modalArea">
-				<button type="button" id="reReplyBtn" class="modalArea">답글달기</button>	
-				<button type="button" onclick="closeModal()" class="modalArea">닫기</button>
-				<button type="button" id="btn" class="modalArea auth visually-hidden">수정</button>
-				<button type="button" id="replyDelBtn" class="modalArea auth visually-hidden">삭제</button>
+			<div class="modal-dialog" role="document">
+		<div class="modal-content rounded-6 shadow">
+		
+		<div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+			<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 " id="reReplyBtn" >답글달기</button>	
+			<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="btn">수정</button>
+			<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="replyDelBtn">삭제</button>
+			<button type="button" class="btn btn-lg btn-outline-dark w-100 mx-0 modalArea" onclick="closeModal()">닫기</button>
 		</div>
 	</div>
-
+</div>
+</div>
 </div> <!-- container -->
+
+</div> <!-- wrapper -->	
+
+<footer class="mx-0 py-2 w-100 border-top row justify-content-between">
+     <a href="/user/follow" class="col-2">팔로우</a>
+     <a href="#" class="col-2">채팅</a>
+     <a href="/post/newsfeed" class="col-2">피드</a>
+     <a href="#" class="col-2">커뮤</a>
+     <a href="/user/room/${login_id }" class="col-2">마이룸</a>
+</footer>
+
+
+
 
 	<!-- jquery cdn 코드 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
@@ -130,10 +173,16 @@ background-color:#ffffff;
 
     
 	/* 댓글 불러오는 로직 */
-	let board_num = ${dog.board_num};
+	
+	/* 게시글 번호, 갤러리 이름, 갤러리 이름(댓글) 변수 선언 */
+	let board_num = '${dog.board_num}';	
+	let gall_name = '${gall_name}';
+	let gall_name_reply = '${gall_name}_reply';
 
+/* 여어어어어어기 */
 	 function getAllList(){
-		$.getJSON("/replies/all/" + board_num, function(data){
+		 
+		$.getJSON("/gallreplies/all/" + gall_name + "/" + board_num, function(data){
 
 			var str = "";
 			console.log(data);
@@ -141,8 +190,13 @@ background-color:#ffffff;
 			$(data).each(
 				function() {
 					// 시간
-					let timestamp = this.update_date;
+					
+					let timestamp = this.m_date;
+					
+					console.log("timestamp : " + timestamp);
+					
 					let date = new Date(timestamp);
+					console.log("date : " + date);
 					let formattedTime = " 게시일 : " + date.getFullYear()
 										+ "/" + (date.getMonth()+1)
 										+ "/" + date.getDate()
@@ -151,20 +205,24 @@ background-color:#ffffff;
 										+":" + date.getSeconds()
 										+ '&nbsp;&nbsp;&nbsp;';
 										
+										if(!(this.reply_id == login_id)){
+											formattedTime += "<a type='button'href='/report/reply/"+this.reply_num+"' >🚨</a>";
+										}
+					
 										
 										formattedTime += '&nbsp;';
 									//	+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
 										
-					str += "<div class='replyLi' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>@"
-						+ this.reply_id + "</strong> - " + formattedTime + "<br>"
-						+ "<div class='reply_content'>" + this.reply_content 
-						+ "</div>"
-						+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
+					str += "<div class='replyLi p-2' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>"
+						+ "<a href='/user/room/" + this.writer + "'>@"+this.writer + "</a></strong> : " /* + formattedTime */
+						+ "<span class='reply_content'>" + this.reply_content 
+						+ "</span>"
+						+ "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>"
 						+"<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
 						
 						+ "</div>";												
 				});
-		
+			console.log("str : " + str);
 			$("#replies").html(str);			
 		});
 	 }
@@ -176,12 +234,38 @@ background-color:#ffffff;
 	 }
 	 
 	 // 기본댓글 작성하는곳
-	 $("#replyAddBtn").on("click", function(){
-			var reply_content = $("#newReplyText").val();
+	 
+	 function enterkey() {
+	        if (window.event.keyCode == 13) {
+	 
+	             // 엔터키가 눌렸을 때 실행할 내용
+	              reply();
+	        }
+	}
+
+	// 댓글 시퀀스 가져오는 함수 선언
+	/*
+		let sequence = "";
+		function getReplySequence(){
+			$.getJSON("/gallreplies/sequence", function(data){
+				sequence = data;
+			});
+		 }
+	 */
+		function reply(){
+			console.log('${gall_name}')
+		 	var reply_content = $("#newReplyText").val();
+			console.log("갤네임"+gall_name);
+			
+			
+			//getReplySequence(); // 시퀀스 번호 가져오기
+	 
+			// $("#replyAddBtn").on("click", function(){
+			//	var reply_content = $("#newReplyText").val();
 			
 			$.ajax({
 				type : 'post',
-				url : '/replies',
+				url : '/gallreplies/'+gall_name+'/'+board_num,
 				headers : {
 					"Content-Type" : "application/json",
 					"X-HTTP-Method-Override" : "POST"
@@ -192,14 +276,25 @@ background-color:#ffffff;
 	            },
 				data : JSON.stringify({
 					board_num : board_num,
-					reply_id : login_id,
-					reply_content : reply_content
+					writer : login_id,
+					reply_content : reply_content,
+					gall_name : gall_name
+					
 				}),
 				success : function(result){
-					if(result == 'OK'){
+					if(result == 'SUCCESS'){
 						alert("등록되었습니다.");
 						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 반영 로직
-						getAllList();
+						$("#replies").prepend(
+								"<div class='replyLi p-2' data-reply_num='" + sequence + "'><strong class='reply_id'>@"
+								+ login_id + "</strong> : "
+								+ "<span class='reply_content'>" + reply_content 
+								+ "</span>"
+								+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
+								+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
+								
+								+ "</div>"		
+					)
 						refresh();
 					}
 					
@@ -210,8 +305,12 @@ background-color:#ffffff;
 				}
 				
 			});
-		});
+		};
 	 
+		 
+		  
+		
+		
 	// 선택한 댓글 외부에서 사용 ///////////////////
 	 	let select = "";
 	 	
@@ -220,7 +319,7 @@ background-color:#ffffff;
 
 	 $("#replies").on("click", ".modalBtn", function(){
 
-		 let reply_id = $(this).siblings(".reply_id").html();
+		 let reply_id = $(this).siblings(".reply_id").children().html();
 	     
 	     console.log("reply_id = "+reply_id+" , login_id = " + login_id);
 	     if(("@"+login_id) == reply_id){
@@ -242,7 +341,7 @@ background-color:#ffffff;
 		$(".modal-title").html(reply_num);
 		$("#reply").val(reply_content);
 
-		$("#modDiv").show("slow");
+		$("#modDiv").show(400);
 		
 		modalArea = true; // 모달 열려있음
 		if(modalArea){
@@ -259,7 +358,7 @@ background-color:#ffffff;
 	
 	 // 모달 닫기
 	 function closeModal(){
-		 $("#modDiv").hide("slow");
+		 $("#modDiv").hide("400");
 		 modalArea = false;
 	 };
 	 
@@ -267,8 +366,8 @@ background-color:#ffffff;
 	 $("#replyDelBtn").on("click", function(){
 		let reply_num = $(".modal-title").html();
 		$.ajax({
-			type : 'delete',
-			url : '/replies/' + reply_num,
+			type : 'DELETE',
+			url : '/gallreplies/' + gall_name + "/" + reply_num + "/" + board_num,
 			header : {
 				"X-HTTP-Method-Override" : "DELETE"
 			},
@@ -282,8 +381,11 @@ background-color:#ffffff;
 				if(result == 'SUCCESS'){
 					alert("삭제 되었습니다.");
 					$("#replyCount").html(parseInt($("#replyCount").html())-1);
+					$(this).hide("slow");
+					console.log(select.parent());
+					select.parent().hide();
 					$("#modDiv").hide("slow");
-					getAllList();
+					 /* getAllList();  */
 				}
 			}
 		});
@@ -304,12 +406,12 @@ background-color:#ffffff;
 	 // 수정사항 저장 버튼
 	 function replyMod(){
 		 
-		$(".modalBtn").toggleClass("modalBtn");
+		$(".memu").toggleClass("modalBtn");
 		let reply_num = $(".modal-title").html();
 		let reply_content = $(".reply").val();
 		$.ajax({
 			type : 'patch', 
-			url : '/replies/' + reply_num,
+			url : '/gallreplies/'+ gall_name + "/" + reply_num,
 			header : {
 				"Content-Type" : "application/json",
 				"X-HTTP-Method-Override" : "PATCH" 
@@ -324,15 +426,42 @@ background-color:#ffffff;
 				console.log("result: " + result);
 				if(result == 'SUCCESS'){
 					alert("수정되었습니다.");
-					getAllList(); //수정된 댓글 반영한 새 댓글목록 갱신
+					select.html(reply_content);
+					$(".menu").addClass("modalBtn");
+					modalarea = false;
+					/* getAllList(); */ //수정된 댓글 반영한 새 댓글목록 갱신 
 				}
 			}
+		});
+		};
+		
+		// 답글달기
+		</script>
+        
+        
+        <script type="text/javascript"> 
+        var content = document.getElementById('content').innerHTML;
+    	console.log(content)
+    	var splitedArray = content.split(' '); // 공백을 기준으로 문자열을 자른다.
+    	var linkedContent = '';
+    	for(var word in splitedArray)
+    	{
+    	  word = splitedArray[word];
+    	   if(word.indexOf('#') == 0) // # 문자를 찾는다.
+    	   {
+    	      word = '<a href=\#>'+word+'</a>'; 
+    	   }
+    	   linkedContent += word+' ';
+    	}
+    	document.getElementById('content').innerHTML = linkedContent;
+    		
+    		
             
          // 좋아요 유무 확인	
        	 function isLike(){
        		 $.ajax({
        				type : 'post',
-       				url : '/galldog/islike',
+       				url : '/gall/islike',
        				headers : {
        					"Content-Type" : "application/json",
        					"X-HTTP-Method-Override" : "POST"
@@ -350,7 +479,7 @@ background-color:#ffffff;
         					$("#boardLike").addClass("board-liked");
        						$("#boardLike").removeClass("board-like");
        						$("#boardLike").addClass("btn-danger");
-       						$("#boardLike").removeClass("btn-outline-danger");
+       						$("#boardLike").removeClass("/* -outline-danger");
        					} else{
        						$("#boardLike").addClass("board-like");
        						$("#boardLike").removeClass("board-liked");
@@ -361,8 +490,8 @@ background-color:#ffffff;
        				}
        				/* error도 설정 가능 */
        			});
-       	 }
-       	 
+       	 } /* isLike()
+       	 */
 
        	// 좋아요 버튼 클릭 시 
        	 $("#boardLike").on("click", function(){
@@ -376,7 +505,7 @@ background-color:#ffffff;
        			
        			$.ajax({
        				type : 'post',
-       				url : '/galldog/like',
+       				url : '/{gall_name}/gall/like',
        				headers : {
        					"Content-Type" : "application/json",
        					"X-HTTP-Method-Override" : "POST"
@@ -386,6 +515,7 @@ background-color:#ffffff;
        	                xhr.setRequestHeader(_csrf_header, _csrf);
        	            },
        				data : JSON.stringify({
+       					gall_name : gall_name,
        					board_num : board_num,
        					user_id : login_id
        				}),

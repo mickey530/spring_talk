@@ -14,4 +14,6 @@ public class ReplyVO {
 	private Date write_date;
 	private Date update_date;
 	private Long reply_level;
+	private long like_count;
+
 }

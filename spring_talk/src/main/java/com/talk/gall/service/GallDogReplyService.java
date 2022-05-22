@@ -6,12 +6,12 @@ import com.talk.gall.domain.GallDogReplyVO;
 
 public interface GallDogReplyService {
 	
-	public List<GallDogReplyVO> listReply(Long board_num);
+	public List<GallDogReplyVO> listReply(GallDogReplyVO vo);
 	
 	public void addReply(GallDogReplyVO vo);
 	
 	public void modifyReply(GallDogReplyVO vo);
 	
-	public void removeReply(Long reply_num);
+	public void removeReply(GallDogReplyVO vo);
 
 }

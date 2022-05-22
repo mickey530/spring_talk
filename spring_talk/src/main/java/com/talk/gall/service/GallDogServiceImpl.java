@@ -4,11 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.talk.gall.domain.GallDogVO;
+import com.talk.gall.domain.SearchCriteria;
 import com.talk.gall.mapper.GallDogMapper;
 import com.talk.gall.mapper.GallDogReplyMapper;
-import com.talk.post.domain.UserCriteria;
 
 @Service
 public class GallDogServiceImpl implements GallDogService {
@@ -25,25 +26,35 @@ public class GallDogServiceImpl implements GallDogService {
 	}
 
 	@Override
-	public GallDogVO select(long board_num) {
-		return gallDogMapper.select(board_num);
+	public GallDogVO select(GallDogVO vo) {
+		return gallDogMapper.select(vo);
+	}
+
+	@Transactional
+	@Override
+	public void delete(GallDogVO vo) {
+		gallDogMapper.delete(vo);
+		
+	}
+	@Override
+	public GallDogVO update(GallDogVO vo) {
+		return gallDogMapper.update(vo);		
 	}
 
 	@Override
-	public void delete(long board_num) {
-		gallDogMapper.delete(board_num);
-		gallDogReplyMapper.delete(board_num);
+	public List<GallDogVO> allList(String gall_name) {
+		return gallDogMapper.allList(gall_name);
 	}
 
 	@Override
-	public void update(GallDogVO vo) {
-		gallDogMapper.update(vo);
+	public void upHit(GallDogVO vo) {
+		gallDogMapper.upHit(vo);
 		
 	}
 
 	@Override
-	public List<GallDogVO> allList(long board_num) {
-		return gallDogMapper.allList(board_num);
+	public int countPageNum(SearchCriteria cri) {
+		return gallDogMapper.countPageNum(cri);
 	}
 }	
 

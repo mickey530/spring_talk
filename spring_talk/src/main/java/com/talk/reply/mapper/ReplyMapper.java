@@ -2,12 +2,15 @@ package com.talk.reply.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.talk.reply.domain.ReplyCriteria;
 import com.talk.reply.domain.ReplyVO;
 
 public interface ReplyMapper {
 
 
-	public List<ReplyVO> getList(Long board_num); // 불러오기
+	public List<ReplyVO> getList(ReplyCriteria cri); // 불러오기
 	
 	public void create(ReplyVO vo); // 작성하기
 	
@@ -23,4 +26,8 @@ public interface ReplyMapper {
 	
 	public void deleteAllReplies(Long post_num);
 	
+	public long getReplySequence();
+	
+	public void updateLikeCount(@Param("reply_num") Long reply_num,
+								@Param("amount") int amount);
 }

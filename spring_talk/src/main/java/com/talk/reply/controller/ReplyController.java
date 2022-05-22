@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.talk.post.domain.Criteria;
+import com.talk.post.domain.PostLikeVO;
+import com.talk.reply.domain.ReplyCriteria;
 import com.talk.reply.domain.ReplyLikeVO;
 import com.talk.reply.domain.ReplyVO;
 import com.talk.reply.service.ReplyAtService;
@@ -32,10 +36,10 @@ public class ReplyController {
 	private ReplyService service;
 	
 	@Autowired
-	private ReplyAtService AtService;
+	private ReplyAtService atService;
 	
 	@Autowired
-	private ReplyLikeService LikeService;
+	private ReplyLikeService likeService;
 	
 	
 	
@@ -60,12 +64,12 @@ public class ReplyController {
 	@GetMapping(value="/all/{post_num}",produces= {MediaType.APPLICATION_XML_VALUE,
 													MediaType.APPLICATION_JSON_UTF8_VALUE})
 	
-	public ResponseEntity<List<ReplyVO>>list(@PathVariable("post_num")Long post_num){
+	public ResponseEntity<List<ReplyVO>>list(@PathVariable("post_num")Long post_num, ReplyCriteria cri){
 		
 		ResponseEntity<List<ReplyVO>> entity= null;
 		
 		try {
-			entity = new ResponseEntity<>(service.listReply(post_num),HttpStatus.OK);
+			entity = new ResponseEntity<>(service.listReply(cri),HttpStatus.OK);
 		}catch(Exception e) {
 			e.printStackTrace();
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -108,6 +112,53 @@ public class ReplyController {
 		return entity;
 	
 }
+	// 댓글 시퀀스 가져오는 로직
+	@GetMapping(value="/sequence",produces= {MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+
+	public ResponseEntity<Long> getReplySequence(){
+	
+	ResponseEntity<Long> entity= null;
+	
+	try {
+	entity = new ResponseEntity<>(service.getReplySequence(),HttpStatus.OK);
+	}catch(Exception e) {
+	e.printStackTrace();
+	entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	return entity;
+	}
+	
+	// 좋아요 확인
+	@PostMapping(value="/islike", consumes="application/json", produces= {
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<String> islike(@RequestBody ReplyLikeVO vo){
+		ResponseEntity<String> entity= null;
+		try {
+			entity = new ResponseEntity<>(likeService.islike(vo), HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
+
+	// 좋아요
+	@PostMapping(value="/like", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity <String> like(@RequestBody ReplyLikeVO vo){
+		ResponseEntity<String> entity= null;
+		try {
+			likeService.like(vo);
+			entity = new ResponseEntity<String>("OK", HttpStatus.OK);
+		}catch(Exception e) {
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
+	
+	
+	
 	
 	// 좋아요 누른사람 리싀트
 //	@GetMapping(value="/all/{post_num}",produces = {MediaType.APPLICATION_XML_VALUE,

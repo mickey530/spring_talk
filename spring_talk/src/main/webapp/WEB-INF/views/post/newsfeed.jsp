@@ -20,7 +20,11 @@
       min-height: 100%;
       padding-bottom: 50px;
   }
-  a{text-decoration:none; text-align:center;}
+  a{
+	  text-decoration:none;
+	  text-align:center;
+	  color: black;
+  }
 .title-padding{
     padding:10px;
 }
@@ -100,7 +104,7 @@ footer {
 
 
 
-<div class="postList">
+<div id="postList">
 
 </div>
 <button id="more" onclick="more()">more</button>
@@ -148,6 +152,7 @@ footer {
 	 function more(){
 		page_num += 1;
 		$.getJSON("/post/newsfeed?page_num=" + page_num, function(data){
+			post = $("#postList").html();			
 
 			console.log(data);
 			
@@ -158,21 +163,13 @@ footer {
 						+ "<br/><button class='btn btn-sm postLike' id='postNum_"+ this.post_num +"'>♡"+this.like_count+"</button> 댓글 <span class=replyCount>" + this.replycount+ "</span>개<br/>"
 						+ "<input type='text' class='newReplyText'>"
 						+ "<button class='replyAddBtn'>ADD REPLY</button></div><hr/>";
-						/* console.log("댓글 개수" + this.replycount);
-						console.log("좋아요 개수" + this.like_count); */
+						
 						
  						isLike(this.post_num);
- 				}
-/* 				
-				<div class='mb-3'>
-				  <label class='form-label'>댓글 달기</label>
-				  <input class='form-control' rows='1'></input>
-				</div>
-			 */
-			
+ 				}			
 			
 			);
-			$(".postList").html(post);			
+			$("#postList").html(post);			
 		});
 	 }
 	 more();
@@ -196,8 +193,8 @@ footer {
 				}),
 				success : function(result){
 					 let thisPost = $("#postNum_"+ post_num);
-					 let likeNum = parseInt(thisPost.html().substr(1, 1));
-					 thisPost.html("♡" + likeNum)
+					 let likeNum = parseInt(thisPost.html().substr(1, 1)); // 왜 없어도 돌아감?
+					 thisPost.html("♡" + likeNum) // 왜 없어도 돌아감?
 					if(result != ""){
 						thisPost.addClass("post-liked");
 						thisPost.removeClass("post-like");
@@ -219,16 +216,26 @@ footer {
 
 
 	 
-		// 좋아요 버튼 클릭 시 
-		 $(".postList").on("click", ".postLike", function(){
-				
+		// 좋아요 버튼 클릭 시
+		 $("#postList").on("click", ".postLike", function(){
+			 if(login_id == ""){
+				 var result = confirm("로그인이 필요한 기능입니다. \n로그인 페이지로 이동하시겠습니까?")
+				 if(result){
+					 location.replace('/user/login')
+				 }
+			 } else{
 			 let post_num = $(this).parent()[0].dataset.post_num;
 			 let thisPost = $("#postNum_"+ post_num);
 			 let likeNum = parseInt(thisPost.html().substr(1, 1));
-			 if(thisPost.hasClass("post-liked")){
+/* 			 if(thisPost.hasClass("post-liked")){
 				 thisPost.html("♡" + (likeNum - 1))
 			 } if(thisPost.hasClass("post-like")){
 				 thisPost.html("♡" + (likeNum + 1))
+			 } */
+ 			 if($(this).hasClass("post-liked")){
+				 $(this).html("♡" + (likeNum - 1))
+			 } if($(this).hasClass("post-like")){
+				 $(this).html("♡" + (likeNum + 1))
 			 }
 			 console.log(post_num);
 				$.ajax({
@@ -252,12 +259,18 @@ footer {
 						}
 					}
 				});
-			});
+			 }});
 	 
 
 	  
 	  // 댓글달기
-	 $(".postList").on("click", ".replyAddBtn", function(){
+	 $("#postList").on("click", ".replyAddBtn", function(){
+		 if(login_id == ""){
+			 var result = confirm("로그인이 필요한 기능입니다. \n로그인 페이지로 이동하시겠습니까?")
+			 if(result){
+				 location.replace('/user/login')
+			 }
+		 } else{
 		let post_num = $(this).parent()[0].dataset.post_num;
 		console.log(post_num);
 		let reply_count = $(this).siblings(".replyCount");
@@ -294,7 +307,8 @@ footer {
 			
 		});
 		
-	});
+	}});
+	  
 	function refresh(){
 	 $(".newReplyText").val("");	 
 	}
