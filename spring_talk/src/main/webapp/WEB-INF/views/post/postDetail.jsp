@@ -379,14 +379,14 @@ opacity : 0.95;
 		
 		// select 에 저장 //////////////////////
 		select = $(this);
-		$(".reply_content").toggleClass("modalArea")
+		$(".reply_content").toggleClass("modalArea");
 		console.log("??? : " + select.html())
 	 });
 	
 	 // 모달 닫기
 	 function closeModal(){
 		 $("#modDiv").hide("400");
-		 $("reply_content").toggleClass("modalArea")
+		 $(".modalBtn").removeClass("modalArea");
 		 modalArea = false;
 		 console.log("근데 이게 자꾸 찍힘;;")
 	 };
