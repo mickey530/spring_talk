@@ -102,12 +102,12 @@ footer {
 </div>
  --%>
 
-
+          
 
 <div id="postList">
 
 </div>
-<button id="more" onclick="more()">more</button>
+<button id="more" class="btn btn-outline-secondary btn-sm" onclick="more()">와 ! 댓글 ! 더보기!</button>
 
 </div> <!-- container -->
 
@@ -158,21 +158,74 @@ footer {
 			
 			$(data).each(
 				function() {
-					post += "<div data-post_num='" + this.post_num + "' class='post'>"
-						+ "<a href='/post/detail/" + this.post_num + "'>"+ this.post_num +"</a> | <a href='/user/room/" + this.writer + "'>"+ this.writer +"</a><br/> " + this.title + " <br/> " + this.content
-						+ "<br/><button class='btn btn-sm postLike' id='postNum_"+ this.post_num +"'>♡"+this.like_count+"</button> 댓글 <span class=replyCount>" + this.replycount+ "</span>개<br/>"
-						+ "<input type='text' class='newReplyText'>"
-						+ "<button class='replyAddBtn'>ADD REPLY</button></div><hr/>";
+					post += `<div><div class="py-2">
+			            <img src="https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj" alt="mdo" width="32" height="32" class="rounded-circle cardHeader">
+			            <a href="/user/room/\${this.writer}" class="nav-link px-2 link-dark fw-bold cardHeader">\${this.writer}</a>
+			          </div>
+			            <a href="/post/detail/\${this.post_num}"><img src="https://i.ytimg.com/vi/4k48gvdAsFY/maxresdefault.jpg" class="w-100" alt="..." border:radius=0px;></a>
+			          <div class="card-menu py-2" style="margin-left: 0px;">
+							<button class='btn btn-sm postLike' id='postNum_\${this.post_num}' data-post_num='\${this.post_num}'>♡\${this.like_count}</button> 댓글 <span class=replyCount>\${this.replycount}</span>개<br/>		
+			          </div>
+
+			          <div class="card-body">
+
+			            <details>
+			              <summary>
+			                <p><strong>@\${this.writer }</strong> \${this.title}</p>
+			              </summary>
+			              <form class="card p-2">
+			                <span>\${this.content}</span>
+			                <hr/>
+			                <p><a href="/post/detail/\${this.post_num}">댓글 <span class=replyCount>\${this.replycount}</span>개</a></p>
+			                <div class='replyArea'></div>
+			              </form>              
+			            </details>
+			            <div class="input-comment">
+			              <div class="input-group">
+			                <input type="text" class="form-control sm_font newReplyText" placeholder="댓글">
+			                <button type="submit" class="btn btn-outline-secondary sm_font replyAddBtn">게시</button>
+			              </div>
+			            </div>
+			          </div>
+			          </div>`
 						
-						
+						getReply(this.post_num);
  						isLike(this.post_num);
- 				}			
+ 				}
+				// 댓글 불러오는 로직
+				
 			
 			);
-			$("#postList").html(post);			
+			$("#postList").html(post+reply);			
 		});
 	 }
 	 more();
+	 
+	 
+	 let reply = "";
+	 function getReply(post_num){
+		 console.log(
+			$.getJSON("/replies/preview/" + post_num, function(data){
+
+				reply = ""
+				$(data).each(
+					function() {
+						reply += `<p><strong>@\${this.reply_id}</strong> \${this.reply_content}</p>`
+
+						console.log(reply)	
+	 				}			
+				
+				);
+				$("#postNum_"+post_num).parent().siblings(".card-body").children("details").children(".card").children(".replyArea").append(reply);			
+			}));
+		 }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 
 		// 좋아요 유무 확인	
  	  function isLike(post_num){
@@ -224,7 +277,7 @@ footer {
 					 location.replace('/user/login')
 				 }
 			 } else{
-			 let post_num = $(this).parent()[0].dataset.post_num;
+			 let post_num = $(this).attr("data-post_num");
 			 let thisPost = $("#postNum_"+ post_num);
 			 let likeNum = parseInt(thisPost.html().substr(1, 1));
 /* 			 if(thisPost.hasClass("post-liked")){
@@ -271,11 +324,14 @@ footer {
 				 location.replace('/user/login')
 			 }
 		 } else{
-		let post_num = $(this).parent()[0].dataset.post_num;
-		console.log(post_num);
-		let reply_count = $(this).siblings(".replyCount");
+		let post_num = $(this).parent().parent().parent().siblings(".card-menu").children(".btn").attr("data-post_num");
+		let replyArea = $(this).parent().parent().siblings("details").children(".card").children(".replyArea");
+		
+		let reply_count = replyArea.siblings("p").children().children(".replyCount");
+		console.log(reply_count)
 		/* reply_count.html(parseInt(reply_count.html())+1); */
 		let reply_content = $(this).siblings(".newReplyText").val();
+		replyArea.append(`<p><strong>@\${login_id}</strong> \${reply_content}</p>`)
 		$.ajax({
 			type : 'post',
 			url : '/replies',

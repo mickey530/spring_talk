@@ -28,6 +28,8 @@ public interface ReplyMapper {
 	
 	public long getReplySequence();
 	
+	public List<ReplyVO> replyPreview(Long post_num); // 좋아요 개수 상위 2개 불러오기
+	
 	public void updateLikeCount(@Param("reply_num") Long reply_num,
 								@Param("amount") int amount);
 }

@@ -76,6 +76,23 @@ public class ReplyController {
 		}
 		return entity;
 }
+	// select
+	@GetMapping(value="/preview/{post_num}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<List<ReplyVO>>preview(@PathVariable("post_num")Long post_num){
+		
+		ResponseEntity<List<ReplyVO>> entity= null;
+		
+		try {
+			entity = new ResponseEntity<>(service.replyPreview(post_num),HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+}
+	
 	//delete
 	@DeleteMapping(value="/{reply_num}", produces= {MediaType.TEXT_PLAIN_VALUE})
 	public ResponseEntity<String> remove(@PathVariable("reply_num")Long reply_num){
