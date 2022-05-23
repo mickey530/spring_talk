@@ -203,7 +203,7 @@ footer {
 			            </details>
 			            <div class="input-comment">
 			              <div class="input-group">
-			                <input type="text" class="form-control sm_font newReplyText" placeholder="댓글">
+			                <input type="text" onkeyup="enterkey($(this),${this.post_num})"  class="form-control sm_font newReplyText" placeholder="댓글">
 			                <button type="submit" class="btn btn-outline-secondary sm_font replyAddBtn">게시</button>
 			              </div>
 			            </div>
@@ -403,7 +403,70 @@ footer {
 	 $(".newReplyText").val("");	 
 	}
 	
-	  
+	let inputArea = "";
+	$("#postList").on("click", ".newReplyText", function(){
+		inputArea = $(this);
+		console.log(inputArea);
+	});
+	
+	function enterReply(post_num){
+		 if(login_id == ""){
+			 var result = confirm("로그인이 필요한 기능입니다. \n로그인 페이지로 이동하시겠습니까?")
+			 if(result){
+				 location.replace('/user/login')
+			 }
+		 } else{
+		/* let post_num = $(this).parent().parent().parent().siblings(".card-menu").children(".btn").attr("data-post_num"); */
+		let replyArea = $(this).parent().parent().siblings("details").children(".card").children(".replyArea");
+		let reply_count = replyArea.siblings("p").children().children(".replyCount");
+		console.log(reply_count)
+
+		/* reply_count.html(parseInt(reply_count.html())+1); */
+		let reply_content = inputArea.val();
+		console.log("댓글내용"+reply_content);
+		$.ajax({
+			type : 'post',
+			url : '/replies',
+			headers : {
+				"Content-Type" : "application/json",
+				"X-HTTP-Method-Override" : "POST"
+			},
+			dataType : 'text',
+			beforeSend: function(xhr){
+	               xhr.setRequestHeader(_csrf_header, _csrf);
+	           },
+			data : JSON.stringify({
+				post_num : post_num,
+				reply_id : login_id,
+				reply_content : reply_content
+			}),
+			success : function(result){
+				if(result == 'OK'){
+					alert("등록되었습니다.");
+					console.log(replyArea);
+					replyArea.append(`<p><strong>@\${login_id}</strong> \${reply_content}</p>`)
+					reply_count.html(parseInt(reply_count.html())+1);
+					refresh();
+				}
+				
+			},
+			/* error도 설정 가능 */
+			error: function(){
+				alert("error")
+			}
+			
+		});
+		
+	}}
+	
+	function enterkey(post_num) {
+        if (window.event.keyCode == 13) {
+        	console.log(post_num);
+ 
+             // 엔터키가 눌렸을 때 실행할 내용
+              enterReply(post_num);
+        }
+	}
 	 </script>
 
 
