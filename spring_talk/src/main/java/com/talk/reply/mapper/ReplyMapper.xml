@@ -18,6 +18,14 @@
 		
 		</select>
 		
+		<select id="replyPreview" resultType="com.talk.reply.domain.ReplyVO">
+			<![CDATA[
+				SELECT * FROM
+				 (SELECT * FROM reply WHERE post_num = #{post_num} ORDER BY like_count DESC)
+				WHERE ROWNUM <= 2
+			]]>
+		</select>
+		
 		<insert id="create">
 			INSERT INTO reply
 			(reply_num, post_num, reply_content, reply_id)

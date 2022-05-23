@@ -90,11 +90,11 @@ footer {
 </div>
 
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
-      <a href="/user/follow" class="col-2">팔로우</a>
-      <a href="#" class="col-2">채팅</a>
-      <a href="/post/newsfeed" class="col-2">피드</a>
-      <a href="/gall/gallList" class="col-2">커뮤</a>
-      <a href="#" class="col-2">마이룸</a>
+     <a href="/user/follow" class="col-2">팔로우</a>
+     <a href="/chatting/chat" class="col-2">채팅</a>
+     <a href="/post/newsfeed" class="col-2">피드</a>
+     <a href="/gall/gallList" class="col-2">커뮤</a>
+     <a href="/user/room/${login_id }" class="col-2">마이룸</a>
 </footer> 
 
 <!-- jquery cdn 코드 -->

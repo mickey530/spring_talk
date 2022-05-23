@@ -105,13 +105,16 @@ opacity : 0.95;
 			<a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>
 		</c:if>
 		<c:if test="${login_id eq post.writer}">
-			
+		<div>
+			<button class="btn btn-outline-danger" id="postLike">♡</button>
+		
+			<a href="/post/updateForm/${post.post_num}" class="btn">수정</a>
 			<form action="/post/delete/${post.post_num}" method="post">
-				<button class="btn btn-outline-danger" id="postLike"><span>${post.like_count}</span>♡</button>			
-				<a href="/post/updateForm/${post.post_num}" class="btn">수정</a>
 				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 				<input type="submit" class="btn" value="삭제">
 			</form>
+		</div>
+
 		</c:if>
 		
 	</div>
@@ -182,7 +185,7 @@ opacity : 0.95;
 
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
      <a href="/user/follow" class="col-2">팔로우</a>
-     <a href="#" class="col-2">채팅</a>
+     <a href="/chatting/chat" class="col-2">채팅</a>
      <a href="/post/newsfeed" class="col-2">피드</a>
      <a href="/gall/gallList" class="col-2">커뮤</a>
      <a href="/user/room/${login_id }" class="col-2">마이룸</a>
@@ -383,14 +386,16 @@ opacity : 0.95;
 		
 		// select 에 저장 //////////////////////
 		select = $(this);
-		$(".reply_content").toggleClass("modalArea")
+		$(".reply_content").toggleClass("modalArea");
+
 		console.log("??? : " + select.html())
 	 });
 	
 	 // 모달 닫기
 	 function closeModal(){
 		 $("#modDiv").hide("400");
-		 $("reply_content").toggleClass("modalArea")
+		 $(".modalBtn").removeClass("modalArea");
+
 		 modalArea = false;
 		 console.log("근데 이게 자꾸 찍힘;;")
 	 };
@@ -419,7 +424,8 @@ opacity : 0.95;
 					$(this).hide("slow");
 					console.log(select.parent().parent());
 					select.parent().parent().hide();
-					$("#modDiv").hide("slow");
+					closeModal();
+
 				}
 			}
 		});

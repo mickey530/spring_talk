@@ -62,6 +62,12 @@ public class ReplyServiceImpl implements ReplyService {
 	public long getReplySequence() {
 		return mapper.getReplySequence();
 	}
+
+
+	@Override
+	public List<ReplyVO> replyPreview(Long post_num) {
+		return mapper.replyPreview(post_num);
+	}
 	
 	
 	

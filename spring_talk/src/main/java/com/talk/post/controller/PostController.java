@@ -72,6 +72,9 @@ public class PostController {
 	@Autowired
 	private FileService fileService;
 	
+//	public final String uploadFolder = "/Users/user/upload_data/temp/";
+	public final String uploadFolder = "c:\\upload_data\\temp\\";
+	
 	@GetMapping("/insert")
 	public String insert() {
 		return "post/insertForm";
@@ -256,8 +259,6 @@ public ResponseEntity<List<ThumbnailVO>> uploadAjaxPost(MultipartFile[] uploadFi
 
 	List<ThumbnailVO> list = new ArrayList<>();
 	
-	String uploadFolder = "C:\\upload_data\\temp";
-	
 	String uploadFolderPath = getFolder();
 	
 	// 폴더 생성 로직
@@ -345,7 +346,7 @@ public ResponseEntity<List<ThumbnailVO>> uploadAjaxPost(MultipartFile[] uploadFi
 		File file = null;
 		
 		try {
-			file = new File("c:\\upload_data\\temp\\" + URLDecoder.decode(fileName, "UTF-8"));
+			file = new File(uploadFolder + URLDecoder.decode(fileName, "UTF-8"));
 			
 			file.delete();
 			
@@ -375,7 +376,7 @@ public ResponseEntity<List<ThumbnailVO>> uploadAjaxPost(MultipartFile[] uploadFi
 		
 		System.out.println("fileName : " + fileName);
 		
-		File file = new File("c:\\upload_data\\temp\\" + fileName);
+		File file = new File(uploadFolder + fileName);
 		
 		System.out.println("file: " + file);
 		
