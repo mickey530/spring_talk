@@ -10,10 +10,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+
+@font-face {
+    font-family: 'CookieRunOTF-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/CookieRunOTF-Bold00.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'CookieRun-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }  
   html, body {height:100%;}
   body {
     background-color: white;
     color: black;
+    font-family: 'CookieRun-Regular';    
+  }
+  h3, .title {
+      font-family: 'CookieRunOTF-Bold';
+      margin: 0px;
   }
   #wrapper{
       height: auto;
@@ -52,6 +70,9 @@ summary > p {
 .card {
     font-size: 12px;
 }
+header{
+        background-color: white;
+}
 
 footer {
         display: flex !important;
@@ -63,7 +84,7 @@ footer {
         align-items: center;
         background-color: white;
         z-index: 2;
-        }
+}
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -75,9 +96,9 @@ footer {
 <!-- 대충 헤더임 -->
 
 <div id="wrapper">
-<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
-<span class="col-11">대충 헤더영역 : 뉴스피드</span>
-<a href="/post/insert" class="col-1 text-left text-white">+</a>
+<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
+<h3 class="col-11 px-0">IN n OUT</h3>
+<a href="/post/insert" class="col-1 text-left text-black">+</a>
 </header>
 <div class="container">
 
@@ -107,7 +128,7 @@ footer {
 <div id="postList">
 
 </div>
-<button id="more" class="btn btn-outline-secondary btn-sm" onclick="more()">와 ! 댓글 ! 더보기!</button>
+<button id="more" class="btn btn-outline-secondary btn-sm" onclick="more()">와 ! 게시물 ! 더보기!</button>
 
 </div> <!-- container -->
 
@@ -123,11 +144,11 @@ footer {
 </div> <!-- wrapper -->
 
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
-      <a href="/user/follow" class="col-2">팔로우</a>
-      <a href="#" class="col-2">채팅</a>
-      <a href="/post/newsfeed" class="col-2">피드</a>
-      <a href="#" class="col-2">커뮤</a>
-      <a href="/user/room/${login_id }" class="col-2">마이룸</a>
+     <a href="/user/follow" class="col-2">팔로우</a>
+     <a href="/chatting/chat" class="col-2">채팅</a>
+     <a href="/post/newsfeed" class="col-2">피드</a>
+     <a href="/gall/gallList" class="col-2">커뮤</a>
+     <a href="/user/room/${login_id }" class="col-2">마이룸</a>
 </footer>
  
 
@@ -143,8 +164,7 @@ footer {
     let login_id = '${login_id}';
     
     
-    
-    
+
 	/* 게시글 불러오는 로직 */
 	let page_num = 0;
 	var post = "";
@@ -201,10 +221,20 @@ footer {
 	 }
 	 more();
 	 
+	// 인피니티 스크롤
+	    $(window).scroll(function(){ 
+	    	var scrT = $(window).scrollTop();
+		    	if(scrT >= $(document).height() - $(window).height()){
+					more();
+		    	}
+		    	else { //아닐때 이벤트
+	    		
+	    		}
+	    	})
+	 
 	 
 	 let reply = "";
 	 function getReply(post_num){
-		 console.log(
 			$.getJSON("/replies/preview/" + post_num, function(data){
 
 				reply = ""
@@ -217,7 +247,8 @@ footer {
 				
 				);
 				$("#postNum_"+post_num).parent().siblings(".card-body").children("details").children(".card").children(".replyArea").append(reply);			
-			}));
+			});
+			reply = "";
 		 }
 	 
 	 
@@ -331,7 +362,6 @@ footer {
 		console.log(reply_count)
 		/* reply_count.html(parseInt(reply_count.html())+1); */
 		let reply_content = $(this).siblings(".newReplyText").val();
-		replyArea.append(`<p><strong>@\${login_id}</strong> \${reply_content}</p>`)
 		$.ajax({
 			type : 'post',
 			url : '/replies',
@@ -351,6 +381,7 @@ footer {
 			success : function(result){
 				if(result == 'OK'){
 					alert("등록되었습니다.");
+					replyArea.append(`<p><strong>@\${login_id}</strong> \${reply_content}</p>`)
 					reply_count.html(parseInt(reply_count.html())+1);
 					refresh();
 				}
@@ -369,8 +400,6 @@ footer {
 	 $(".newReplyText").val("");	 
 	}
 	
-
-	  
 	  
 	 </script>
 
