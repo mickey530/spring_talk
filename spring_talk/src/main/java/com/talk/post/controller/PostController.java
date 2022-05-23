@@ -1,14 +1,26 @@
 package com.talk.post.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +30,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.talk.file.domain.ImageFileDTO;
+import com.talk.file.domain.ImageFileVO;
+import com.talk.file.domain.ThumbnailVO;
+import com.talk.file.service.FileService;
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.FollowCriteria;
 import com.talk.post.domain.PostLikeVO;
@@ -33,6 +50,7 @@ import com.talk.reply.domain.ReplyVO;
 import com.talk.reply.service.ReplyService;
 
 import lombok.extern.log4j.Log4j;
+import net.coobird.thumbnailator.Thumbnailator;
 
 @Controller
 @Log4j
@@ -51,6 +69,8 @@ public class PostController {
 	private TagService tag;	
 	@Autowired
 	private ReplyService replyService;
+	@Autowired
+	private FileService fileService;
 	
 	@GetMapping("/insert")
 	public String insert() {
@@ -58,8 +78,9 @@ public class PostController {
 	}
 	
 	@PostMapping("/insert")
-	public String insert(PostVO vo) {
-		service.insert(vo);
+	public String insert(PostVO vo,ImageFileDTO ifVOs) {
+		service.insert(vo,ifVOs.getIfVOs());
+		
 		return "post/newsfeed"; // 나중에 뉴스피드로 리다이렉트 예정
 	}
 	
@@ -200,10 +221,10 @@ public class PostController {
 	ResponseEntity<Long> entity= null;
 	
 	try {
-	entity = new ResponseEntity<>(likeService.likeCount(post_num),HttpStatus.OK);
+		entity = new ResponseEntity<>(likeService.likeCount(post_num),HttpStatus.OK);
 	}catch(Exception e) {
-	e.printStackTrace();
-	entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		e.printStackTrace();
+		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	return entity;
 	}	
@@ -222,5 +243,198 @@ public class PostController {
 		return entity;
 	}
 	
+	
+	
+
+	//업로드 테스트 시작 단
+	@PostMapping(value="/uploadAjaxAction",
+			produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
+@ResponseBody
+public ResponseEntity<List<ThumbnailVO>> uploadAjaxPost(MultipartFile[] uploadFile) {
+	
+	System.out.println("ajax post update!");
+
+	List<ThumbnailVO> list = new ArrayList<>();
+	
+	String uploadFolder = "C:\\upload_data\\temp";
+	
+	String uploadFolderPath = getFolder();
+	
+	// 폴더 생성 로직
+	File uploadPath = new File(uploadFolder, uploadFolderPath);
+	System.out.println("upload path : " + uploadPath);
+	
+	if(uploadPath.exists() == false) {
+		uploadPath.mkdirs();
+	}
+	
+	for(MultipartFile multipartFile : uploadFile) {
+		System.out.println("==============================");
+		System.out.println("upload file name : " + multipartFile.getOriginalFilename());
+		System.out.println("Upload file size : " + multipartFile.getSize());
+
+		ImageFileVO imageVO = new ImageFileVO();
+		ThumbnailVO attachVO = new ThumbnailVO();
+		
+		String uploadFileName = multipartFile.getOriginalFilename();
+		
+		uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
+		System.out.println("last file name : " + uploadFileName);
+		
+		// uploadFileName에 의해 파일이름을 얻어왔으면 파일명을 attachDTO에 집어넣음
+		attachVO.setFile_name(uploadFileName);
+		
+		// uuid 발급 부분
+		UUID uuid = UUID.randomUUID();
+		
+		uploadFileName = uuid.toString() + "_" + uploadFileName;
+		
+		//File saveFile = new File(uploadFolder, uploadFileName);
+		
+		
+		try {
+			
+			
+			File saveFile = new File(uploadPath, uploadFileName);
+			multipartFile.transferTo(saveFile);
+			
+			attachVO.setUuid(uuid.toString());
+			attachVO.setUpload_path(uploadFolderPath);
+
+			imageVO.setFile_name(uploadFolderPath);
+			imageVO.setFile_type(checkFileType(uploadFileName));
+			imageVO.setUpload_path(uploadFolderPath);
+			imageVO.setUuid(uuid.toString());
+			System.out.println("파일 형식 : " + checkFileType(uploadFileName)) ;
+			boolean isImage = false;
+			log.info("파일 경로 : " + uploadFolderPath);
+			try {
+				isImage = Files.probeContentType(saveFile.toPath()).startsWith("image");
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+			// 이 아래부터 썸네일 생성로직
+			if(isImage) {
+				
+				System.out.println(uploadFileName + " is Image");
+				
+				FileOutputStream thumbnail =
+					new FileOutputStream(new File(uploadPath, "s_"+uploadFileName));
+				
+				Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
+				thumbnail.close();
+			}
+			
+			list.add(attachVO);
+			
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}//endfor
+	return new ResponseEntity<>(list, HttpStatus.OK);
+}
+
+	@PostMapping("/deleteFile")
+	@ResponseBody
+	public ResponseEntity<String> deleteFile(String fileName, String type){
+		log.info("deleteFile: " + fileName);
+		log.info(type);
+		
+		File file = null;
+		
+		try {
+			file = new File("c:\\upload_data\\temp\\" + URLDecoder.decode(fileName, "UTF-8"));
+			
+			file.delete();
+			
+			if(type.equals("image")) {
+				String largeFileName = file.getAbsolutePath().replace("s_", "");
+				
+				log.info("largeFileName : " + largeFileName);
+				
+				file = new File(largeFileName);
+				
+				file.delete();
+			}
+		} catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<String>("deleted", HttpStatus.OK);
+		
+	}
+	
+
+	
+	@GetMapping("/display")
+	@ResponseBody
+	public ResponseEntity<byte[]> getFile(String fileName){
+		
+		System.out.println("fileName : " + fileName);
+		
+		File file = new File("c:\\upload_data\\temp\\" + fileName);
+		
+		System.out.println("file: " + file);
+		
+		
+		ResponseEntity<byte[]> result = null;
+		
+		try {
+			HttpHeaders header = new HttpHeaders();
+			header.add("Content-Type", Files.probeContentType(file.toPath()));
+			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	
+	
+	
+	public String checkFileType(String file_name) {
+		
+		String fileType =  file_name.substring(file_name.indexOf(".")+1);
+		if(fileType.equals("BMP") ||fileType.equals("TIFF") ||fileType.equals("JPEG") ||fileType.equals("JPG") || fileType.equals("PNG") 
+				||fileType.equals("bmp") ||fileType.equals("tiff") ||fileType.equals("jpeg") ||fileType.equals("jpg") ||fileType.equals("png") )
+		{
+			fileType = "IMG";
+		}
+		return fileType;
+	}
+	
+
+	
+	private String getFolder() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Date date = new Date();
+		
+		String str = sdf.format(date);
+	
+		return str.replace("-", File.separator);
+	}
+
+	@GetMapping(value="/getImages/{post_num}",  produces= {MediaType.APPLICATION_XML_VALUE,
+												MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<List<ImageFileVO>>getImages(@PathVariable("post_num")Long post_num){
+		ResponseEntity<List<ImageFileVO>> entity= null;
+		try {
+			entity = new ResponseEntity<>(fileService.select(post_num),HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			System.out.println("getImages error : " +e);
+		}
+			return entity;
+	}
+
+	//업로드 테스트 끝 단
+		
 }
 

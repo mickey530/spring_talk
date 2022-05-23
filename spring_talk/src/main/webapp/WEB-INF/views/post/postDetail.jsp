@@ -32,6 +32,10 @@ body {width:100%;}
     min-height: 100%;
     padding-bottom: 121px;
  }
+ 
+ .upload_img{
+    width: 300px;
+ }
  a{
  	text-decoration:none;
  	text-align:center;
@@ -110,6 +114,7 @@ opacity : 0.95;
 				<input type="submit" class="btn" value="삭제">
 			</form>
 		</div>
+
 		</c:if>
 		
 	</div>
@@ -382,6 +387,7 @@ opacity : 0.95;
 		// select 에 저장 //////////////////////
 		select = $(this);
 		$(".reply_content").toggleClass("modalArea");
+
 		console.log("??? : " + select.html())
 	 });
 	
@@ -389,6 +395,7 @@ opacity : 0.95;
 	 function closeModal(){
 		 $("#modDiv").hide("400");
 		 $(".modalBtn").removeClass("modalArea");
+
 		 modalArea = false;
 		 console.log("근데 이게 자꾸 찍힘;;")
 	 };
@@ -418,6 +425,7 @@ opacity : 0.95;
 					console.log(select.parent().parent());
 					select.parent().parent().hide();
 					closeModal();
+
 				}
 			}
 		});
@@ -607,7 +615,39 @@ opacity : 0.95;
 				}
 				/* error도 설정 가능 */
 			});
-	 } isLike()
+	 } isLike();
+
+	// 이미지 콘텐츠 관련 ////////////////////////////////////////////////////////////////////////
+	  function getImages(){
+		  console.log("post_num");
+		  console.log(post_num);
+		  console.log('${post.post_num}');
+		  
+
+			$.getJSON("/post/getImages/" + post_num, function(data){
+				console.log(data);
+				
+				var imgData = "";
+
+				imgData += "<li> "
+				$(data).each(
+					function() {
+
+						var fileCallPath = this.upload_path + "/" + this.uuid + "_" + this.file_name;
+						
+						fileCallPath = encodeURIComponent(this.upload_path + "/" + this.uuid + "_" + this.file_name);
+						console.log("fileCallPath2");
+						console.log(fileCallPath);
+						imgData += "<img class='upload_img' src='/post/display?fileName="+ fileCallPath + "'>"
+							
+							
+							
+					});
+				imgData += "</li>";
+			
+				$("#content").append(imgData);	
+			});
+	 } getImages();
 	 
 
 	// 포스트 좋아요 버튼 클릭 시 

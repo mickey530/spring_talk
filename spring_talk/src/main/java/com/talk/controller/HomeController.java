@@ -1,14 +1,17 @@
 package com.talk.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
@@ -16,6 +19,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,15 +37,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.SecurityUser;
 import com.talk.user.domain.UserVO;
 import com.talk.user.service.UserService;
 import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.talk.file.domain.ImageFileVO;
+import com.talk.file.domain.ThumbnailVO;
 import com.talk.naver.NaverLoginBO;
 
 import lombok.extern.log4j.Log4j;
+import net.coobird.thumbnailator.Thumbnailator;
 
 /**
  * Handles requests for the application home page.
@@ -75,11 +84,19 @@ public class HomeController {
 		
 		return "home";
 	}
-		@GetMapping("pay")
-		public void pay( ) {
-			
-		}
+	@GetMapping("pay")
+	public void pay( ) {
 		
+	}
+	
+	//업로드 테스트 시작 단
+	
+	@GetMapping("uploadTest")
+	public String uploadTest( ) {
+		return "uploadTest";
+	}
+	
+	//업로드 테스트 끝 단
 //		@ResponseBody
 //		@PostMapping(value="/order", consumes="application/json",
 //										produces= {MediaType.TEXT_PLAIN_VALUE})

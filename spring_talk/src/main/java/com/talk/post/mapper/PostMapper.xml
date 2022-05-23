@@ -4,9 +4,13 @@
 
 <mapper namespace="com.talk.post.mapper.PostMapper">
 	<insert id="insert">
+	
+		<selectKey keyProperty="post_num" order="BEFORE" resultType="long">
+			SELECT post_num.nextval from dual
+		</selectKey>
 		INSERT INTO post (post_num, title, content, writer)
 			VALUES
-		(post_num.nextval, #{title}, #{content}, #{writer})
+		(#{post_num}, #{title}, #{content}, #{writer})
 	</insert>
 
 	<select id="select" resultType="com.talk.post.domain.PostVO">

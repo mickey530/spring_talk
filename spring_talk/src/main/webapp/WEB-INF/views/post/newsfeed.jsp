@@ -125,6 +125,7 @@ footer {
 
           
 
+
 <div id="postList">
 
 </div>
@@ -208,6 +209,7 @@ footer {
 			            </div>
 			          </div>
 			          </div>`
+
 						
 						getReply(this.post_num);
  						isLike(this.post_num);
@@ -217,6 +219,7 @@ footer {
 			
 			);
 			$("#postList").html(post+reply);			
+
 		});
 	 }
 	 more();
@@ -357,9 +360,9 @@ footer {
 		 } else{
 		let post_num = $(this).parent().parent().parent().siblings(".card-menu").children(".btn").attr("data-post_num");
 		let replyArea = $(this).parent().parent().siblings("details").children(".card").children(".replyArea");
-		
 		let reply_count = replyArea.siblings("p").children().children(".replyCount");
 		console.log(reply_count)
+
 		/* reply_count.html(parseInt(reply_count.html())+1); */
 		let reply_content = $(this).siblings(".newReplyText").val();
 		$.ajax({
