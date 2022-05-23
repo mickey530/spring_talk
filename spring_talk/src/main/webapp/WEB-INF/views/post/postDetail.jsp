@@ -144,7 +144,7 @@ opacity : 0.95;
 		</sec:authorize>
 		
 		<sec:authorize access="isAnonymous()">
-		<a href="http://localhost:8181/user/login">로그인</a>
+			<a href="/user/login">로그인</a>
 		</sec:authorize>
 		<br/>
 	</div>
