@@ -102,30 +102,6 @@ footer {
 </header>
 <div class="container">
 
-
-
-
-<%-- 
-<div class="row justify-content-center">
-<c:forEach var="post" items="${postList }">
-	<div class="card" style="width: 100%;">
-	  <div class="card-title">${post.post_num } | ${post.writer } </div>
-	
-	  <!-- <img src="#" class="" alt="사진 들어갈 자리"> -->
-	  <div class="card-body">
-	  	<details>
-	    <summary class="card-title">${post.title }</summary>
-	    <p class="card-text">${post.content }</p>
-	  	</details>
-	  </div>
-	</div>
-</c:forEach>
-</div>
- --%>
-
-          
-
-
 <div id="postList">
 
 </div>
@@ -133,15 +109,6 @@ footer {
 
 </div> <!-- container -->
 
-<!-- 
-<div class="mb-3">
-  <label for="exampleFormControlTextarea1" class="form-label">댓글 입력</label>
-  <textarea class="form-control newReplyText" id="exampleFormControlTextarea1 " rows="3">
-  </textarea>
-  <button class='replyAddBtn'>ADD REPLY</button>
-</div>
-
- -->
 </div> <!-- wrapper -->
 
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
@@ -179,42 +146,41 @@ footer {
 			
 			$(data).each(
 				function() {
-					post += `<div><div class="py-2">
-			            <img src="https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj" alt="mdo" width="32" height="32" class="rounded-circle cardHeader">
-			            <a href="/user/room/\${this.writer}" class="nav-link px-2 link-dark fw-bold cardHeader">\${this.writer}</a>
-			          </div>
-			            <a href="/post/detail/\${this.post_num}"><img src="https://i.ytimg.com/vi/4k48gvdAsFY/maxresdefault.jpg" class="w-100" alt="..." border:radius=0px;></a>
-			          <div class="card-menu py-2" style="margin-left: 0px;">
-							<button class='btn btn-sm postLike' id='postNum_\${this.post_num}' data-post_num='\${this.post_num}'>♡\${this.like_count}</button> 댓글 <span class=replyCount>\${this.replycount}</span>개<br/>		
-			          </div>
+					post += "<div><div class='py-2'>"
+			             + "<img src='https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj' alt='mdo' width='32' height='32' class='rounded-circle cardHeader'>"
+			             + "<a href='/user/room/" + this.writer + "' class='nav-link px-2 link-dark fw-bold cardHeader'>" + this.writer + "</a>"
+			             + "</div>"
+			             + "<a href='/post/detail/" + this.post_num + "'></a>"
+			          	 + "<div class='card-menu py-2' style='margin-left: 0px;'>"
+						 + "<button class='btn btn-sm postLike' id='postNum_" + this.post_num + "' data-post_num='" + this.post_num + "'>♡" + this.like_count + "</button> 댓글 <span class=replyCount>" + this.replycount + "</span>개<br/>"	
+			          	 + "</div>"
 
-			          <div class="card-body">
+			         	 + "<div class='card-body'>"
 
-			            <details>
-			              <summary>
-			                <p><strong>@\${this.writer }</strong> \${this.title}</p>
-			              </summary>
-			              <form class="card p-2">
-			                <span>\${this.content}</span>
-			                <hr/>
-			                <p><a href="/post/detail/\${this.post_num}">댓글 <span class=replyCount>\${this.replycount}</span>개</a></p>
-			                <div class='replyArea'></div>
-			              </form>              
-			            </details>
-			            <div class="input-comment">
-			              <div class="input-group">
-			                <input type="text" onkeyup="enterkey($(this),${this.post_num})"  class="form-control sm_font newReplyText" placeholder="댓글">
-			                <button type="submit" class="btn btn-outline-secondary sm_font replyAddBtn">게시</button>
-			              </div>
-			            </div>
-			          </div>
-			          </div>`
+			             + "<details>"
+			             + "<summary>"
+			             + "<p><strong>@" + this.writer + "</strong> " + this.title + "</p>"
+			             + "</summary>"
+			             + "<form class='card p-2'>"
+			             + "<span>" + this.content + "</span>"
+			             + "<hr/>"
+			             + "<p><a href='/post/detail/" + this.post_num + "'>댓글 <span class=replyCount>" + this.replycount + "</span>개</a></p>"
+			             + "<div class='replyArea'></div>"
+			             + "</form>"              
+			             + "</details>"
+			           	 + "<div class='input-comment'>"
+			             + "<div class='input-group'>"
+			             + "<input type='text' onkeyup='enterkey(" + this.post_num + ")'  class='form-control sm_font newReplyText' placeholder='댓글'>"
+			             + "<button type='submit' class='btn btn-outline-secondary sm_font replyAddBtn'>게시</button>"
+			             + "</div>"
+			             + "</div>"
+			          	 + "</div>"
+			          	 + "</div>"
 
-						
+			          	getImages(this.post_num);
 						getReply(this.post_num);
  						isLike(this.post_num);
  				}
-				// 댓글 불러오는 로직
 				
 			
 			);
@@ -280,8 +246,8 @@ footer {
 				}),
 				success : function(result){
 					 let thisPost = $("#postNum_"+ post_num);
-					 let likeNum = parseInt(thisPost.html().substr(1, 1)); // 왜 없어도 돌아감?
-					 thisPost.html("♡" + likeNum) // 왜 없어도 돌아감?
+					 /* let likeNum = parseInt(thisPost.html().substr(1, 1)); // 왜 없어도 돌아감?
+					 thisPost.html("♡" + likeNum) // 왜 없어도 돌아감? */
 					if(result != ""){
 						thisPost.addClass("post-liked");
 						thisPost.removeClass("post-like");
@@ -467,6 +433,39 @@ footer {
               enterReply(post_num);
         }
 	}
+	
+	
+	// 이미지 콘텐츠 관련 ////////////////////////////////////////////////////////////////////////
+	  function getImages(post_num){
+		  console.log("post_num");
+		  console.log(post_num);
+		  console.log('${post.post_num}');
+		  
+
+			$.getJSON("/post/getImages/" + post_num, function(data){
+				console.log(data);
+				
+				var imgData = "";
+
+				$(data).each(
+					function() {
+
+						var fileCallPath = this.upload_path + "/" + this.uuid + "_" + this.file_name;
+						
+						fileCallPath = encodeURIComponent(this.upload_path + "/" + this.uuid + "_" + this.file_name);
+						console.log("fileCallPath2");
+						console.log(fileCallPath);
+						imgData += "<img class='upload_img w-100' src='/post/display?fileName="+ fileCallPath + "'>"
+							
+							
+							
+					});
+				$("#postNum_"+post_num).parent().siblings("a").prepend(imgData);	
+			});
+	 };
+	
+	
+	
 	 </script>
 
 
