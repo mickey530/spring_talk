@@ -16,14 +16,20 @@ public class ReplyLikeServiceImpl implements ReplyLikeService{
 
 	@Autowired
 	private ReplyLikeMapper replyLikeMapper;
+	
+	@Autowired
+	private ReplyMapper replyMapper;
 
 	@Override
 	public void like(ReplyLikeVO vo) {
 		String check = replyLikeMapper.islike(vo);
+		long reply_num = vo.getReply_num();
 		if(check == null) {
 			replyLikeMapper.like(vo);
+			replyMapper.updateLikeCount(reply_num, 1);
 		} else {
 			replyLikeMapper.unlike(vo);
+			replyMapper.updateLikeCount(reply_num, -1);
 		}
 	}
 

@@ -10,17 +10,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+
+@font-face {
+    font-family: 'CookieRunOTF-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/CookieRunOTF-Bold00.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'CookieRun-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }  
   html, body {height:100%;}
   body {
     background-color: white;
     color: black;
+    font-family: 'CookieRun-Regular';    
+  }
+  h3, .title {
+      font-family: 'CookieRunOTF-Bold';
+      margin: 0px;
   }
   #wrapper{
       height: auto;
       min-height: 100%;
       padding-bottom: 50px;
   }
-  a{text-decoration:none; text-align:center;}
+  a{
+	  text-decoration:none;
+	  text-align:center;
+	  color: black;
+  }
 .title-padding{
     padding:10px;
 }
@@ -48,6 +70,9 @@ summary > p {
 .card {
     font-size: 12px;
 }
+header{
+        background-color: white;
+}
 
 footer {
         display: flex !important;
@@ -59,7 +84,7 @@ footer {
         align-items: center;
         background-color: white;
         z-index: 2;
-        }
+}
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -71,9 +96,9 @@ footer {
 <!-- 대충 헤더임 -->
 
 <div id="wrapper">
-<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
-<span class="col-11">대충 헤더영역 : 뉴스피드</span>
-<a href="/post/insert" class="col-1 text-left text-white">+</a>
+<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
+<h3 class="col-11 px-0">IN n OUT</h3>
+<a href="/post/insert" class="col-1 text-left text-black">+</a>
 </header>
 <div class="container">
 
@@ -98,12 +123,13 @@ footer {
 </div>
  --%>
 
+          
 
 
-<div class="postList">
+<div id="postList">
 
 </div>
-<button id="more" onclick="more()">more</button>
+<button id="more" class="btn btn-outline-secondary btn-sm" onclick="more()">와 ! 게시물 ! 더보기!</button>
 
 </div> <!-- container -->
 
@@ -119,11 +145,11 @@ footer {
 </div> <!-- wrapper -->
 
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
-      <a href="/user/follow" class="col-2">팔로우</a>
-      <a href="#" class="col-2">채팅</a>
-      <a href="/post/newsfeed" class="col-2">피드</a>
-      <a href="#" class="col-2">커뮤</a>
-      <a href="/user/room/${login_id }" class="col-2">마이룸</a>
+     <a href="/user/follow" class="col-2">팔로우</a>
+     <a href="/chatting/chat" class="col-2">채팅</a>
+     <a href="/post/newsfeed" class="col-2">피드</a>
+     <a href="/gall/gallList" class="col-2">커뮤</a>
+     <a href="/user/room/${login_id }" class="col-2">마이룸</a>
 </footer>
  
 
@@ -139,8 +165,7 @@ footer {
     let login_id = '${login_id}';
     
     
-    
-    
+
 	/* 게시글 불러오는 로직 */
 	let page_num = 0;
 	var post = "";
@@ -148,28 +173,93 @@ footer {
 	 function more(){
 		page_num += 1;
 		$.getJSON("/post/newsfeed?page_num=" + page_num, function(data){
-			post = $(".postList").html();			
+			post = $("#postList").html();			
 
 			console.log(data);
 			
 			$(data).each(
 				function() {
-					post += "<div data-post_num='" + this.post_num + "' class='post'>"
-						+ "<a href='/post/detail/" + this.post_num + "'>"+ this.post_num +"</a> | <a href='/user/room/" + this.writer + "'>"+ this.writer +"</a><br/> " + this.title + " <br/> " + this.content
-						+ "<br/><button class='btn btn-sm postLike' id='postNum_"+ this.post_num +"'>♡"+this.like_count+"</button> 댓글 <span class=replyCount>" + this.replycount+ "</span>개<br/>"
-						+ "<input type='text' class='newReplyText'>"
-						+ "<button class='replyAddBtn'>ADD REPLY</button></div><hr/>";
-						/* console.log("댓글 개수" + this.replycount);
-						console.log("좋아요 개수" + this.like_count); */
+					post += `<div><div class="py-2">
+			            <img src="https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj" alt="mdo" width="32" height="32" class="rounded-circle cardHeader">
+			            <a href="/user/room/\${this.writer}" class="nav-link px-2 link-dark fw-bold cardHeader">\${this.writer}</a>
+			          </div>
+			            <a href="/post/detail/\${this.post_num}"><img src="https://i.ytimg.com/vi/4k48gvdAsFY/maxresdefault.jpg" class="w-100" alt="..." border:radius=0px;></a>
+			          <div class="card-menu py-2" style="margin-left: 0px;">
+							<button class='btn btn-sm postLike' id='postNum_\${this.post_num}' data-post_num='\${this.post_num}'>♡\${this.like_count}</button> 댓글 <span class=replyCount>\${this.replycount}</span>개<br/>		
+			          </div>
+
+			          <div class="card-body">
+
+			            <details>
+			              <summary>
+			                <p><strong>@\${this.writer }</strong> \${this.title}</p>
+			              </summary>
+			              <form class="card p-2">
+			                <span>\${this.content}</span>
+			                <hr/>
+			                <p><a href="/post/detail/\${this.post_num}">댓글 <span class=replyCount>\${this.replycount}</span>개</a></p>
+			                <div class='replyArea'></div>
+			              </form>              
+			            </details>
+			            <div class="input-comment">
+			              <div class="input-group">
+			                <input type="text" class="form-control sm_font newReplyText" placeholder="댓글">
+			                <button type="submit" class="btn btn-outline-secondary sm_font replyAddBtn">게시</button>
+			              </div>
+			            </div>
+			          </div>
+			          </div>`
+
 						
+						getReply(this.post_num);
  						isLike(this.post_num);
- 				}			
+ 				}
+				// 댓글 불러오는 로직
+				
 			
 			);
-			$(".postList").html(post);			
+			$("#postList").html(post+reply);			
+
 		});
 	 }
 	 more();
+	 
+	// 인피니티 스크롤
+	    $(window).scroll(function(){ 
+	    	var scrT = $(window).scrollTop();
+		    	if(scrT >= $(document).height() - $(window).height()){
+					more();
+		    	}
+		    	else { //아닐때 이벤트
+	    		
+	    		}
+	    	})
+	 
+	 
+	 let reply = "";
+	 function getReply(post_num){
+			$.getJSON("/replies/preview/" + post_num, function(data){
+
+				reply = ""
+				$(data).each(
+					function() {
+						reply += `<p><strong>@\${this.reply_id}</strong> \${this.reply_content}</p>`
+
+						console.log(reply)	
+	 				}			
+				
+				);
+				$("#postNum_"+post_num).parent().siblings(".card-body").children("details").children(".card").children(".replyArea").append(reply);			
+			});
+			reply = "";
+		 }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 
 		// 좋아요 유무 확인	
  	  function isLike(post_num){
@@ -190,8 +280,8 @@ footer {
 				}),
 				success : function(result){
 					 let thisPost = $("#postNum_"+ post_num);
-					 let likeNum = parseInt(thisPost.html().substr(1, 1));
-					 thisPost.html("♡" + likeNum)
+					 let likeNum = parseInt(thisPost.html().substr(1, 1)); // 왜 없어도 돌아감?
+					 thisPost.html("♡" + likeNum) // 왜 없어도 돌아감?
 					if(result != ""){
 						thisPost.addClass("post-liked");
 						thisPost.removeClass("post-like");
@@ -213,9 +303,15 @@ footer {
 
 
 	 
-		// 좋아요 버튼 클릭 시 
-		 $(".postList").on("click", ".postLike", function(){
-			 let post_num = $(this).parent()[0].dataset.post_num;
+		// 좋아요 버튼 클릭 시
+		 $("#postList").on("click", ".postLike", function(){
+			 if(login_id == ""){
+				 var result = confirm("로그인이 필요한 기능입니다. \n로그인 페이지로 이동하시겠습니까?")
+				 if(result){
+					 location.replace('/user/login')
+				 }
+			 } else{
+			 let post_num = $(this).attr("data-post_num");
 			 let thisPost = $("#postNum_"+ post_num);
 			 let likeNum = parseInt(thisPost.html().substr(1, 1));
 /* 			 if(thisPost.hasClass("post-liked")){
@@ -250,15 +346,23 @@ footer {
 						}
 					}
 				});
-			});
+			 }});
 	 
 
 	  
 	  // 댓글달기
-	 $(".postList").on("click", ".replyAddBtn", function(){
-		let post_num = $(this).parent()[0].dataset.post_num;
-		console.log(post_num);
-		let reply_count = $(this).siblings(".replyCount");
+	 $("#postList").on("click", ".replyAddBtn", function(){
+		 if(login_id == ""){
+			 var result = confirm("로그인이 필요한 기능입니다. \n로그인 페이지로 이동하시겠습니까?")
+			 if(result){
+				 location.replace('/user/login')
+			 }
+		 } else{
+		let post_num = $(this).parent().parent().parent().siblings(".card-menu").children(".btn").attr("data-post_num");
+		let replyArea = $(this).parent().parent().siblings("details").children(".card").children(".replyArea");
+		let reply_count = replyArea.siblings("p").children().children(".replyCount");
+		console.log(reply_count)
+
 		/* reply_count.html(parseInt(reply_count.html())+1); */
 		let reply_content = $(this).siblings(".newReplyText").val();
 		$.ajax({
@@ -280,6 +384,7 @@ footer {
 			success : function(result){
 				if(result == 'OK'){
 					alert("등록되었습니다.");
+					replyArea.append(`<p><strong>@\${login_id}</strong> \${reply_content}</p>`)
 					reply_count.html(parseInt(reply_count.html())+1);
 					refresh();
 				}
@@ -292,13 +397,12 @@ footer {
 			
 		});
 		
-	});
+	}});
+	  
 	function refresh(){
 	 $(".newReplyText").val("");	 
 	}
 	
-
-	  
 	  
 	 </script>
 

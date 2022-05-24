@@ -9,15 +9,15 @@ public interface GallDogService {
 
 	public void insert(GallDogVO vo);
 	
-	public GallDogVO select(long board_num);
+	public GallDogVO select(GallDogVO vo);
 
-	public void update(GallDogVO vo);
+	public GallDogVO update(GallDogVO vo);
 	
-	public void delete(long board_num);
+	public void delete(GallDogVO vo);
 	
-	public List<GallDogVO> allList();
+	public List<GallDogVO> allList(String gall_name);
 	
-	public void upHit(long board_num);
+	public void upHit(GallDogVO vo);
 	
 	public int countPageNum(SearchCriteria cri);
 	

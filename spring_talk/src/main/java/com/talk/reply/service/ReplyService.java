@@ -10,6 +10,8 @@ public interface ReplyService {
 	
 	public List<ReplyVO>listReply(ReplyCriteria cri); // 불러오기
 	
+	public List<ReplyVO> replyPreview(Long post_num); // 좋아요 개수 상위 2개 불러오기
+	
 	public void addReply(ReplyVO vo); 
 	
 	public void modifyReply(ReplyVO vo); 

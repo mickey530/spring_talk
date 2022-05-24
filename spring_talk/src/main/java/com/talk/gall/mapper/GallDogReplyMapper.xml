@@ -4,38 +4,38 @@
 	
 	<mapper namespace="com.talk.gall.mapper.GallDogReplyMapper">
 	
-	<select id="getList" resultType="com.talk.gall.domain.GallDogReplyVO">
-		SELECT * FROM gall_dog_reply 
+	<select id="getList" parameterType="com.talk.gall.domain.GallDogReplyVO" resultType="com.talk.gall.domain.GallDogReplyVO">
+		SELECT * FROM ${gall_name}_reply
 			WHERE board_num = #{board_num}
 		ORDER BY reply_num DESC
 	</select>
 	
-	<insert id="create">
-		INSERT INTO gall_dog_reply 
+	<insert id="create" parameterType="string">
+		INSERT INTO ${gall_name}_reply
 		(reply_num, board_num, reply_content, writer)
 			VALUES
 		(reply_num.nextval, #{board_num}, #{reply_content}, #{writer})
 	</insert>
 	
-	<update id="update">
-		UPDATE gall_dog_reply 
+	<select id="update" parameterType="string">
+		UPDATE ${gall_name}_reply 
 			SET	
 		reply_content = #{reply_content}, m_date = SYSDATE	
 		WHERE reply_num = #{reply_num}
-	</update>
+	</select>
 	
-	<delete id="delete">
-		DELETE FROM gall_dog_reply 
+	<delete id="delete" parameterType="string">
+		DELETE FROM ${gall_name}_reply
 			WHERE reply_num = #{reply_num}
 	</delete>
 	
-	<select id ="getBoard_num" resultType="long">
-		SELECT board_num FROM gall_dog_reply
+	<select id ="getBoard_num" parameterType="string" resultType="long">
+		SELECT board_num FROM ${gall_name}_reply
 			WHERE reply_num = #{reply_num}
 	</select>
 	
-	<delete id = "deleteAllReplies">
-		 delete from gall_dog_reply
+	<delete id = "deleteAllReplies" parameterType="string">
+		 delete from ${gall_name}_reply
 		 	WHERE board_num = #{board_num}
 	</delete>
 

@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">   
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">   
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <!DOCTYPE html>
 <html>
 <head>
@@ -70,21 +71,36 @@ opacity : 0.95;
 	<sec:authentication property="principal.user.user_id" var="login_id"/> 	
 </sec:authorize>
 
-	<div class="container" >
+<div id="wrapper">
+	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
+		<span class="col-11">${dog.writer }'s post</span>
+		<a href="/post/insert" class="col-1 text-left text-white">+</a>
+	</header>
 
+	<div class="container" >
+<div>
+	<h2>${dog.board_num  }번 게시글</h2>
+	<p>작성자 : ${dog.writer }</p>
+	<p>제목 : ${dog.board_title }</p>
+	<p id="content">내용 : ${dog.board_content }</p>
 	<div>
-		<h2>${dog.board_num  }번 게시글</h2>
-		<p>작성자 : ${dog.writer }</p>
-		<p>제목 : ${dog.board_title }</p>
-		<p id="content">내용 : ${dog.board_content }</p>
-	<div>		
-		<c:if test="${login_id eq dog.writer}">
-			<a href="/gall/updateForm/${dog.board_num}" class="btn btn-dark">수정</a>
-			<a href="/gall/delete/${dog.board_num}" class="btn btn-danger">삭제</a>
+		<c:if test="${login_id ne null}">
+			<button class="btn btn-outline-danger" id="postLike"><span>${post.like_count}</span>♡</button>
 		</c:if>
-		<!-- <a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>  -->		
+		<c:if test="${login_id eq dog.writer}">
+			<form action="/gall/updateForm/${gall_name }/${dog.board_num}" method="get">
+				<input type="submit" class="btn" value="수정">
+				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+			</form>
+			<form action="/gall/delete/${gall_name }/${dog.board_num}" method="post">
+				<input type="submit" class="btn" value="삭제">
+				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+			</form>
+		</c:if>
+		<%-- <a href="/report/post/${dog.board_num}" class="btn btn-outline-dark">신고🚨</a> --%>
+		
 	</div>
-	</div>
+</div>
 
 <hr/>
 <h3>댓글 <span id="replyCount">${dog.replycount }</span>개</h3>
@@ -134,6 +150,8 @@ opacity : 0.95;
 </div>
 </div> <!-- container -->
 
+</div> <!-- wrapper -->	
+
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
      <a href="/user/follow" class="col-2">팔로우</a>
      <a href="#" class="col-2">채팅</a>
@@ -155,11 +173,16 @@ opacity : 0.95;
 
     
 	/* 댓글 불러오는 로직 */
-	let board_num = '${dog.board_num}';
+	
+	/* 게시글 번호, 갤러리 이름, 갤러리 이름(댓글) 변수 선언 */
+	let board_num = '${dog.board_num}';	
+	let gall_name = '${gall_name}';
+	let gall_name_reply = '${gall_name}_reply';
+
 /* 여어어어어어기 */
 	 function getAllList(){
 		 
-		$.getJSON("/gallreplies/all/" + board_num, function(data){
+		$.getJSON("/gallreplies/all/" + gall_name + "/" + board_num, function(data){
 
 			var str = "";
 			console.log(data);
@@ -199,7 +222,7 @@ opacity : 0.95;
 						
 						+ "</div>";												
 				});
-		
+			console.log("str : " + str);
 			$("#replies").html(str);			
 		});
 	 }
@@ -212,31 +235,37 @@ opacity : 0.95;
 	 
 	 // 기본댓글 작성하는곳
 	 
-	  function enterkey() {
-        if (window.event.keyCode == 13) {
- 
-             // 엔터키가 눌렸을 때 실행할 내용
-              reply();
-        }
-}
+	 function enterkey() {
+	        if (window.event.keyCode == 13) {
+	 
+	             // 엔터키가 눌렸을 때 실행할 내용
+	              reply();
+	        }
+	}
+
 	// 댓글 시퀀스 가져오는 함수 선언
+	/*
 		let sequence = "";
 		function getReplySequence(){
 			$.getJSON("/gallreplies/sequence", function(data){
 				sequence = data;
 			});
 		 }
-	 
+	 */
 		function reply(){
-			var reply_content = $("#newReplyText").val();
-			getReplySequence(); // 시퀀스 번호 가져오기
+			console.log('${gall_name}')
+		 	var reply_content = $("#newReplyText").val();
+			console.log("갤네임"+gall_name);
+			
+			
+			//getReplySequence(); // 시퀀스 번호 가져오기
 	 
-	// $("#replyAddBtn").on("click", function(){
-		//	var reply_content = $("#newReplyText").val();
+			// $("#replyAddBtn").on("click", function(){
+			//	var reply_content = $("#newReplyText").val();
 			
 			$.ajax({
 				type : 'post',
-				url : '/gallreplies',
+				url : '/gallreplies/'+gall_name+'/'+board_num,
 				headers : {
 					"Content-Type" : "application/json",
 					"X-HTTP-Method-Override" : "POST"
@@ -248,7 +277,9 @@ opacity : 0.95;
 				data : JSON.stringify({
 					board_num : board_num,
 					writer : login_id,
-					reply_content : reply_content
+					reply_content : reply_content,
+					gall_name : gall_name
+					
 				}),
 				success : function(result){
 					if(result == 'SUCCESS'){
@@ -276,6 +307,10 @@ opacity : 0.95;
 			});
 		};
 	 
+		 
+		  
+		
+		
 	// 선택한 댓글 외부에서 사용 ///////////////////
 	 	let select = "";
 	 	
@@ -332,7 +367,7 @@ opacity : 0.95;
 		let reply_num = $(".modal-title").html();
 		$.ajax({
 			type : 'DELETE',
-			url : '/gallreplies/' + reply_num,
+			url : '/gallreplies/' + gall_name + "/" + reply_num + "/" + board_num,
 			header : {
 				"X-HTTP-Method-Override" : "DELETE"
 			},
@@ -376,7 +411,7 @@ opacity : 0.95;
 		let reply_content = $(".reply").val();
 		$.ajax({
 			type : 'patch', 
-			url : '/gallreplies/' + reply_num,
+			url : '/gallreplies/'+ gall_name + "/" + reply_num,
 			header : {
 				"Content-Type" : "application/json",
 				"X-HTTP-Method-Override" : "PATCH" 
@@ -426,7 +461,7 @@ opacity : 0.95;
        	 function isLike(){
        		 $.ajax({
        				type : 'post',
-       				url : '/galldog/islike',
+       				url : '/gall/islike',
        				headers : {
        					"Content-Type" : "application/json",
        					"X-HTTP-Method-Override" : "POST"
@@ -444,7 +479,7 @@ opacity : 0.95;
         					$("#boardLike").addClass("board-liked");
        						$("#boardLike").removeClass("board-like");
        						$("#boardLike").addClass("btn-danger");
-       						$("#boardLike").removeClass("btn-outline-danger");
+       						$("#boardLike").removeClass("/* -outline-danger");
        					} else{
        						$("#boardLike").addClass("board-like");
        						$("#boardLike").removeClass("board-liked");
@@ -455,8 +490,8 @@ opacity : 0.95;
        				}
        				/* error도 설정 가능 */
        			});
-       	 } isLike()
-       	
+       	 } /* isLike()
+       	 */
 
        	// 좋아요 버튼 클릭 시 
        	 $("#boardLike").on("click", function(){
@@ -470,7 +505,7 @@ opacity : 0.95;
        			
        			$.ajax({
        				type : 'post',
-       				url : '/galldog/like',
+       				url : '/{gall_name}/gall/like',
        				headers : {
        					"Content-Type" : "application/json",
        					"X-HTTP-Method-Override" : "POST"
@@ -480,6 +515,7 @@ opacity : 0.95;
        	                xhr.setRequestHeader(_csrf_header, _csrf);
        	            },
        				data : JSON.stringify({
+       					gall_name : gall_name,
        					board_num : board_num,
        					user_id : login_id
        				}),

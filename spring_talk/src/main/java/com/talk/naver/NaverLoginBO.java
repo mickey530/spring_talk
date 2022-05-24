@@ -25,7 +25,7 @@ public class NaverLoginBO {
 	
 	private final static String SESSION_STATE = "oauth_state";
 	
-	private final static String PROFILE_API_URL = "https://ppenapi.naver.com/v1/nid/me";
+	private final static String PROFILE_API_URL = "https://openapi.naver.com/v1/nid/me";
 	
 	public String getAuthorizationUrl(HttpSession session) {
 		
@@ -58,11 +58,31 @@ public class NaverLoginBO {
 		return (String) session.getAttribute(SESSION_STATE);
 	}
 	public String getUserProfile(OAuth2AccessToken oauthToken) throws IOException{
-		OAuth20Service oauthService = new ServiceBuilder().apiKey(CLIENT_ID).apiSecret(CLIENT_SECRET)
-							.callback(REDIRECT_URI).build(NaverLoginApi.instance());
-		OAuthRequest request = new OAuthRequest(Verb.GET, PROFILE_API_URL, oauthService);
-		oauthService.signRequest(oauthToken, request);
-		Response response = request.send();
+		System.out.println("getUserProfile 0 : "+ oauthToken);
+		Response response = null;
+		try {
+			OAuth20Service oauthService = new ServiceBuilder()
+					.apiKey(CLIENT_ID)
+					.apiSecret(CLIENT_SECRET)
+					.callback(REDIRECT_URI)
+					.build(NaverLoginApi.instance());
+			
+			
+			OAuthRequest request = new OAuthRequest(Verb.GET, PROFILE_API_URL, oauthService);
+			oauthService.signRequest(oauthToken, request);	
+			response = request.send();
+			
+			
+		}catch(com.github.scribejava.core.exceptions.OAuthConnectionException e){
+
+			e.printStackTrace();
+			System.out.println("getUserProfile OAuthConnectionException : "+ e);
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("getUserProfile error : "+ e);
+		}
 		return response.getBody();
 	}
 	

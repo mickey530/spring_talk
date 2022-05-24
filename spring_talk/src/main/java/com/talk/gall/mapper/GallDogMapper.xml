@@ -35,49 +35,49 @@
 		</if>
 	</sql>
 
-	<insert id="insert">
-		INSERT INTO gall_dog (board_num, board_title, board_content, writer)
+	<insert id="insert" parameterType="string">
+		INSERT INTO ${gall_name} (board_num, board_title, board_content, writer)
 			VALUES
 		(board_num.nextval, #{board_title}, #{board_content}, #{writer})
 	</insert>
 
-	<select id="select" resultType="com.talk.gall.domain.GallDogVO">
-		SELECT * FROM gall_dog WHERE board_num=#{board_num}
+	<select id="select" parameterType="com.talk.gall.domain.GallDogVO" resultType="com.talk.gall.domain.GallDogVO">
+		SELECT * FROM ${gall_name} WHERE board_num=#{board_num}
 	</select>
 
-	<delete id="delete">
-		DELETE FROM gall_dog WHERE board_num=#{board_num}
+	<delete id="delete" parameterType="com.talk.gall.domain.GallDogVO"> 
+		DELETE FROM ${gall_name} WHERE board_num=#{board_num}
 	</delete>
 	
-	<update id="update">
-		UPDATE gall_dog
+	<select id="update" parameterType="com.talk.gall.domain.GallDogVO" resultType="com.talk.gall.domain.GallDogVO">
+		UPDATE ${gall_name}
 			SET 
 		board_title=#{board_title}, board_content=#{board_content}, m_date=SYSDATE 
 			WHERE 
 		board_num=#{board_num}
-	</update>
+	</select>
 	
-	<select id="allList" resultType="com.talk.gall.domain.GallDogVO">
-		SELECT * FROM gall_dog
+	<select id="allList" parameterType="string" resultType="com.talk.gall.domain.GallDogVO">
+		SELECT * FROM  ${gall_name}
 		ORDER BY board_num DESC
 	</select>
 	
-	<update id="updateReplyCount">
-		UPDATE gall_dog
+	<update id="updateReplyCount" parameterType="string">
+		UPDATE ${gall_name}
 			SET
 		replycount = replycount + #{amount} WHERE board_num = #{board_num}
 	</update>
 	
 		
-	<update id="updateLikeCount">
-		UPDATE gall_dog
+	<update id="updateLikeCount" parameterType="string">
+		UPDATE ${gall_name}
 			set
 		like_count = like_count + #{amount} WHERE board_num = #{board_num}	
 	</update>
 	
-	<select id="countPageNum" resultType="int">
+	<select id="countPageNum" parameterType="string" resultType="int">
 		<![CDATA[
-		SELECT COUNT(*) FROM gall_dog WHERE
+		SELECT COUNT(*) FROM ${gall_name} WHERE
 		]]>
 		
 		<!-- 상단의 sql태그를 이용해 명칭을 부여했으므로, 명칭만 맞추면 긴내용을 다 넣지 않아도 됨 -->
@@ -89,8 +89,8 @@
 	</select>
 	
 	<!--조회수  -->
-    <update id="upHit">
-        UPDATE gall_dog
+    <update id="upHit" parameterType="com.talk.gall.domain.GallDogVO">
+        UPDATE ${gall_name}
             SET
         hit = (hit + 1) WHERE board_num= #{board_num}
     </update>

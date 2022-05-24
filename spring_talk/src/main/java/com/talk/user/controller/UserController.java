@@ -35,6 +35,7 @@ import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
 import com.talk.user.domain.MemberVO;
+import com.talk.user.domain.SecurityUser;
 import com.talk.user.domain.UserVO;
 import com.talk.user.mapper.AuthMapper;
 import com.talk.user.service.AuthService;
@@ -50,6 +51,7 @@ import com.talk.reply.domain.ReplyVO;
 import com.talk.user.service.FollowServiceImpl;
 import com.talk.user.service.UserService;
 import com.talk.user.service.UserServiceImpl;
+import com.talk.naver.NaverLoginBO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -69,10 +71,9 @@ public class UserController {
 	
 	@Autowired
 	private AuthService authService;
-	
+
 	@Autowired
 	private NaverLoginBO naverLoginBO;
-	
 	//user단
 	
 	@GetMapping(value={ "/", ""})
@@ -139,6 +140,7 @@ public class UserController {
 	}
 		return entity;
 	}
+	
 	
 	@GetMapping(value="/update")
 	public String update(String uid,
@@ -254,10 +256,11 @@ public class UserController {
 	}
 
 	@PostMapping(value="/login")
-	public void loginUser(String uid, String upw) {
+	public void loginUser(String uid, String upw, HttpServletRequest request) {
 		System.out.println("login post ");
 		System.out.println("uid : " + uid);
 		System.out.println("upw : " + upw);
+			
 
 		UserVO userInfo = userService.loginCheck(uid, upw);
 		
@@ -281,10 +284,10 @@ public class UserController {
 	@PostMapping(value="/logout")
 	public String logoutPost(HttpSession session) {
 
-
+		System.out.println("컨트롤러 로그아웃");
 		session.invalidate(); 
 
-		return "redirect:/user/";
+		return "redirect:/user";
 	}
 
 	
@@ -509,6 +512,7 @@ public class UserController {
 		return entity;
 	}
 	
+
 	// 소셜 로그인
 	@RequestMapping(value="/naverLogin", method = RequestMethod.GET)
 	public String login(HttpSession session) {
@@ -516,25 +520,45 @@ public class UserController {
 		session.setAttribute("url", naverAuthUrl);
 		return "secu/customLogin";
 	}
-	/* 
-	@RequestMapping(value="/naver/login", method = {RequestMethod.GET, RequestMethod.POST})
+	
+	
+
+	// 네이버 로그인 결과를 DB에 적재하고 권한을 발급하는 메서드
+	@RequestMapping (value="/naver/login", method = {RequestMethod.GET, RequestMethod.POST})
 	public String callback(Model model, @RequestParam String code, @RequestParam String state, HttpSession session) throws IOException, ParseException{
 		OAuth2AccessToken oauthToken;
 		oauthToken = naverLoginBO.getAccessToken(session, code, state);
 		
-		apiResult = naverLoginBO.getUserProfile(oauthToken);
+		// 1. 로그인 사용자 정보 읽어오기
+		String apiResult = naverLoginBO.getUserProfile(oauthToken);
 		
+		// 2. String형식인 apiResult를 json형태로 전환
 		JSONParser parser = new JSONParser();
-		Object obj = parser.parse(apiResult);
+		Object obj=null;
+		try {
+			obj = parser.parse(apiResult);
+		} catch (org.json.simple.parser.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		if(obj == null) {
+			return "redirect:/user/naverLogin";
+		}
+		
+		JSONObject jsonObj = (JSONObject) obj;
+		
+		// 3. 데이터 파싱
+		// TOP레벨 단계 _response 파싱
 		JSONObject response_obj = (JSONObject) jsonObj.get("reponse");
 		System.out.println("파싱해온 API :" + response_obj);
 		
+		// response의 nickname값 파싱
 		String id = (String) response_obj.get("id");
 		String email = (String) response_obj.get("email");
 		String userName = (String) response_obj.get("nickname");
 		
-		MemberVO user = new MemberVO();
+		UserVO user = new UserVO();
 		List<AuthVO> authList = new ArrayList<AuthVO>();
 		AuthVO auth = new AuthVO();
 		UUID uuid = UUID.randomUUID();
@@ -542,22 +566,22 @@ public class UserController {
 		auth.setAuthority("ROLE_MEMBER");
 		authList.add(auth);
 		
-		user.setUserId("NAVER_" + id);
-		user.setAuthList(authList);
-		user.setUserPw(uuid.toString());
-		user.setUserName(userName);
+		user.setUser_id("NAVER_" + id);
+		user.setAvos(authList);
+		user.setUser_pw(uuid.toString());
+		user.setUser_name(userName);
 		System.out.println("insert하기 전 마지막 체크 : " + user);
 		
-		if(service.read(user.getUserId() == null){
-			service.insert(user);
-		}
-		CustomUser customUser = new CustomUser(user);
+		// DB에 해당 유저가 없을 경우 join으로
+		if(userService.selectById(id)==null){
+			userService.insert(user);
+		}		
+		SecurityUser securityUser = new SecurityUser(user);
 		
-		Authentication authentication = new UsernamePasswordAuthenticationToken(customUser, null,customUser.getAuthorities());
+		// 시큐리티 권한 직접 세팅
+		Authentication authentication = new UsernamePasswordAuthenticationToken(securityUser, null,securityUser.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
-		return "redirect/secu/user/member";
+		return "redirect:/user/getAllUsers";
 	}
-	*/
-	
 }

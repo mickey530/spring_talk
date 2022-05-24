@@ -26,37 +26,34 @@ public class GallDogServiceImpl implements GallDogService {
 	}
 
 	@Override
-	public GallDogVO select(long board_num) {
-		return gallDogMapper.select(board_num);
+	public GallDogVO select(GallDogVO vo) {
+		return gallDogMapper.select(vo);
 	}
 
 	@Transactional
 	@Override
-	public void delete(long board_num) {
-		gallDogMapper.delete(board_num);
-		gallDogReplyMapper.delete(board_num);
-	}
-
-	@Override
-	public void update(GallDogVO vo) {
-		gallDogMapper.update(vo);
+	public void delete(GallDogVO vo) {
+		gallDogMapper.delete(vo);
 		
 	}
-
 	@Override
-	public List<GallDogVO> allList() {
-		return gallDogMapper.allList();
+	public GallDogVO update(GallDogVO vo) {
+		return gallDogMapper.update(vo);		
 	}
 
 	@Override
-	public void upHit(long board_num) {
-		gallDogMapper.upHit(board_num);
+	public List<GallDogVO> allList(String gall_name) {
+		return gallDogMapper.allList(gall_name);
+	}
+
+	@Override
+	public void upHit(GallDogVO vo) {
+		gallDogMapper.upHit(vo);
 		
 	}
 
 	@Override
 	public int countPageNum(SearchCriteria cri) {
-		// TODO Auto-generated method stub
 		return gallDogMapper.countPageNum(cri);
 	}
 }	
