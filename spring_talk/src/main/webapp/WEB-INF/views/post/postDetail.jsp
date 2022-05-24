@@ -18,10 +18,31 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 <!-- 번들 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<!--http://localhost:8181/post/detail/102  -->
+
 <style>
+@font-face {
+    font-family: 'CookieRunOTF-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/CookieRunOTF-Bold00.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'CookieRun-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }  
+  html, body {height:100%;}
 *{margin: 0;padding: 0;list-style: none;;}
-body {width:100%;}
+  body {
+    background-color: white;
+    color: black;
+    font-family: 'CookieRun-Regular';    
+  }
+  h3, .title {
+      font-family: 'CookieRunOTF-Bold';
+      margin: 0px;
+  }
 .container{width : 100%}
 .darkMode{
 	background-color: black;
@@ -32,21 +53,24 @@ body {width:100%;}
     min-height: 100%;
     padding-bottom: 121px;
  }
- 
- .upload_img{
-    width: 300px;
- }
+
  a{
  	text-decoration:none;
  	text-align:center;
  	color: black;
  	}
+.postHeader{
+    display: inline-block;
+} 	
 #replyBar{
        display: flex !important;
        background-color:white;
        position: fixed;
        bottom: 50px;
        left: 0px;
+}
+header{
+        background-color: white;
 }
 footer {
        display: flex !important;
@@ -85,9 +109,9 @@ opacity : 0.95;
 </sec:authorize>
 
 <div id="wrapper">
-	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
-		<span class="col-11">${post.writer }'s post</span>
-		<a href="/post/insert" class="col-1 text-left text-white">+</a>
+	<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
+		<h3 class="col-11 px-0">IN n OUT</h3>
+		<a href="/post/insert" class="col-1 text-left text-black">+</a>
 	</header>
 
 <div class="container">
@@ -95,11 +119,11 @@ opacity : 0.95;
 
 
 <div>
-
-	<strong>${post.writer }</strong>
-	<h5>${post.title }</h5>
-	<p id="content"> ${post.content }</p>
-	<div>
+	<div class="py-2">
+	<img src="https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj" alt="mdo" width="32" height="32" class="rounded-circle cardHeader"><a href="/user/room/1234" class="nav-link px-2 link-dark fw-bold postHeader">${post.writer }</a></div>
+	<div id="img"></div>
+	<div id="content">
+	<div class="btnBar py-2">
 		<c:if test="${login_id ne post.writer}">
 			<button class="btn btn-outline-danger" id="postLike">♡</button>
 			<a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>
@@ -109,7 +133,7 @@ opacity : 0.95;
 			<button class="btn btn-outline-danger" id="postLike">♡</button>
 		
 			<a href="/post/updateForm/${post.post_num}" class="btn">수정</a>
-			<form action="/post/delete/${post.post_num}" method="post">
+			<form action="/post/delete/${post.post_num}" method="post" class="d-inline">
 				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 				<input type="submit" class="btn" value="삭제">
 			</form>
@@ -118,6 +142,10 @@ opacity : 0.95;
 		</c:if>
 		
 	</div>
+	<strong>@${post.writer }</strong><span> ${post.title }</span>
+	<br/>
+	 ${post.content }
+	 </div>
 </div>
 
 <hr/>
@@ -169,12 +197,6 @@ opacity : 0.95;
     </div>
   </div>
 	</div>
-
-
-
-
-
-
 
 
 
@@ -618,7 +640,9 @@ opacity : 0.95;
 	 } isLike();
 
 	// 이미지 콘텐츠 관련 ////////////////////////////////////////////////////////////////////////
-	  function getImages(){
+	
+	
+	function getImages(){
 		  console.log("post_num");
 		  console.log(post_num);
 		  console.log('${post.post_num}');
@@ -629,7 +653,6 @@ opacity : 0.95;
 				
 				var imgData = "";
 
-				imgData += "<li> "
 				$(data).each(
 					function() {
 
@@ -638,14 +661,13 @@ opacity : 0.95;
 						fileCallPath = encodeURIComponent(this.upload_path + "/" + this.uuid + "_" + this.file_name);
 						console.log("fileCallPath2");
 						console.log(fileCallPath);
-						imgData += "<img class='upload_img' src='/post/display?fileName="+ fileCallPath + "'>"
+						imgData += "<img class='upload_img w-100' src='/post/display?fileName="+ fileCallPath + "'>"
 							
 							
 							
 					});
-				imgData += "</li>";
 			
-				$("#content").append(imgData);	
+				$("#img").prepend(imgData);	
 			});
 	 } getImages();
 	 

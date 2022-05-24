@@ -49,15 +49,17 @@
 			<a href="/post/insert" class="col-1 text-left text-white">+</a>
 		</header>
 		
-	<div class="container row">
+	<div class="container">
 	
-		<a href="/gall/dogList">멍 갤</a><br/>
-		<a href="#">냥 갤</a><br/>
-		<a href="#">냠냠 갤</a><br/>
-		<a href="#">운동 갤</a><br/>
-		<a href="#">게임 갤</a><br/>
-		<a href="#">등산 갤</a><br/>
-		
+	<div class="mx-0 py-2 w-100 border-top row justify-content-between">
+		<a href="/gall/dogList" class="p-3 border-bottom">멍 갤</a><br/>
+		<a href="#" class="p-3 border-bottom">냥 갤</a><br/>
+		<a href="#" class="p-3 border-bottom">냠냠 갤</a><br/>
+		<a href="#" class="p-3 border-bottom">운동 갤</a><br/>
+		<a href="#" class="p-3 border-bottom">게임 갤</a><br/>
+		<a href="#" class="p-3 border-bottom">등산 갤</a><br/>
+	</div>
+	
 	</div> 
 	
 	</div> <!-- wrapper -->

@@ -242,7 +242,6 @@ $(document).ready(function(){
 		<input type="submit" id="submitBtn" value="글쓰기">
 	</form>
 	
-    <input type="file" id="camera" name="camera" capture="camera" accept="image/*" />
     <br />
 	
 	<div class="uploadDiv">
