@@ -51,7 +51,7 @@
 		
 	<div class="container row">
 	
-		<a href="/gall/dogList">멍 갤</a><br/>
+		<a href="http://localhost:8181/gall/list/gall_dog">멍 갤</a><br/>
 		<a href="#">냥 갤</a><br/>
 		<a href="#">냠냠 갤</a><br/>
 		<a href="#">운동 갤</a><br/>

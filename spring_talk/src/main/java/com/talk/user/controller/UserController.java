@@ -35,9 +35,11 @@ import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
 import com.talk.user.domain.MemberVO;
+import com.talk.user.domain.NoteVO;
 import com.talk.user.domain.SecurityUser;
 import com.talk.user.domain.UserVO;
 import com.talk.user.mapper.AuthMapper;
+import com.talk.user.mapper.NoteMapper;
 import com.talk.user.service.AuthService;
 import com.talk.user.service.BanService;
 import com.talk.user.service.BanServiceImpl;
@@ -49,6 +51,7 @@ import com.talk.post.domain.PostVO;
 import com.talk.post.service.TagService;
 import com.talk.reply.domain.ReplyVO;
 import com.talk.user.service.FollowServiceImpl;
+import com.talk.user.service.NoteService;
 import com.talk.user.service.UserService;
 import com.talk.user.service.UserServiceImpl;
 import com.talk.naver.NaverLoginBO;
@@ -75,6 +78,13 @@ public class UserController {
 	@Autowired
 	private NaverLoginBO naverLoginBO;
 	//user단
+	
+	//쪽지
+	@Autowired
+	private NoteMapper noteMapper;
+	
+	@Autowired
+	private NoteService noteService;
 	
 	@GetMapping(value={ "/", ""})
 	public String userHome() {
@@ -583,5 +593,49 @@ public class UserController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
 		return "redirect:/user/getAllUsers";
+		
+	}
+	
+	
+	
+	
+	/////////////// 쪽지
+	// 쪽리 리스트
+	@GetMapping(value="/noteList")
+	public String noteList(Model model) {
+		noteMapper.getList();
+		List<NoteVO> noteList = noteService.getList();
+		model.addAttribute("noteList",noteList);
+		return "user/noteList";
+		
+	}
+	
+	// 쪽지 상세페이지
+	@GetMapping(value="noteDetail/{note_num}")
+	public String noteDetail(@PathVariable long note_num, Model model) {
+		NoteVO note = noteService.select(note_num);
+		model.addAttribute("note", note);
+		model.addAttribute("note_num", note_num);
+		return "user/noteDetail";
+	}
+	
+	// 쪽지 작성
+	@GetMapping(value="/noteInsert")
+	public String noteInsertForm() {
+		return "user/noteForm";
+	}
+	@PostMapping(value="/noteInsert")
+	public String noteInsert(NoteVO note) {
+		log.warn(note);
+		System.out.println(note);
+		noteService.insert(note);
+		return "redirect:/user/noteList";
+	}
+	
+	// 쪽지 삭제
+	@PostMapping(value="/noteDelete")
+	public String noteDelete(long note_num) {
+		noteService.delete(note_num);
+		return "redirect:/user/noteList";
 	}
 }
