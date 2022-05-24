@@ -152,7 +152,7 @@ footer {
 			             + "</div>"
 			             + "<a href='/post/detail/" + this.post_num + "'></a>"
 			          	 + "<div class='card-menu py-2' style='margin-left: 0px;'>"
-						 + "<button class='btn btn-sm postLike' id='postNum_" + this.post_num + "' data-post_num='" + this.post_num + "'>♡" + this.like_count + "</button> 댓글 <span class=replyCount>" + this.replycount + "</span>개<br/>"	
+						 + "<button class='btn btn-sm postLike' id='postNum_" + this.post_num + "' data-post_num='" + this.post_num + "'>♡" + this.like_count + "</button><a href='/post/detail/" + this.post_num + "'> 댓글 <span class=replyCount>" + this.replycount + "</span>개</a><br/>"	
 			          	 + "</div>"
 
 			         	 + "<div class='card-body'>"
@@ -409,8 +409,17 @@ footer {
 			success : function(result){
 				if(result == 'OK'){
 					alert("등록되었습니다.");
+					
 					console.log(replyArea);
-					replyArea.append(`<p><strong>@\${login_id}</strong> \${reply_content}</p>`)
+					replyArea = $("#postNum_326").parent().siblings(".card-body").children("details").children(".card").children(".replyArea");
+					replyArea.append("<p><strong>@" + login_id + "</strong> " + reply_content + "</p>")
+					
+					// 윗 댓글 개수
+					reply_count = $("#postNum_326").parent().children("a").children()
+					reply_count.html(parseInt(reply_count.html())+1);
+					
+					// 아래 댓글 개수
+					reply_count = $("#postNum_326").parent().siblings(".card-body").children("details").children(".card").children(".replyArea").siblings().children("a").children()
 					reply_count.html(parseInt(reply_count.html())+1);
 					refresh();
 				}
