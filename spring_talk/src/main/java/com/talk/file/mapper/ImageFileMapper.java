@@ -16,4 +16,6 @@ public interface ImageFileMapper {
 
 	public void update(@Param("vos") List<ImageFileVO> vos);
 	
+	public void deleteAll(@Param("post_num")long post_num);
+	
 }

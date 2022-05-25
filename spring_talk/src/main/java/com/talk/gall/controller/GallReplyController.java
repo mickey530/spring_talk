@@ -79,7 +79,7 @@ public class GallReplyController {
 		public ResponseEntity<String>modify(@RequestBody GallDogReplyVO vo, @PathVariable("gall_name") String gall_name, @PathVariable("reply_num") Long reply_num){
 			
 			ResponseEntity<String> entity = null;
-			try {
+			try {	
 	 			vo.setGall_name(gall_name);
 				vo.setReply_num(reply_num);
 				

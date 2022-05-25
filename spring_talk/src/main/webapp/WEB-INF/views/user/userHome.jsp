@@ -41,10 +41,7 @@ Get All Users</title>
 	</sec:authorize>
 <table border="1" class="table">
 
-	<sec:authorize access="isAuthenticated()">	
-     	    	
-			<p>principal.username : <sec:authentication property="principal.username"/></p>
-			<p>principal.test : <sec:authentication property="principal.user.user_pw"/></p>
+	<sec:authorize access="isAuthenticated()">
 			<h1>
 				<sec:authentication property="principal.username"/>
 			</h1>

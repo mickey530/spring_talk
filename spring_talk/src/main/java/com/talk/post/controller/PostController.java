@@ -1,6 +1,7 @@
 package com.talk.post.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
@@ -75,13 +77,18 @@ public class PostController {
 //	public final String uploadFolder = "/Users/user/upload_data/temp/";
 	public final String uploadFolder = "c:\\upload_data\\temp\\";
 	
+	@PreAuthorize("hasAnyRole('ALL')")
 	@GetMapping("/insert")
 	public String insert() {
 		return "post/insertForm";
 	}
 	
 	@PostMapping("/insert")
-	public String insert(PostVO vo,ImageFileDTO ifVOs) {
+	public String insert(PostVO vo,@PathVariable (value = "ifVOs", required = false) ImageFileDTO ifVOs) {
+		if(ifVOs == null) {
+			ifVOs = new ImageFileDTO();
+			ifVOs.setIfVOs(new ArrayList<ImageFileVO>());
+		}
 		service.insert(vo,ifVOs.getIfVOs());
 		
 		return "post/newsfeed"; // 나중에 뉴스피드로 리다이렉트 예정
@@ -254,6 +261,19 @@ public class PostController {
 			produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
 public ResponseEntity<List<ThumbnailVO>> uploadAjaxPost(MultipartFile[] uploadFile) {
+		
+		for(int i =0 ; i < uploadFile.length ; i++ ) {
+
+			try {
+				byte[] a = uploadFile[i].getBytes();
+				
+				System.out.println("uploadAjaxPost can get bytes : " + a);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println("uploadAjaxPost can't get bytes : " + e);
+				e.printStackTrace();
+			}
+		}
 	
 	System.out.println("ajax post update!");
 
@@ -386,6 +406,11 @@ public ResponseEntity<List<ThumbnailVO>> uploadAjaxPost(MultipartFile[] uploadFi
 		try {
 			HttpHeaders header = new HttpHeaders();
 			header.add("Content-Type", Files.probeContentType(file.toPath()));
+
+			FileInputStream fis;
+			fis=new FileInputStream(file);
+			
+			
 			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
 		} catch(IOException e) {
 			e.printStackTrace();

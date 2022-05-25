@@ -1,14 +1,24 @@
 package com.talk.user.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.rowset.serial.SerialException;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,6 +40,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.w3c.dom.html.HTMLInputElement;
 
 import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
@@ -143,26 +156,70 @@ public class UserController {
 	
 	
 	@GetMapping(value="/update")
-	public String update(String uid,
-			Model model) {
-		
-		System.out.println("uid : " + uid);
-		
-		UserVO user = userService.selectById(uid);
-		
-		model.addAttribute("userInfo",user);
-
+	public String update() {
 		return "/user/updateForm";
 	}
 	
-	@GetMapping(value="/updateUser")
-	public String updateUser(
-				UserVO vo, 
-				Model model)
-			throws DataIntegrityViolationException
-	{
+
+	@GetMapping(value="/getByte/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<String> getByte(@PathVariable("user_id")String user_id){
+		
+		ResponseEntity<String> entity= null;
 		
 		try {
+
+			System.out.println("user_id : " +user_id);
+		      
+			byte[] bytes = userService.selectById(user_id).getUser_img();
+			if(bytes == null) {
+				entity = new ResponseEntity<>("/resources/file.png",HttpStatus.OK);
+			}
+			System.out.println("blob : " +bytes);
+			System.out.println("blob : " +bytes.length);
+			
+		      ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+		      BufferedImage bImage2 = ImageIO.read(bis);
+		      ImageIO.write(bImage2, "png", new File("C:\\upload_data\\temp\\output.png") );
+		      System.out.println("image created");
+		      
+		      Base64.Encoder encoder = Base64.getEncoder();
+
+		      String encoding = "data:image/png;base64," + encoder.encodeToString(bytes);
+		      
+		      System.out.println("encoding : " + encoding);
+		      
+			entity = new ResponseEntity<>(encoding,HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("getByte : "+ entity);
+		return entity;
+	}
+	
+
+	@PostMapping(value="/updateUser")
+	public String updateUser(UserVO vo,@RequestParam("file") MultipartFile[] file){
+
+		try { 
+			System.out.println("file : " +file);
+			System.out.println("file getOriginalFilename : " +file[0].getOriginalFilename());
+			System.out.println("file get : " +file[0].getBytes().length);
+
+			System.out.println("file : " + file[0].getBytes().length);
+			
+			if(file[0].getBytes().length <= 0) {
+				vo.setUser_img(userService.select(vo.getUser_num()).getUser_img());
+			}else {
+		    vo.setUser_img(file[0].getBytes());
+			}
+			List<AuthVO> authList = authService.userAuthList(vo.getUser_id());
+			System.out.println("authList : " + authList.toString());
+			vo.setAvos(authList);
+			System.out.println("vo.getAvos : " + vo.getAvos());
+			
 			userService.update(vo);
 			return "redirect:/user/";
     	} catch(DataIntegrityViolationException e) {
@@ -209,28 +266,27 @@ public class UserController {
 	}
 	
 	@PostMapping(value="/insert")
-	public String insertUser(UserVO vo,String[] roles) throws DataIntegrityViolationException{
+	public String insertUser(UserVO vo) throws DataIntegrityViolationException{
 
 		System.out.println("user_id : " + vo.getUser_id()); 
 		System.out.println("user_name : " + vo.getUser_name());
 
 		List<AuthVO> authList = new ArrayList<AuthVO>();
-		for(String role : roles) {
-			AuthVO auth = new AuthVO();
-			auth.setUser_id(vo.getUser_id());
-			auth.setAuthority(role);
-			authList.add(auth);
+		AuthVO auth = new AuthVO();
+		auth.setUser_id(vo.getUser_id());
+		auth.setAuthority("ROLE_ALL");
+		authList.add(auth);
 			
-			System.out.println("authList = " + auth.toString());
-		}
+		System.out.println("authList = " + auth.toString());
+		
 		
 		UserVO uavo = vo;
 		uavo.setAvos(authList);
 		
 		try {
 			userService.insert(uavo);
-			
-			return "redirect:/user/userInfo/" + vo.getUser_id();
+
+			return "redirect:/user/";
     	} catch(DataIntegrityViolationException e) {
     		System.out.println("DuplicateKeyException");
     	} catch(Exception e) {
@@ -256,13 +312,13 @@ public class UserController {
 	}
 
 	@PostMapping(value="/login")
-	public void loginUser(String uid, String upw, HttpServletRequest request) {
+	public void loginUser(String username, String upw, HttpServletRequest request) {
 		System.out.println("login post ");
-		System.out.println("uid : " + uid);
+		System.out.println("uid : " + username);
 		System.out.println("upw : " + upw);
 			
 
-		UserVO userInfo = userService.loginCheck(uid, upw);
+		UserVO userInfo = userService.loginCheck(username, upw);
 		
 
 		if(userInfo != null) {//구분해서 처리 예정

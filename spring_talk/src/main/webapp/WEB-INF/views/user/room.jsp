@@ -19,6 +19,25 @@
     padding-bottom: 50px;
  }
  
+ #profile_img{
+    flex-grow: 1;
+	float:left
+}
+ 
+ .menulist_ul{
+ 
+    padding: 0px;
+ }
+ .menulist{
+    font-size: 16px;
+    margin-right: 40px;
+    list-style: none;
+ }
+ .menu{
+    text-align: left;
+ 	display:block
+ }
+ 
  #sideMenu > ul > li > a{
  	color: white;
  }
@@ -64,10 +83,60 @@ footer {
 	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
 		<span class="col-11">${user_id }'s room</span>
 		<a href="/post/insert" class="col-1 text-left text-white">+</a>
-	</header>
+	</header>	
+
 
 <div class="container">
 
+	<div id="profile_img">
+		<div>
+			<button title="프로필 사진 추가">
+				<img alt="프로필 사진 추가" id="user_img" src="/resources/file.png">
+			</button>
+		</div>
+	
+	<section class="profile_section">
+		<div class="wrap_info">
+			<h2 id="user_id">${user.user_id}</h2>
+			
+			<ul class="menulist_ul ">
+				
+				
+				<sec:authorize access="isAuthenticated()">
+						
+				<sec:authentication property="principal" var="princ"/>
+					<li class="menulist">
+						<a href="/user/update?uid=${princ.username}" tabindex="0">
+							<div class="menu">
+							프로필 편집 <span class="profile" title="0"></span>
+							</div>
+						</a>
+					</li>
+				</sec:authorize>
+				<li class="menulist">
+					<div class="menu">팔로워 <span class="follower" title="0">0</span>
+					</div></a>
+				</li>
+				<li class="menulist">
+					<div class="menu ">
+						팔로우 <span class="followed">0</span>
+					</div>
+				</li>
+				<li class="menulist">
+					<div class="menu ">
+						연락처 : <span class="phone_num">0</span>
+					</div>
+				</li>
+				<li class="menulist">
+					<div class="menu ">
+						나이 <span class="user_age">0</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</section>
+	</div>
+	
 	<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
 		팔로워 : <span id="followNum"></span>명<button id="follow">팔로</button>
 		<button id="ban">응 차단~</button>
@@ -85,8 +154,9 @@ footer {
 	<button id="more" onclick="more()">more</button>
 	
 
-</div>
+	</div>
 
+</div>
 </div>
 
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
@@ -127,6 +197,56 @@ footer {
 		});
 	 }
 	 more();
+
+	 function setImage(data){
+	     const previewImage = document.getElementById("user_img")
+	     previewImage.src = data
+	 }
+
+	 function load_blob_img() {
+
+	 	console.log("byte")
+	 	
+	 	
+	 		$.ajax({
+	 			url: '/user/getByte/${user.user_id}',
+	 			processData: false,
+	 			contentType: false,
+	 			type:"get",
+	 			beforeSend : function(xhr) {
+	 			 xhr.setRequestHeader(_csrf_header, _csrf);
+	 			},
+	 			success: function(result){
+		 			console.log("data")
+		 			console.log(data.responseText)
+		 			setImage(data.responseText)
+	 			},
+	 			
+	 		}).fail(function(data, textStatus, errorThrown){
+	 			console.log("data")
+	 			console.log(data.responseText)
+	 			setImage(data.responseText)
+	 		}).done(function(data, textStatus, errorThrown){
+
+	 			console.log("data")
+	 			console.log(data.responseText)
+	 			setImage(data.responseText)
+	 		}); // ajax
+	 		
+	 /* 		$.getJSON("/user/getByte/${user.user_id}" , function(data){
+	 			console.log("byte");
+	 			console.log(data);
+	 		}); */
+	 	/* 
+	 	byte[] imgByte = '${user.user_img}';
+	 	byte[] byteEnc64 = Base64.encodeBase64(imgByte);
+	 	console.log("byteEnc64");
+	 	console.log(byteEnc64);
+	 	String imgStr = new String(byteEnc64 , "UTF-8");
+	 	console.log("imgStr");
+	 	console.log(imgStr); */
+	 };
+	 /* load_blob_img(); */
 	 
 	 // 팔로우 숫자
 	 
@@ -135,10 +255,20 @@ footer {
 			$.getJSON("/user/countFollower/" + user_id, function(data){
 
 				console.log(data)
-			
-				$("#followNum").html(data);			
+
+				$("#followNum").html(data);		
+				$(".follower").html(data);			
 			});
 		 }
+
+	 function followedNum(){
+			$.getJSON("/user/countFollowed/" + user_id, function(data){
+
+				console.log(data)
+
+				$(".followed").html(data);			
+			});
+		 }followedNum();
 		 
 
 
@@ -231,6 +361,67 @@ footer {
 	 }
 	 getFavoriteList();
 	 
+
+//	프로필 가져오기
+	 function getProfile(){
+		console.log("getProfile");
+		$.getJSON("/test/userProfile/" + user_id, function(data){
+			
+			var follower = "";
+
+			console.log("data");
+			console.log(data);
+			console.log("user_img"	);
+			console.log(data.user_img);
+			console.log("user_name"	);
+			console.log(data.user_name);
+			console.log("user_num"	);
+			console.log(data.user_age);	
+			
+			load_blob_img();
+
+/* 			if(data.user_img != ""){
+				
+				var image_path = encodeURIComponent(fileCallPath);
+				$(".user_img").attr("src", '/post/display?fileName='+image_path);
+			} */
+			$(".phone_num").html(data.phone_num);
+			$(".user_age").html(data.user_age);
+		
+			
+			
+			/* $(data).each(
+				function() {
+						follower += "<div class='col-2'><p class='freind'>"
+						+ "<a href='/user/room/" + this.user_id + "'>"
+						+ this.user_name +"</a></p></div><br/>"
+						if(this.favorite == 'Y'){
+
+							follower += "<button class='btn btn-sm btn-danger favorite'>☆ 즐겨찾기</button>";
+						}
+						else{
+
+							follower += "<button class='btn btn-sm btn-outline-danger favorite'>☆ 즐겨찾기</button>";
+						}
+						
+				});
+			$(".freindList").html(follower);	 */		
+		});
+	 }
+		getProfile();
+		
+
+		 
+		 function user_none_check(){
+			 console.log('${user.user_id}');
+			 if('${user.user_id}' == ""){
+					alert("존재하지 않는 유저입니다!");
+
+				location.href="/user";
+			 }
+		 }
+		 user_none_check();
+	 
 	 followerNum();
 
 	 // 로딩 끝나고
@@ -286,11 +477,7 @@ footer {
 
 	 $(".followerList").on("click", ".favorite", function(){
 		 let follower = $(this).parent()[0].dataset.follower;
-		 
-		 
-		 
 		 let favorite = '';
-
 		 if($(this).hasClass('btn-danger') === true){
 
 			 favorite = 'N';
@@ -326,6 +513,7 @@ footer {
 				}
 			});
 	 });
+	 
 	 </script>
 	
 	

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -52,6 +53,7 @@ public class GallDogController {
 	
 	
 	// 게시글 작성 http://localhost:8181/gall/insert/gall_dog
+	@PreAuthorize("hasAnyRole('ALL')")
 	@GetMapping("/insert/{gall_name}" )
 	public String insert(@PathVariable("gall_name") String gall_name, Model model) {
 		return "gall/insertForm";

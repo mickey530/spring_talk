@@ -1,30 +1,19 @@
-package com.talk.security.Handler;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package com.talk.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Service;
 
 import com.talk.user.domain.SecurityUser;
 import com.talk.user.domain.UserVO;
 import com.talk.user.mapper.AuthMapper;
-import com.talk.user.mapper.UserMapper;
 
 import lombok.extern.log4j.Log4j;
 
-
 @Log4j
+@Service
 public class CustomUserDetailsService implements UserDetailsService{
 
 	@Autowired
@@ -51,6 +40,5 @@ public class CustomUserDetailsService implements UserDetailsService{
 		return su;
 	}
 	
-
-
+	
 }

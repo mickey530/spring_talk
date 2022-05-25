@@ -1,5 +1,7 @@
 package com.talk.user.domain;
 
+import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -14,5 +16,6 @@ public class UserVO {
 	private String last_name = "";
 	private String user_age = "";
 	private String phone_num = "";
-	private List<AuthVO> avos ;
+	private byte[] user_img ;
+	private List<AuthVO> avos = new ArrayList<AuthVO>();
 }

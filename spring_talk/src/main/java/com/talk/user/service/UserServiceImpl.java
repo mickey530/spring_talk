@@ -117,11 +117,8 @@ public class UserServiceImpl implements UserService {
 		String originPW = vo.getUser_pw();
 		String encodedPW = pwEncode.encode(originPW);
 		vo.setUser_pw(encodedPW);
-		System.out.println("VO insert");
+		System.out.println("VO update");
 		System.out.println(vo.toString());
-		UserMapper.insert(vo);
-		
-
 		for(AuthVO auth : vo.getAvos()) {
 			System.out.println("insert auth : " + auth);
 		}

@@ -52,7 +52,7 @@ public class FileServiceImpl implements FileService{
 	}
 
 	@Override
-	public void delete(String post_num) {
+	public void delete(String file_num) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -62,5 +62,16 @@ public class FileServiceImpl implements FileService{
 		// TODO Auto-generated method stub
 
 		return ifMapper.select(post_num);
+	}
+	
+	@Override
+	public void deleteAll(long post_num) {
+		ifMapper.deleteAll(post_num);
+	}
+
+	@Override
+	public void insertBLOB(List<ImageFileVO> vos) {
+		// TODO Auto-generated method stub
+		
 	}
 }
