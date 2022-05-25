@@ -71,6 +71,19 @@ summary > p {
     font-size: 12px;
 }
 
+#img{
+	position: relative;
+	width: 100%;
+	padding-bottom: 100%;
+	overflow: hidden;
+}
+.upload_img{
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 header{
         background-color: white;
 }
@@ -151,7 +164,7 @@ footer {
 			             + "<img src='https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj' alt='mdo' width='32' height='32' class='rounded-circle cardHeader'>"
 			             + "<a href='/user/room/" + this.writer + "' class='nav-link px-2 link-dark fw-bold cardHeader'>" + this.writer + "</a>"
 			             + "</div>"
-			             + "<a href='/post/detail/" + this.post_num + "'></a>"
+			             + "<div id='img' href='/post/detail/" + this.post_num + "'></div>"
 			          	 + "<div class='card-menu py-2' style='margin-left: 0px;'>"
 						 + "<button class='btn btn-sm postLike' id='postNum_" + this.post_num + "' data-post_num='" + this.post_num + "'>♡" + this.like_count + "</button><a href='/post/detail/" + this.post_num + "'> 댓글 <span class=replyCount>" + this.replycount + "</span>개</a><br/>"	
 			          	 + "</div>"
@@ -465,12 +478,12 @@ footer {
 						fileCallPath = encodeURIComponent(this.upload_path + "/" + this.uuid + "_" + this.file_name);
 						console.log("fileCallPath2");
 						console.log(fileCallPath);
-						imgData += "<img id='img' class='upload_img w-100' src='/post/display?fileName="+ fileCallPath + "'>"
+						imgData += "<img class='upload_img w-100' src='/post/display?fileName="+ fileCallPath + "'>"
 							
 							
 							
 					});
-				$("#postNum_"+post_num).parent().siblings("a").prepend(imgData);	
+				$("#postNum_"+post_num).parent().siblings("#img").prepend(imgData);	
 			});
 	 };
 	
