@@ -53,7 +53,18 @@
     min-height: 100%;
     padding-bottom: 121px;
  }
-
+#img{
+	position: relative;
+	width: 100%;
+	padding-bottom: 100%;
+	overflow: hidden;
+}
+.upload_img{
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
  a{
  	text-decoration:none;
  	text-align:center;
