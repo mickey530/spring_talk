@@ -70,6 +70,7 @@ summary > p {
 .card {
     font-size: 12px;
 }
+
 header{
         background-color: white;
 }
@@ -411,15 +412,15 @@ footer {
 					alert("등록되었습니다.");
 					
 					console.log(replyArea);
-					replyArea = $("#postNum_326").parent().siblings(".card-body").children("details").children(".card").children(".replyArea");
+					replyArea = $("#postNum_" + post_num).parent().siblings(".card-body").children("details").children(".card").children(".replyArea");
 					replyArea.append("<p><strong>@" + login_id + "</strong> " + reply_content + "</p>")
 					
 					// 윗 댓글 개수
-					reply_count = $("#postNum_326").parent().children("a").children()
+					reply_count = $("#postNum_" + post_num).parent().children("a").children()
 					reply_count.html(parseInt(reply_count.html())+1);
 					
 					// 아래 댓글 개수
-					reply_count = $("#postNum_326").parent().siblings(".card-body").children("details").children(".card").children(".replyArea").siblings().children("a").children()
+					reply_count = $("#postNum_" + post_num).parent().siblings(".card-body").children("details").children(".card").children(".replyArea").siblings().children("a").children()
 					reply_count.html(parseInt(reply_count.html())+1);
 					refresh();
 				}
@@ -464,7 +465,7 @@ footer {
 						fileCallPath = encodeURIComponent(this.upload_path + "/" + this.uuid + "_" + this.file_name);
 						console.log("fileCallPath2");
 						console.log(fileCallPath);
-						imgData += "<img class='upload_img w-100' src='/post/display?fileName="+ fileCallPath + "'>"
+						imgData += "<img id='img' class='upload_img w-100' src='/post/display?fileName="+ fileCallPath + "'>"
 							
 							
 							

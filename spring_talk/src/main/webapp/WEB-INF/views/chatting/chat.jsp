@@ -183,7 +183,7 @@
   #wrapper{
       height: auto;
       min-height: 100%;
-      padding-bottom: 50px;
+      padding-bottom: 92px;
   }
   a{
 	  text-decoration:none;
