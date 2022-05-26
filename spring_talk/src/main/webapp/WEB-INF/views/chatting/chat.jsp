@@ -125,6 +125,7 @@
     		console.log(webSocket);
     		webSocket.send(str);
 //    	     webSocket.prototype.oldSend.apply(webSocket, [str]);
+    		document.body.scrollTop = document.body.scrollHeight;
     	}
     	
     	function _initSocket(){
@@ -183,7 +184,7 @@
   #wrapper{
       height: auto;
       min-height: 100%;
-      padding-bottom: 92px;
+      padding-bottom: 116px;
   }
   a{
 	  text-decoration:none;
@@ -229,7 +230,7 @@ footer {
 	<div class="p-2">
 		<div id="divChatData"></div>
 	</div>
-	<div class="p-2">
+	<div>
 		<input type="text" id="message" class="form-control p-2" onkeypress="if(event.keyCode==13){sendChat()}">
 		<!-- <input type="button" id="btnSend" class="justify-content-right" value = "전송" onclick="sendChat()"> -->
 	</div>
