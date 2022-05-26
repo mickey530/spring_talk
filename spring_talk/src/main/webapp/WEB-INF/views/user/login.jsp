@@ -40,7 +40,7 @@ body{
         
         <button id="btn-Yes" class="btn btn-lg btn-primary btn-block" type="submit">로그인</button>
           <label>
-            <input type="checkbox" value="remember-me"  name="remember-me"> 기억하기
+            <input type="checkbox" name="remember-me"> 기억하기
           </label>
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
       </form>

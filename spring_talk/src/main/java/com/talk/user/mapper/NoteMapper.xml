@@ -5,7 +5,10 @@
 
 <select id ="getList" resultType="com.talk.user.domain.NoteVO">
 	<![CDATA[
-		SELECT * FROM note order by note_num desc
+		SELECT * FROM note
+		WHERE note_recipient = #{note_recipient} and note_sender = #{note_sender}
+		or note_recipient = #{note_sender} and note_sender = #{note_recipient}
+		order by note_num
 	]]>		
 	
 </select>

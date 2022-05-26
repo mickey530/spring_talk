@@ -26,6 +26,8 @@
 	<div class ="col-md-1">
 		<form action="/user/noteDelete" method="post">
 			<input type="hidden" value="${note.note_num}" name="note_num">
+			<input type="hidden" value="${note.note_recipient}" name="note_recipient">
+			<input type="hidden" value="${note.note_sender}" name="note_sender">
 			 <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/> 
 			<input type="submit" class="btn btn-danger" value="삭제">
 		</form>
@@ -33,7 +35,7 @@
 	
 	<div class="row">
 		<div class="col=md-1">
-			<a href="http://localhost:8181/user/noteList" class="btn brn-success">쪽지목록</a>
+			<a href="http://localhost:8181/user/noteList/${note.note_recipient}/${note.note_sender}" class="btn brn-success">쪽지목록</a>
 		</div>
 	</div>
 </body>

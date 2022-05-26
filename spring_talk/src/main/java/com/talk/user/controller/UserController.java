@@ -596,15 +596,19 @@ public class UserController {
 		
 	}
 	
-	
+	//  note_sender --보내는 사람
+    //  note_recipient --받는 사람
 	
 	
 	/////////////// 쪽지
-	// 쪽리 리스트
-	@GetMapping(value="/noteList")
-	public String noteList(Model model) {
-		noteMapper.getList();
-		List<NoteVO> noteList = noteService.getList();
+	// 쪽지 나 : 너					받는사람			보내는사람
+	@GetMapping(value="/noteList/{note_recipient}/{note_sender}")
+	public String noteList(@PathVariable("note_recipient") String note_recipient,
+			@PathVariable("note_sender") String note_sender, Model model) {
+		NoteVO vo = new NoteVO();
+		vo.setNote_recipient(note_recipient);
+		vo.setNote_sender(note_sender);
+		List<NoteVO> noteList = noteService.getList(vo);
 		model.addAttribute("noteList",noteList);
 		return "user/noteList";
 		
@@ -619,23 +623,25 @@ public class UserController {
 		return "user/noteDetail";
 	}
 	
-	// 쪽지 작성
-	@GetMapping(value="/noteInsert")
-	public String noteInsertForm() {
+	// 쪽지 작성							받는사람
+	@GetMapping(value="/noteInsert/{note_recipient}")
+	public String noteInsertForm(@PathVariable("note_recipient") String note_recipient, Model model) {
+		model.addAttribute("note_recipient", note_recipient);
 		return "user/noteForm";
 	}
 	@PostMapping(value="/noteInsert")
-	public String noteInsert(NoteVO note) {
+	public String noteInsert(String note_recipient, String note_sender, NoteVO note) {
 		log.warn(note);
 		System.out.println(note);
 		noteService.insert(note);
-		return "redirect:/user/noteList";
+		return "redirect:/user/noteList/" +note_recipient+"/"+ note_sender;
 	}
 	
 	// 쪽지 삭제
 	@PostMapping(value="/noteDelete")
-	public String noteDelete(long note_num) {
+	public String notelete(String note_recipient,String note_sender,long note_num) {
 		noteService.delete(note_num);
-		return "redirect:/user/noteList";
+		
+		return "redirect:/user/noteList/" +note_recipient+"/"+ note_sender;
 	}
 }

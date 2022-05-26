@@ -6,7 +6,7 @@ import com.talk.user.domain.NoteVO;
 
 public interface NoteMapper {
 	
-	public List<NoteVO> getList();
+	public List<NoteVO> getList(NoteVO vo);
 	
 	// insert
 	public void insert(NoteVO vo);

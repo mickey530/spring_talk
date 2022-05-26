@@ -8,7 +8,7 @@ import com.talk.user.domain.NoteVO;
 
 public interface NoteService {
 	
-	public List<NoteVO> getList();
+	public List<NoteVO> getList(NoteVO vo);
 
 	public NoteVO select(long note_num);
 	
