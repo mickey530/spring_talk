@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC	 "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	
+<mapper namespace="com.talk.reply.mapper.ReplyLikeMapper">
+
+	<select id="islike" resultType="string">
+		SELECT user_id FROM reply_like WHERE reply_num=#{reply_num} AND user_id=#{login_id}
+	</select>
+	
+	<insert id="like">
+		INSERT INTO reply_like (reply_num , user_id)
+			VALUES
+		(#{reply_num}, #{login_id})
+	</insert>
+	
+	<delete id="unlike">
+		DELETE FROM reply_like
+			WHERE
+		reply_num = #{reply_num} AND user_id = #{login_id}
+	</delete>
+	
+	<select id="likeCount" resultType="long">
+		SELECT count(*) FROM reply_like
+			WHERE post_num = #{reply_num}
+	</select>
+
+
+	<select id="getReplyLikeUserList" resultType="com.talk.reply.domain.ReplyLikeVO">
+		SELECT u.* FROM user_info u WHERE u.user_id in(
+			SELECT r.user_id FROM reply_like r WHERE r.reply_num = #{reply_num})
+	</select>
+	
+	<select id="getReplyList" resultType="com.talk.reply.domain.ReplyLikeVO">
+	 SELECT * FROM reply_like
+	 	WHERE reply_num = #{reply_num}
+	</select>
+	
+</mapper>
