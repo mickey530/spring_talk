@@ -38,5 +38,14 @@
 			<a href="http://localhost:8181/user/noteList/${note.note_recipient}/${note.note_sender}" class="btn brn-success">쪽지목록</a>
 		</div>
 	</div>
+	
+	
+	
+
+	
+	
+	
+	
+	
 </body>
 </html>
