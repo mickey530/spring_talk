@@ -21,8 +21,8 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 	@Override
-	public NoteVO select(long note_num) {
-		return noteMapper.select(note_num);
+	public NoteVO select(NoteVO vo) {
+		return noteMapper.select(vo);
 	}
 
 	@Override
