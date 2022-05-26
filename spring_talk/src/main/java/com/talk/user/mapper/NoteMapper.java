@@ -12,7 +12,7 @@ public interface NoteMapper {
 	public void insert(NoteVO vo);
 	
 	// select
-	public NoteVO select(long note_num);
+	public NoteVO select(NoteVO vo);
 	
 	// delete
 	public void delete(long note_num);

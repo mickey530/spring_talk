@@ -10,7 +10,7 @@ public interface NoteService {
 	
 	public List<NoteVO> getList(NoteVO vo);
 
-	public NoteVO select(long note_num);
+	public NoteVO select(NoteVO vo);
 	
 	public void insert(NoteVO vo);
 	

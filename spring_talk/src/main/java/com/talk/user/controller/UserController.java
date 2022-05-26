@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
@@ -602,46 +604,115 @@ public class UserController {
 	
 	/////////////// 쪽지
 	// 쪽지 나 : 너					받는사람			보내는사람
-	@GetMapping(value="/noteList/{note_recipient}/{note_sender}")
-	public String noteList(@PathVariable("note_recipient") String note_recipient,
-			@PathVariable("note_sender") String note_sender, Model model) {
-		NoteVO vo = new NoteVO();
-		vo.setNote_recipient(note_recipient);
-		vo.setNote_sender(note_sender);
-		List<NoteVO> noteList = noteService.getList(vo);
-		model.addAttribute("noteList",noteList);
-		return "user/noteList";
-		
+	/*
+	 * @GetMapping(value="/noteList/{note_recipient}/{note_sender}") public String
+	 * noteList(@PathVariable("note_recipient") String note_recipient,
+	 * 
+	 * @PathVariable("note_sender") String note_sender, Model model) { NoteVO vo =
+	 * new NoteVO(); vo.setNote_recipient(note_recipient);
+	 * vo.setNote_sender(note_sender); List<NoteVO> noteList =
+	 * noteService.getList(vo); model.addAttribute("noteList",noteList); return
+	 * "user/noteList";
+	 * 
+	 * }
+	 * 
+	 * // 쪽지 상세페이지
+	 * 
+	 * @GetMapping(value="noteDetail/{note_num}") public String
+	 * noteDetail(@PathVariable long note_num, Model model) { NoteVO note =
+	 * noteService.select(note_num); model.addAttribute("note", note);
+	 * model.addAttribute("note_num", note_num); return "user/noteDetail"; }
+	 * 
+	 * // 쪽지 작성 받는사람
+	 * 
+	 * @GetMapping(value="/noteInsert/{note_recipient}") public String
+	 * noteInsertForm(@PathVariable("note_recipient") String note_recipient, Model
+	 * model) { model.addAttribute("note_recipient", note_recipient); return
+	 * "user/noteForm"; }
+	 * 
+	 * @PostMapping(value="/noteInsert") public String noteInsert(String
+	 * note_recipient, String note_sender, NoteVO note) { log.warn(note);
+	 * System.out.println(note); noteService.insert(note); return
+	 * "redirect:/user/noteList/" +note_recipient+"/"+ note_sender; }
+	 * 
+	 * // 쪽지 삭제
+	 * 
+	 * @PostMapping(value="/noteDelete") public String notedelete(String
+	 * note_recipient,String note_sender,long note_num) {
+	 * noteService.delete(note_num);
+	 * 
+	 * return "redirect:/user/noteList/" +note_recipient+"/"+ note_sender; }
+	 */
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// insert
+	@ResponseBody
+	@PostMapping(value="/noteInsert", consumes="application/json",
+							produces= {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity<String> register(@RequestBody NoteVO vo){
+		ResponseEntity<String>entity = null;
+		try {
+			noteService.insert(vo);
+			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		}catch(Exception e) {
+
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}                                       
+		return entity;
 	}
 	
-	// 쪽지 상세페이지
-	@GetMapping(value="noteDetail/{note_num}")
-	public String noteDetail(@PathVariable long note_num, Model model) {
-		NoteVO note = noteService.select(note_num);
-		model.addAttribute("note", note);
-		model.addAttribute("note_num", note_num);
+	// 쪽지 창 detail
+	@GetMapping(value="/noteDetail/{note_sender}/{note_recipient}")
+	public String noteDetail(@PathVariable("note_sender") String note_sender,
+				@PathVariable("note_recipient") String note_recipient, Model model) {
+		model.addAttribute("note_recipient", note_recipient);
+		model.addAttribute("note_sender", note_sender);
 		return "user/noteDetail";
 	}
-	
-	// 쪽지 작성							받는사람
-	@GetMapping(value="/noteInsert/{note_recipient}")
-	public String noteInsertForm(@PathVariable("note_recipient") String note_recipient, Model model) {
-		model.addAttribute("note_recipient", note_recipient);
-		return "user/noteForm";
-	}
-	@PostMapping(value="/noteInsert")
-	public String noteInsert(String note_recipient, String note_sender, NoteVO note) {
-		log.warn(note);
-		System.out.println(note);
-		noteService.insert(note);
-		return "redirect:/user/noteList/" +note_recipient+"/"+ note_sender;
-	}
-	
-	// 쪽지 삭제
-	@PostMapping(value="/noteDelete")
-	public String notelete(String note_recipient,String note_sender,long note_num) {
-		noteService.delete(note_num);
 		
-		return "redirect:/user/noteList/" +note_recipient+"/"+ note_sender;
+
+	
+	
+	
+	
+	
+	// 주고받은 쪽지 리스트
+	@GetMapping(value="/noteList/{note_sender}/{note_recipient}",
+			produces= {MediaType.APPLICATION_XML_VALUE,
+					 MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<List<NoteVO>> list(@PathVariable("note_sender") String note_sender, NoteVO vo){
+		ResponseEntity<List<NoteVO>> entity = null;
+		try {
+			entity = new ResponseEntity<>(noteService.getList(vo), HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace(); // 이게 있어야 에러를 콘솔에 찍을수 있음
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return entity;
 	}
-}
+	
+	// delete
+	@DeleteMapping(value="/noteDelete)", produces = {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity<String> remove(String note_recipient,String note_sender,long note_num){
+		ResponseEntity<String> entity = null;
+		try {
+			noteService.delete(note_num);
+			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		}catch(Exception e) {
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+		}
+		return entity;
+	}
+	
+		
+	}
+	
+

@@ -34,4 +34,14 @@
 		</tbody>
 	</table>
 	<a href="http://localhost:8181/user/noteInsert/${note_recipient}" class="btn btn-success">쪽지쓰기</a>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </body>
