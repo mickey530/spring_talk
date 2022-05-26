@@ -4,24 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.talk.gall.domain.GallDogLikeVO;
-import com.talk.gall.mapper.GallDogLikeMapper;
-import com.talk.gall.mapper.GallDogMapper;
+import com.talk.gall.domain.GallLikeVO;
+import com.talk.gall.mapper.GallLikeMapper;
+import com.talk.gall.mapper.GallMapper;
 
 @Service
-public class GallDogLikeServiceImpl implements GallDogLikeService{
+public class GallLikeServiceImpl implements GallLikeService{
 
 	@Autowired
-	private GallDogLikeMapper galldogLikeMapper;
+	private GallLikeMapper galldogLikeMapper;
 	
 	@Autowired
-	private GallDogMapper galldogMapper;
+	private GallMapper galldogMapper;
 	
 	@Transactional
 	@Override
-	public void like(GallDogLikeVO vo) {
+	public void like(GallLikeVO vo) {
 		String check = galldogLikeMapper.islike(vo);
 		long board_num = vo.getBoard_num();
+		
 		if(check == null) {
 			galldogLikeMapper.like(vo);
 			galldogMapper.updateLikeCount(board_num, 1);
@@ -32,7 +33,7 @@ public class GallDogLikeServiceImpl implements GallDogLikeService{
 	}
 
 	@Override
-	public String islike(GallDogLikeVO vo) {
+	public String islike(GallLikeVO vo) {
 		// TODO Auto-generated method stub
 		return galldogLikeMapper.islike(vo);
 	}

@@ -5,9 +5,8 @@ import java.sql.Date;
 import lombok.Data;
 
 @Data
-public class GallDogLikeVO {
+public class GallLikeVO {
 
 	 private int board_num;
 	 private String user_id;
-	 private Date like_date;
 }

@@ -5,24 +5,25 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.talk.gall.domain.SearchCriteria;
-import com.talk.gall.domain.GallDogVO;
+import com.talk.gall.domain.GallVO;
 
-public interface GallDogMapper {
+public interface GallMapper {
 	
 	// 조회수
-    public void upHit(long board_num);
+    public void upHit(GallVO vo);
 
-	public void insert(GallDogVO vo);
+
+	public void insert(GallVO vo);
 	
-	public GallDogVO select(long board_num);
+	public GallVO select(GallVO vo);
 	
-	public void delete(long board_num);
+	public void delete(GallVO vo);
 	
-	public void update(GallDogVO vo);
+	public GallVO update(GallVO vo);
 	
-	public List<GallDogVO> allList();
+	public List<GallVO> allList(String gall_name);
 	
-	public void updateReplyCount(@Param("board_num") Long board_num,
+	public void updateReplyCount(@Param("gall_name") String gall_name, @Param("board_num") Long board_num,
 			@Param("amount") int amount);
 
 	public void updateLikeCount(@Param("board_num") Long board_num,

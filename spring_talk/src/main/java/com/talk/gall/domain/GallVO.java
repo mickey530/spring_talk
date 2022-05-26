@@ -5,7 +5,9 @@ import java.sql.Date;
 import lombok.Data;
 
 @Data
-public class GallDogVO {
+public class GallVO {
+	
+	private String gall_name;
 	
 	private long board_num;
 	private String board_title;
