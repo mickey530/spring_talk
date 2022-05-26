@@ -601,6 +601,10 @@ public class UserController {
 	//  note_sender --보내는 사람
     //  note_recipient --받는 사람
 	
+	@GetMapping(value="/allNote/{login_id}")
+	public String allNote(@PathVariable("login_id") String login_id) {
+		return null;
+	}
 	
 	/////////////// 쪽지
 	// 쪽지 나 : 너					받는사람			보내는사람
