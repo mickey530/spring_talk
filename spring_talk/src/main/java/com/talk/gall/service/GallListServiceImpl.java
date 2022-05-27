@@ -3,7 +3,6 @@ package com.talk.gall.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.talk.gall.domain.GallDogVO;
 import com.talk.gall.domain.GallListVO;
 import com.talk.gall.mapper.GallListMapper;
 

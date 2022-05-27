@@ -30,14 +30,16 @@ public class AdminController {
 	@PostMapping("gallList")
 	public String gallList(GallListVO vo, Model model) {
 		listservice.create(vo);
+		log.info(vo);
 		model.addAttribute("vo", vo);
-		return "redirect:/gall/gallList";
+		return "redirect/gall/gallList";
 	}
 
 	// gall_??? 테이블 생성
 	@PostMapping("/create/{gall_name}")
     public String createGall(@PathVariable("gall_name") String gall_name, Model model) {
         listservice.createTbl(gall_name);
+        log.info(gall_name);
         model.addAttribute("gall", gall_name); 
         return "redirect:/gall/gallList";
     }
