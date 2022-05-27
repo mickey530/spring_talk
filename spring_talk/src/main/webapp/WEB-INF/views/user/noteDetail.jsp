@@ -202,7 +202,7 @@ footer {
 			function send(){
 				var note_sender = login_id;
 				var note_content = $("#newNoteContent").val();
-				
+
 				$.ajax({
 					type : 'post',
 					url : '/user/noteInsert',

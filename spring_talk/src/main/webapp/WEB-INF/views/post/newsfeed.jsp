@@ -225,6 +225,7 @@ footer {
 			
 			);
 			$("#postList").html(post+reply);			
+ 			ad();
 
 		});
 	 }
@@ -535,7 +536,41 @@ footer {
 			});
 	 };
 	
-	
+	// 광고글 불러오는 메서드
+	function ad(){
+		let ad_num = 1;
+		$.getJSON("/post/ad?ad_num=" + ad_num, function(data){
+			post_ad = "";
+			console.log(data);
+			
+			$(data).each(
+				function() {
+					post_ad += "<div><div class='py-2'>"
+			             + "<img src='https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj' alt='mdo' width='32' height='32' class='rounded-circle cardHeader'>"
+			             + "<a href='/user/room/" + this.company + "' class='nav-link px-2 link-dark fw-bold cardHeader'>" + this.company + "</a>"
+			             + "</div>"
+			             + "<div id='img' href='/post/detail/" + this.ad_num + "'><img src='/resources/logo.png' class='upload_img w-100'></div>"
+			          	 + "<div class='card-menu py-2' style='margin-left: 0px;'>"
+			          	 + "</div>"
+
+			         	 + "<div class='card-body'>"
+
+			             + "<p><strong>@" + this.title + "</strong> <br>"
+			            
+			             + "<span><a href='/pay'>" + this.content + "</a></span>"
+			             + "<hr/>"
+			   
+			             + "</div>"
+			          	 + "</div>"
+
+ 				}
+				
+			
+			);
+			$("#postList").append(post_ad);			
+
+		});
+	 }
 	
 	 </script>
 
