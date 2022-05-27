@@ -18,10 +18,10 @@ import oracle.net.aso.m;
 
 
 @Controller
-@RequestMapping("/chatting/")
+@RequestMapping("/chatting")
 public class ChatController{
 	
-	@GetMapping("chat")
+	@GetMapping("/chat")
 	public String asdf() {
 		return "chatting/chat";
 	}

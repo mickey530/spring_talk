@@ -53,7 +53,6 @@ public class PostServiceImpl implements PostService{
 	@Transactional
 	@Override
 	public void delete(long post_num) {
-		fileService.deleteAll(post_num);
 		replyMapper.deleteAllReplies(post_num);
 		postMapper.delete(post_num);
 	}

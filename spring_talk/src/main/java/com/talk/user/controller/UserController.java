@@ -1,24 +1,15 @@
 package com.talk.user.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.sql.rowset.serial.SerialException;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -33,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,17 +32,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.w3c.dom.html.HTMLInputElement;
 
 import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
 import com.talk.user.domain.MemberVO;
+import com.talk.user.domain.NoteVO;
 import com.talk.user.domain.SecurityUser;
 import com.talk.user.domain.UserVO;
 import com.talk.user.mapper.AuthMapper;
+import com.talk.user.mapper.NoteMapper;
 import com.talk.user.service.AuthService;
 import com.talk.user.service.BanService;
 import com.talk.user.service.BanServiceImpl;
@@ -62,6 +55,7 @@ import com.talk.post.domain.PostVO;
 import com.talk.post.service.TagService;
 import com.talk.reply.domain.ReplyVO;
 import com.talk.user.service.FollowServiceImpl;
+import com.talk.user.service.NoteService;
 import com.talk.user.service.UserService;
 import com.talk.user.service.UserServiceImpl;
 import com.talk.naver.NaverLoginBO;
@@ -88,6 +82,13 @@ public class UserController {
 	@Autowired
 	private NaverLoginBO naverLoginBO;
 	//user단
+	
+	//쪽지
+	@Autowired
+	private NoteMapper noteMapper;
+	
+	@Autowired
+	private NoteService noteService;
 	
 	@GetMapping(value={ "/", ""})
 	public String userHome() {
@@ -154,6 +155,7 @@ public class UserController {
 		return entity;
 	}
 	
+
 	
 	@GetMapping(value="/update")
 	public String update() {
@@ -171,24 +173,21 @@ public class UserController {
 		try {
 
 			System.out.println("user_id : " +user_id);
-		      
+			String encoding;
 			byte[] bytes = userService.selectById(user_id).getUser_img();
 			if(bytes == null) {
+				encoding ="/resources/file.png";
 				entity = new ResponseEntity<>("/resources/file.png",HttpStatus.OK);
+			}else {
+			      Base64.Encoder encoder = Base64.getEncoder();
+			      encoding = "data:image/png;base64," + encoder.encodeToString(bytes);
+			      System.out.println("encoding : " + encoding);
 			}
-			System.out.println("blob : " +bytes);
-			System.out.println("blob : " +bytes.length);
 			
-		      ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-		      BufferedImage bImage2 = ImageIO.read(bis);
-		      ImageIO.write(bImage2, "png", new File("C:\\upload_data\\temp\\output.png") );
-		      System.out.println("image created");
-		      
-		      Base64.Encoder encoder = Base64.getEncoder();
-
-		      String encoding = "data:image/png;base64," + encoder.encodeToString(bytes);
-		      
-		      System.out.println("encoding : " + encoding);
+//		      ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+//		      BufferedImage bImage2 = ImageIO.read(bis);
+//		      ImageIO.write(bImage2, "png", new File("C:\\upload_data\\temp\\output.png") );
+//		      System.out.println("image created");
 		      
 			entity = new ResponseEntity<>(encoding,HttpStatus.OK);
 		}catch(Exception e) {
@@ -204,21 +203,13 @@ public class UserController {
 	public String updateUser(UserVO vo,@RequestParam("file") MultipartFile[] file){
 
 		try { 
-			System.out.println("file : " +file);
-			System.out.println("file getOriginalFilename : " +file[0].getOriginalFilename());
-			System.out.println("file get : " +file[0].getBytes().length);
-
-			System.out.println("file : " + file[0].getBytes().length);
-			
 			if(file[0].getBytes().length <= 0) {
 				vo.setUser_img(userService.select(vo.getUser_num()).getUser_img());
 			}else {
 		    vo.setUser_img(file[0].getBytes());
 			}
 			List<AuthVO> authList = authService.userAuthList(vo.getUser_id());
-			System.out.println("authList : " + authList.toString());
 			vo.setAvos(authList);
-			System.out.println("vo.getAvos : " + vo.getAvos());
 			
 			userService.update(vo);
 			return "redirect:/user/";
@@ -230,6 +221,7 @@ public class UserController {
 		
 		return "redirect:/user/";
 	}
+	
 	
 	@GetMapping(value="/delete")
 	public String delete() {
@@ -266,27 +258,28 @@ public class UserController {
 	}
 	
 	@PostMapping(value="/insert")
-	public String insertUser(UserVO vo) throws DataIntegrityViolationException{
+	public String insertUser(UserVO vo,String[] roles) throws DataIntegrityViolationException{
 
 		System.out.println("user_id : " + vo.getUser_id()); 
 		System.out.println("user_name : " + vo.getUser_name());
 
 		List<AuthVO> authList = new ArrayList<AuthVO>();
-		AuthVO auth = new AuthVO();
-		auth.setUser_id(vo.getUser_id());
-		auth.setAuthority("ROLE_ALL");
-		authList.add(auth);
+		for(String role : roles) {
+			AuthVO auth = new AuthVO();
+			auth.setUser_id(vo.getUser_id());
+			auth.setAuthority(role);
+			authList.add(auth);
 			
-		System.out.println("authList = " + auth.toString());
-		
+			System.out.println("authList = " + auth.toString());
+		}
 		
 		UserVO uavo = vo;
 		uavo.setAvos(authList);
 		
 		try {
 			userService.insert(uavo);
-
-			return "redirect:/user/";
+			
+			return "redirect:/user/userInfo/" + vo.getUser_id();
     	} catch(DataIntegrityViolationException e) {
     		System.out.println("DuplicateKeyException");
     	} catch(Exception e) {
@@ -312,13 +305,13 @@ public class UserController {
 	}
 
 	@PostMapping(value="/login")
-	public void loginUser(String username, String upw, HttpServletRequest request) {
+	public void loginUser(String uid, String upw, HttpServletRequest request) {
 		System.out.println("login post ");
-		System.out.println("uid : " + username);
+		System.out.println("uid : " + uid);
 		System.out.println("upw : " + upw);
 			
 
-		UserVO userInfo = userService.loginCheck(username, upw);
+		UserVO userInfo = userService.loginCheck(uid, upw);
 		
 
 		if(userInfo != null) {//구분해서 처리 예정
@@ -639,5 +632,126 @@ public class UserController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
 		return "redirect:/user/getAllUsers";
+		
 	}
-}
+	
+	//  note_sender --보내는 사람
+    //  note_recipient --받는 사람
+	
+	@GetMapping(value="/allNote/{login_id}")
+	public String allNote(@PathVariable("login_id") String login_id) {
+		return null;
+	}
+	
+	/////////////// 쪽지
+	// 쪽지 나 : 너					받는사람			보내는사람
+	/*
+	 * @GetMapping(value="/noteList/{note_recipient}/{note_sender}") public String
+	 * noteList(@PathVariable("note_recipient") String note_recipient,
+	 * 
+	 * @PathVariable("note_sender") String note_sender, Model model) { NoteVO vo =
+	 * new NoteVO(); vo.setNote_recipient(note_recipient);
+	 * vo.setNote_sender(note_sender); List<NoteVO> noteList =
+	 * noteService.getList(vo); model.addAttribute("noteList",noteList); return
+	 * "user/noteList";
+	 * 
+	 * }
+	 * 
+	 * // 쪽지 상세페이지
+	 * 
+	 * @GetMapping(value="noteDetail/{note_num}") public String
+	 * noteDetail(@PathVariable long note_num, Model model) { NoteVO note =
+	 * noteService.select(note_num); model.addAttribute("note", note);
+	 * model.addAttribute("note_num", note_num); return "user/noteDetail"; }
+	 * 
+	 * // 쪽지 작성 받는사람
+	 * 
+	 * @GetMapping(value="/noteInsert/{note_recipient}") public String
+	 * noteInsertForm(@PathVariable("note_recipient") String note_recipient, Model
+	 * model) { model.addAttribute("note_recipient", note_recipient); return
+	 * "user/noteForm"; }
+	 * 
+	 * @PostMapping(value="/noteInsert") public String noteInsert(String
+	 * note_recipient, String note_sender, NoteVO note) { log.warn(note);
+	 * System.out.println(note); noteService.insert(note); return
+	 * "redirect:/user/noteList/" +note_recipient+"/"+ note_sender; }
+	 * 
+	 * // 쪽지 삭제
+	 * 
+	 * @PostMapping(value="/noteDelete") public String notedelete(String
+	 * note_recipient,String note_sender,long note_num) {
+	 * noteService.delete(note_num);
+	 * 
+	 * return "redirect:/user/noteList/" +note_recipient+"/"+ note_sender; }
+	 */
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// insert
+	@ResponseBody
+	@PostMapping(value="/noteInsert", consumes="application/json",
+							produces= {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity<String> register(@RequestBody NoteVO vo){
+		ResponseEntity<String>entity = null;
+		try {
+			noteService.insert(vo);
+			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		}catch(Exception e) {
+
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}                                       
+		return entity;
+	}
+	
+	// 쪽지 창 detail
+	@GetMapping(value="/noteDetail/{note_sender}/{note_recipient}")
+	public String noteDetail(@PathVariable("note_sender") String note_sender,
+				@PathVariable("note_recipient") String note_recipient, Model model) {
+		model.addAttribute("note_recipient", note_recipient);
+		model.addAttribute("note_sender", note_sender);
+		return "user/noteDetail";
+	}
+		
+
+	
+	
+	
+	
+	
+	// 주고받은 쪽지 리스트
+	@GetMapping(value="/noteList/{note_sender}/{note_recipient}",
+			produces= {MediaType.APPLICATION_XML_VALUE,
+					 MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<List<NoteVO>> list(@PathVariable("note_sender") String note_sender, NoteVO vo){
+		ResponseEntity<List<NoteVO>> entity = null;
+		try {
+			entity = new ResponseEntity<>(noteService.getList(vo), HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace(); // 이게 있어야 에러를 콘솔에 찍을수 있음
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
+	
+	// delete
+	@DeleteMapping(value="/noteDelete)", produces = {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity<String> remove(String note_recipient,String note_sender,long note_num){
+		ResponseEntity<String> entity = null;
+		try {
+			noteService.delete(note_num);
+			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		}catch(Exception e) {
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+		}
+		return entity;
+	}
+	
+		
+	}

@@ -14,12 +14,11 @@
 		class="com.talk.security.Handler.CustomLoginSuccessHandler"/>
 		
 	<bean id="customUserDetailsService" 
-		class="com.talk.user.service.CustomUserDetailsService"/>
+		class="com.talk.security.Handler.CustomUserDetailsService"/>
 		
 	<bean id="bcryptPasswordEncoder" 
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 		
-	
 		
 	<security:http>
 		<!--   /secu/all로 접속시 모든 유저에게 접속 허용   -->
@@ -31,10 +30,11 @@
 		<!--   /secu/admin로 접속시 관리자 권한을 가진 유저에게만 접속 허용   -->
 		<security:intercept-url pattern="/secu/user/admin" access="hasRole('ROLE_ADMIN')"/>
 		
+		<!--   /secu/admin로 접속시 관리자 권한을 가진 유저에게만 접속 허용   -->
 		<security:intercept-url pattern="/user/userInfo" access="hasRole('ROLE_ALL')"/>
 		
 		<security:form-login 
-				username-parameter="username" 
+				username-parameter="uid" 
 				password-parameter="upw" 
 				login-page="/user/login" 
 				authentication-success-handler-ref="customLoginSuccess"/>
@@ -45,12 +45,17 @@
 		 <security:access-denied-handler ref="customAccessDenied"/>
 		 
 		 <security:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
+		
+		
 	</security:http>
 	
 	<security:authentication-manager>
 	
 		<security:authentication-provider
 			user-service-ref="customUserDetailsService">
+
+				
+				
 			<security:password-encoder ref="bcryptPasswordEncoder"/>
 		</security:authentication-provider>
 	</security:authentication-manager>

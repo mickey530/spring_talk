@@ -15,16 +15,11 @@
 	</delete>
 	
 	
-	<delete id="deleteAll">
-	
-		DELETE FROM img_file WHERE post_num = #{post_num}
-	</delete>
-	
-	
  	<update id="insert">
 		insert into img_file 
 		values (img_num.nextval,#{post_num}, #{file_name}, #{upload_path}, #{uuid},#{file_type})
 	</update>
+	
 	
  	<update id="update">
  	
