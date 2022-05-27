@@ -16,14 +16,14 @@
 	<hr/>
 	
 	<form action="/gallList" method="post">
-		<input type="hidden" name="gall_num"/>
-		<input type="text" name="gall_name" value="${gall_name }" placeholder="커뮤니티 이름"/>
+		<input type="text" name="gall_name" placeholder="커뮤니티명"/>
+		<input type="text" name="table_name" placeholder="테이블명(gall_?)"/>
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 		<input type="submit" value="리스트 생성">
 	</form>
 	
 	<form action="/create/{gall_name }" method="post">
-		<input type="text" name="gall_name" placeholder="커뮤니티 이름"/>
+		<input type="text" name="gall_name" placeholder="테이블명"/>
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 		<input type="submit" value="테이블 생성">
 	</form>

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+ <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,21 +46,22 @@
 	<div id="wrapper">
 		<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
 			<span class="col-11">IN & OUT 커뮤니티</span>
-			<a href="/post/insert" class="col-1 text-left text-white">+</a>
 		</header>
 		
 	<div class="container row">
-	
 		<table boarder="1" class="table table-hover">
 		      <thead>
 		        <tr>
-		          <th>커뮤니티 이름</th>	
+		          <th>커뮤니티 이름</th>
+		          <th>테이블명</th>	
 		        </tr>
 		      </thead>
 		      <tbody>
-		        <c:forEach var="gall" items="gall">
+		        <c:forEach var="gall" items="${vo }">
 		          <tr>
-		          	<td><a href="/gall/list/${gall_name }">${gall_name }</a></td>		  
+		          	<!--  <td><a href="/gall/list/${gall.gall_name }">${gall.gall_name }</a></td>	-->	
+		          	<td>${gall.gall_name }</td>
+		          	<td>${gall.table_name }</td>  
 		          </tr>
 		        </c:forEach>
 		      </tbody>
