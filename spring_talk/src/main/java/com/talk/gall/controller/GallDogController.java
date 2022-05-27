@@ -49,7 +49,10 @@ public class GallDogController {
 	
 	// 갤러리 구분해놓은 목록
 	@GetMapping("gallList")
-	public String gallList() {
+	public String gallList(String gall_name, Model model) {
+		List<GallListVO> gall = listservice.list(gall_name);
+		log.info(gall);
+		model.addAttribute("gall",gall);
 		return "gall/gallList";
 	}
 	
