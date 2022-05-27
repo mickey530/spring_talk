@@ -109,6 +109,8 @@ footer {
 				<img alt="프로필 사진" id="user_img" src="/resources/file.png">
 				<hr/>
 			</c:if>
+			<p>${user.user_comment }</p><br>
+		       		 
 		</div>
 	</div>
 	

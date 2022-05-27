@@ -33,6 +33,7 @@
 			<h2 class="card-title text-center" style="color:#113366;">로그인 폼</h2>
 		</div>
 		<div class="card-body">
+		
 		      <form action="/user/updateUser" class="form-signin" method="POST" enctype="multipart/form-data">
 		      
 					<div style="text-align:center;">
@@ -40,6 +41,8 @@
 						<img alt="프로필 사진" style=" margin-bottom:10px; width:200px; height:200px" id="user_img" class="user_img" src="/resources/file.png">
 						<div class="mb-3">
 						  <input id="file" name="file" class="form-control file_control" type="file" accept=".png">
+						  <input type="text"  name="user_comment" class="form-control" value="${user.user_comment }"  placeholder="상태 메시지" required ><br>
+		       		 
 						</div>
 					</div>
 		        <h5 class="form-signin-heading">로그인 정보를 입력하세요</h5>
@@ -47,6 +50,9 @@
 		        <p class="form-control">${user.user_id }</p><BR>
 		       	<input type="hidden" id="user_num" name="user_num" value="${user.user_num }">
 		       	<input type="hidden" id="user_id" name="user_id" value="${user.user_id }">
+		       	
+		       
+       
 		       
 		        <label for="inputPassword" class="sr-only">Password</label>
 		        <input type="password" id="user_pw" name="user_pw" class="form-control" placeholder="Password" required autofocus><br>
@@ -87,6 +93,7 @@ function setImage(data){
 
 function load_blob_img() {
 
+	console.log('${user}')
 	console.log("byte")
 	
 	

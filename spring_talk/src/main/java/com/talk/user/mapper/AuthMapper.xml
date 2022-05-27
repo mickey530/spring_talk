@@ -12,6 +12,8 @@
 		<result property="last_name" column="last_name" />
 		<result property="user_age" column="user_age" />
 		<result property="phone_num" column="phone_num" />
+		<result property="user_comment" column="user_comment" />
+		
 		<collection property="avos" resultMap="authMap" javaType="ArrayList"></collection>
 	</resultMap>
 	

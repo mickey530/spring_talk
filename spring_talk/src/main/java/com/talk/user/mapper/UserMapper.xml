@@ -41,7 +41,8 @@
 		last_name = #{last_name}, 
 		user_age = #{user_age}, 
 		phone_num = #{phone_num},
-		user_img = #{user_img}
+		user_img = #{user_img},
+		user_comment = #{user_comment}
 		WHERE user_num=#{user_num}
 	</update>
 </mapper>

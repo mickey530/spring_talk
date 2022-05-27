@@ -12,7 +12,7 @@ public interface ImageFileMapper {
 
 	public void insert(ImageFileVO vo);
 	
-	public void delete(@Param("file_num")long file_num);
+	public void deleteAll(@Param("post_num")long post_num);
 
 	public void update(@Param("vos") List<ImageFileVO> vos);
 	

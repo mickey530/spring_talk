@@ -342,6 +342,29 @@ public class UserController {
 	
 	//팔로우, 밴 단
 
+	// check Friend
+	@PostMapping(value="/isFriend")
+	
+	public ResponseEntity<String> isFriend(@RequestBody FollowVO vo){
+		System.out.println("isFriend vo : " + vo.toString());
+		
+		ResponseEntity<String> entity= null;
+
+		String favorite = "NO";
+		try {
+			if(followService.checkFavorite(vo)) {
+				favorite = "YES";
+			}
+			entity = new ResponseEntity<>(favorite,HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(favorite,HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("countFollower : "+ entity);
+		return entity;
+	}
+	
+	
 
 	// count follower
 	@GetMapping(value="/countFollower/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
@@ -745,6 +768,23 @@ public class UserController {
 		ResponseEntity<String> entity = null;
 		try {
 			noteService.delete(note_num);
+			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		}catch(Exception e) {
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+		}
+		return entity;
+	}
+	
+	
+	//권한 추가 메서드
+
+	@PostMapping(value="/addAuth)", produces = {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity<String> addAuth(String user_id,String authName){
+		ResponseEntity<String> entity = null;
+		try {
+			UserVO vo = userService.selectById(user_id);
+			authService.insert(vo);
 			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 		}catch(Exception e) {
 			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
