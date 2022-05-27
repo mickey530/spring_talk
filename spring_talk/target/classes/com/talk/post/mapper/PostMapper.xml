@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.talk.post.mapper.PostMapper">
+	<insert id="insert">
+	
+		<selectKey keyProperty="post_num" order="BEFORE" resultType="long">
+			SELECT post_num.nextval from dual
+		</selectKey>
+		INSERT INTO post (post_num, title, content, writer)
+			VALUES
+		(#{post_num}, #{title}, #{content}, #{writer})
+	</insert>
+
+	<select id="select" resultType="com.talk.post.domain.PostVO">
+		SELECT * FROM post WHERE post_num=#{post_num}
+	</select>
+
+	<delete id="delete">
+		DELETE FROM post WHERE post_num=#{post_num}
+	</delete>
+	
+	<update id="update">
+		UPDATE post 
+			SET 
+		title=#{title}, content=#{content}, m_date=SYSDATE 
+			WHERE 
+		post_num=#{post_num}
+	</update>
+	
+	<select id="getAllPost" resultType="com.talk.post.domain.PostVO">
+		<![CDATA[
+		SELECT * FROM
+			(SELECT /*+ INDEX_DESC(post pk_post_post_num) */ rownum rn, post.* FROM post WHERE rownum <= #{page_num}*#{number})
+		WHERE rn > (#{page_num}-1)*#{number}
+		]]>
+	</select>
+	
+	<select id="getUserPost" resultType="com.talk.post.domain.PostVO">
+		<![CDATA[
+		SELECT * FROM
+			(SELECT /*+ INDEX_DESC(post pk_post_post_num) */ rownum rn, post.* FROM post WHERE writer = #{writer} AND rownum <= #{page_num}*#{number})
+		WHERE rn > (#{page_num}-1)*#{number}
+		]]>
+	</select>
+	
+	<select id="getFollowingPost" resultType="com.talk.post.domain.PostVO">
+		<![CDATA[
+		SELECT * FROM
+			(SELECT /*+ INDEX_DESC(post pk_post_post_num) */ rownum rn, post.* FROM post WHERE writer IN
+			(SELECT Followed FROM FOLLOW WHERE FOLLOWER = #{login_id}) AND rownum <= #{page_num}*#{number})
+		WHERE rn > (#{page_num}-1)*#{number}
+		]]>
+	</select>
+	
+	<update id="updateReplyCount">
+		UPDATE post
+			SET
+		replycount = replycount + #{amount} WHERE post_num = #{post_num}
+	</update>
+	
+		
+	<update id="updateLikeCount">
+		UPDATE post
+			set
+		like_count = like_count + #{amount} WHERE post_num = #{post_num}	
+	</update>
+</mapper>

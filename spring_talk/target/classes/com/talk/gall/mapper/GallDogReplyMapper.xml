@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC	 "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.talk.gall.mapper.GallDogReplyMapper">
+	
+	<select id="getList" parameterType="com.talk.gall.domain.GallDogReplyVO" resultType="com.talk.gall.domain.GallDogReplyVO">
+		SELECT * FROM ${gall_name}_reply
+			WHERE board_num = #{board_num}
+		ORDER BY reply_num DESC
+	</select>
+	
+	<insert id="create" parameterType="string">
+		INSERT INTO ${gall_name}_reply
+		(reply_num, board_num, reply_content, writer)
+			VALUES
+		(reply_num.nextval, #{board_num}, #{reply_content}, #{writer})
+	</insert>
+	
+	<select id="update" parameterType="string">
+		UPDATE ${gall_name}_reply 
+			SET	
+		reply_content = #{reply_content}, m_date = SYSDATE	
+		WHERE reply_num = #{reply_num}
+	</select>
+	
+	<delete id="delete" parameterType="string">
+		DELETE FROM ${gall_name}_reply
+			WHERE reply_num = #{reply_num}
+	</delete>
+	
+	<select id ="getBoard_num" parameterType="string" resultType="long">
+		SELECT board_num FROM ${gall_name}_reply
+			WHERE reply_num = #{reply_num}
+	</select>
+	
+	<delete id = "deleteAllReplies" parameterType="string">
+		 delete from ${gall_name}_reply
+		 	WHERE board_num = #{board_num}
+	</delete>
+
+</mapper>
+	

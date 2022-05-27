@@ -9,5 +9,4 @@ public class GallDogLikeVO {
 
 	 private int board_num;
 	 private String user_id;
-	 private Date like_date;
 }

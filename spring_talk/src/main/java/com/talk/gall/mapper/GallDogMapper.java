@@ -29,10 +29,7 @@ public interface GallDogMapper {
 	public void updateLikeCount(@Param("board_num") Long board_num,
 			@Param("amount") int amount);
 	
-	public int countPageNum(SearchCriteria cri);
-
-
-	
+	public int countPageNum(SearchCriteria cri);	
 }
 
 // PostMapper.java 참조

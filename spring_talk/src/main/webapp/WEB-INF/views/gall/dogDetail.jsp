@@ -72,22 +72,23 @@ opacity : 0.95;
 </sec:authorize>
 
 <div id="wrapper">
-	<header class="sticky-top p-3 bg-primary text-white border-bottom row" style="margin:0px;">
-		<span class="col-11">${dog.writer }'s post</span>
-		<a href="/post/insert" class="col-1 text-left text-white">+</a>
-	</header>
 
 	<div class="container" >
-<div>
+	<div>
 	<h2>${dog.board_num  }번 게시글</h2>
 	<p>작성자 : ${dog.writer }</p>
 	<p>제목 : ${dog.board_title }</p>
+	
+	
 	<p id="content">내용 : ${dog.board_content }</p>
 	<div>
-		<c:if test="${login_id ne null}">
-			<button class="btn btn-outline-danger" id="postLike"><span>${post.like_count}</span>♡</button>
+		<c:if test="${login_id ne dog.writer}">
+				<button class="btn btn-outline-danger" id="boardLike">♡</button>
 		</c:if>
 		<c:if test="${login_id eq dog.writer}">
+		<div>
+			<button class="btn btn-outline-danger" id="boardLike">♡</button>
+		
 			<form action="/gall/updateForm/${gall_name }/${dog.board_num}" method="get">
 				<input type="submit" class="btn" value="수정">
 				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
@@ -96,6 +97,7 @@ opacity : 0.95;
 				<input type="submit" class="btn" value="삭제">
 				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 			</form>
+		</div>
 		</c:if>
 		<%-- <a href="/report/post/${dog.board_num}" class="btn btn-outline-dark">신고🚨</a> --%>
 		
@@ -103,8 +105,8 @@ opacity : 0.95;
 </div>
 
 <hr/>
-<h3>댓글 <span id="replyCount">${dog.replycount }</span>개</h3>
-	<hr/>	
+<p>좋아요 <span id="likeCount">${dog.like_count}</span>개 / 댓글 <span id="replyCount">${dog.replycount }</span>개</p>
+<hr/>	
 
 	
 
@@ -154,9 +156,9 @@ opacity : 0.95;
 
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
      <a href="/user/follow" class="col-2">팔로우</a>
-     <a href="#" class="col-2">채팅</a>
+     <a href="/chatting/chat" class="col-2">채팅</a>
      <a href="/post/newsfeed" class="col-2">피드</a>
-     <a href="#" class="col-2">커뮤</a>
+     <a href="/gall/gallLis" class="col-2">커뮤</a>
      <a href="/user/room/${login_id }" class="col-2">마이룸</a>
 </footer>
 
@@ -211,14 +213,14 @@ opacity : 0.95;
 					
 										
 										formattedTime += '&nbsp;';
-									//	+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
+										+ "<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
 										
 					str += "<div class='replyLi p-2' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>"
 						+ "<a href='/user/room/" + this.writer + "'>@"+this.writer + "</a></strong> : " /* + formattedTime */
 						+ "<span class='reply_content'>" + this.reply_content 
 						+ "</span>"
 						+ "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>"
-						+"<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
+						+ "<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
 						
 						+ "</div>";												
 				});
@@ -291,7 +293,7 @@ opacity : 0.95;
 								+ "<span class='reply_content'>" + reply_content 
 								+ "</span>"
 								+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
-								+"<button class='btn btn-outline-danger' id='postLike'>좋아요</button>"
+								+"<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
 								
 								+ "</div>"		
 					)
@@ -433,32 +435,11 @@ opacity : 0.95;
 				}
 			}
 		});
-		};
-		
-		// 답글달기
-		</script>
-        
-        
-        <script type="text/javascript"> 
-        var content = document.getElementById('content').innerHTML;
-    	console.log(content)
-    	var splitedArray = content.split(' '); // 공백을 기준으로 문자열을 자른다.
-    	var linkedContent = '';
-    	for(var word in splitedArray)
-    	{
-    	  word = splitedArray[word];
-    	   if(word.indexOf('#') == 0) // # 문자를 찾는다.
-    	   {
-    	      word = '<a href=\#>'+word+'</a>'; 
-    	   }
-    	   linkedContent += word+' ';
-    	}
-    	document.getElementById('content').innerHTML = linkedContent;
-    		
-    		
-            
+		};            
          // 좋아요 유무 확인	
-       	 function isLike(){
+       	 function isLike(board_num){
+   		 	let login_id = '${login_id}';
+       
        		 $.ajax({
        				type : 'post',
        				url : '/gall/islike',
@@ -479,7 +460,7 @@ opacity : 0.95;
         					$("#boardLike").addClass("board-liked");
        						$("#boardLike").removeClass("board-like");
        						$("#boardLike").addClass("btn-danger");
-       						$("#boardLike").removeClass("/* -outline-danger");
+       						$("#boardLike").removeClass("btn-outline-danger");
        					} else{
        						$("#boardLike").addClass("board-like");
        						$("#boardLike").removeClass("board-liked");
@@ -490,22 +471,23 @@ opacity : 0.95;
        				}
        				/* error도 설정 가능 */
        			});
-       	 } /* isLike()
-       	 */
+       	 } isLike();
 
        	// 좋아요 버튼 클릭 시 
        	 $("#boardLike").on("click", function(){
-       			let likeCount = $("#boardLike").children().html();
-       			console.log(parseInt(likeCount));
+       	    	
+       			let likeCount = $("#likeCount").text();
+       			console.log(gall_name);
+       			console.log(login_id);
        			if($("#boardLike").hasClass("board-like")){
-       				$("#boardLike").children().html(parseInt(likeCount)+1);
+       				$("#likeCount").html(parseInt(likeCount)+1);
        			} else{
-       				$("#boardLike").children().html(parseInt(likeCount)-1);
+       				$("#likeCount").html(parseInt(likeCount)-1);
        			}
        			
        			$.ajax({
        				type : 'post',
-       				url : '/{gall_name}/gall/like',
+       				url : '/gall/'+gall_name+'/like',
        				headers : {
        					"Content-Type" : "application/json",
        					"X-HTTP-Method-Override" : "POST"
@@ -515,7 +497,6 @@ opacity : 0.95;
        	                xhr.setRequestHeader(_csrf_header, _csrf);
        	            },
        				data : JSON.stringify({
-       					gall_name : gall_name,
        					board_num : board_num,
        					user_id : login_id
        				}),

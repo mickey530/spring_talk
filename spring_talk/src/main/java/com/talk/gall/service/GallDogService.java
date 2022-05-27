@@ -20,7 +20,7 @@ public interface GallDogService {
 	public void upHit(GallDogVO vo);
 	
 	public int countPageNum(SearchCriteria cri);
-	
+
 	}
 
 

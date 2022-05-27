@@ -2,7 +2,6 @@ package com.talk.gall.controller;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,11 +12,12 @@ import org.springframework.ui.Model;
 import com.talk.gall.domain.SearchCriteria;
 import com.talk.gall.domain.GallDogLikeVO;
 import com.talk.gall.domain.GallDogVO;
+import com.talk.gall.domain.GallListVO;
 import com.talk.gall.domain.PageMaker;
 import com.talk.gall.service.GallDogLikeService;
 import com.talk.gall.service.GallDogReplyService;
 import com.talk.gall.service.GallDogService;
-
+import com.talk.gall.service.GallListService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 
 import lombok.extern.log4j.Log4j;
 
@@ -42,14 +43,15 @@ public class GallDogController {
 	@Autowired
 	GallDogLikeService doglikeservice;
 	
+	@Autowired
+	GallListService listservice;
+	
 	
 	// 갤러리 구분해놓은 목록
 	@GetMapping("gallList")
 	public String gallList() {
 		return "gall/gallList";
 	}
-	
-	
 	
 	// 게시글 작성 http://localhost:8181/gall/insert/gall_dog
 	@GetMapping("/insert/{gall_name}" )
@@ -59,12 +61,12 @@ public class GallDogController {
 	@PostMapping("/insert/{gall_name}")
 	public String insert(@PathVariable("gall_name") String gall_name, GallDogVO vo) {
 		service.insert(vo);
-		return "redirect:/gall/dogList/"+ gall_name;
+		return "redirect:/gall/list/"+ gall_name;
 	}
 	
 	
 	
-	// 게시글 목록 http://localhost:8181/gall/dogList/gall_dog
+	// 게시글 목록 http://localhost:8181/gall/list/gall_dog
 	@GetMapping("/list/{gall_name}")
 	public String dogList(@PathVariable("gall_name") String gall_name, SearchCriteria cri, Model model) {
 		List<GallDogVO> dogList = service.allList(gall_name);
@@ -78,7 +80,7 @@ public class GallDogController {
 		
 		return "gall/dogList";
 	}
-	
+
 	
 	// 게시글 상세 http://localhost:8181/gall/detail/gall_dog
 	@GetMapping("/detail/{gall_name}/{board_num}")
@@ -92,13 +94,12 @@ public class GallDogController {
 	}
 
 	
-	
 	// 게시글 삭제
 	@PostMapping("delete/{gall_name}/{board_num}")
 	public String delete(@PathVariable long board_num, @PathVariable("gall_name") String gall_name, GallDogVO vo, Model model) {
 		service.delete(vo);
 		log.info(gall_name);
-		return "redirect:/gall/dogList/" + gall_name;
+		return "redirect:/gall/list/" + gall_name;
 	}
 	
 	
@@ -154,10 +155,11 @@ public class GallDogController {
 		
 		// 좋아요
 		@PostMapping(value="/{gall_name}/like", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
-		public ResponseEntity <String> like(@RequestBody GallDogLikeVO vo){
+		public ResponseEntity <String> like(@PathVariable("gall_name")String gall_name, GallDogLikeVO vo){
+			System.out.println("vo : "+vo.toString());
 			ResponseEntity<String> entity= null;
 			try {
-				doglikeservice.like(vo);
+					doglikeservice.like(vo);		
 				entity = new ResponseEntity<String>("OK", HttpStatus.OK);
 			}catch(Exception e) {
 				entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
