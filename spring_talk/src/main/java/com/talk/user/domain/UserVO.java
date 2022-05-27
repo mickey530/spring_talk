@@ -14,5 +14,6 @@ public class UserVO {
 	private String last_name = "";
 	private String user_age = "";
 	private String phone_num = "";
+	private byte[] user_img ;
 	private List<AuthVO> avos ;
 }

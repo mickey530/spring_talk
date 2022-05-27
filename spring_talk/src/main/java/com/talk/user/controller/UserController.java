@@ -3,6 +3,7 @@ package com.talk.user.controller;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
@@ -153,28 +155,62 @@ public class UserController {
 		return entity;
 	}
 	
+
 	
 	@GetMapping(value="/update")
-	public String update(String uid,
-			Model model) {
-		
-		System.out.println("uid : " + uid);
-		
-		UserVO user = userService.selectById(uid);
-		
-		model.addAttribute("userInfo",user);
-
+	public String update() {
 		return "/user/updateForm";
 	}
 	
-	@GetMapping(value="/updateUser")
-	public String updateUser(
-				UserVO vo, 
-				Model model)
-			throws DataIntegrityViolationException
-	{
+
+	@GetMapping(value="/getByte/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<String> getByte(@PathVariable("user_id")String user_id){
+		
+		ResponseEntity<String> entity= null;
 		
 		try {
+
+			System.out.println("user_id : " +user_id);
+			String encoding;
+			byte[] bytes = userService.selectById(user_id).getUser_img();
+			if(bytes == null) {
+				encoding ="/resources/file.png";
+				entity = new ResponseEntity<>("/resources/file.png",HttpStatus.OK);
+			}else {
+			      Base64.Encoder encoder = Base64.getEncoder();
+			      encoding = "data:image/png;base64," + encoder.encodeToString(bytes);
+			      System.out.println("encoding : " + encoding);
+			}
+			
+//		      ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+//		      BufferedImage bImage2 = ImageIO.read(bis);
+//		      ImageIO.write(bImage2, "png", new File("C:\\upload_data\\temp\\output.png") );
+//		      System.out.println("image created");
+		      
+			entity = new ResponseEntity<>(encoding,HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("getByte : "+ entity);
+		return entity;
+	}
+	
+
+	@PostMapping(value="/updateUser")
+	public String updateUser(UserVO vo,@RequestParam("file") MultipartFile[] file){
+
+		try { 
+			if(file[0].getBytes().length <= 0) {
+				vo.setUser_img(userService.select(vo.getUser_num()).getUser_img());
+			}else {
+		    vo.setUser_img(file[0].getBytes());
+			}
+			List<AuthVO> authList = authService.userAuthList(vo.getUser_id());
+			vo.setAvos(authList);
+			
 			userService.update(vo);
 			return "redirect:/user/";
     	} catch(DataIntegrityViolationException e) {
@@ -185,6 +221,7 @@ public class UserController {
 		
 		return "redirect:/user/";
 	}
+	
 	
 	@GetMapping(value="/delete")
 	public String delete() {
@@ -682,11 +719,6 @@ public class UserController {
 	}
 		
 
-	
-	
-	
-	
-	
 	// 주고받은 쪽지 리스트
 	@GetMapping(value="/noteList/{note_sender}/{note_recipient}",
 			produces= {MediaType.APPLICATION_XML_VALUE,
@@ -718,5 +750,4 @@ public class UserController {
 	
 		
 	}
-	
 

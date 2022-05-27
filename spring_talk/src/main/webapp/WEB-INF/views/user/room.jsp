@@ -47,6 +47,11 @@
 	  text-align:center;
 	  color: black;
   }
+  
+  #user_img{
+  	width: 300px;
+  	
+  }
  #sideMenu > ul > li > a{
  	color: white;
  }
@@ -90,14 +95,29 @@ footer {
 </header>
 <div class="container">
 
+
+
+	<div id="profile_img">
+	
+		<div>
+			<c:if test="${login_id ne 'null' && login_id eq user.user_id}">
+				<a href="/user/update" title="프로필 사진 추가" >
+					<img alt="프로필 사진 추가" id="user_img" src="/resources/file.png">
+				</a>
+			</c:if>
+			<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
+				<img alt="프로필 사진" id="user_img" src="/resources/file.png">
+				<hr/>
+			</c:if>
+		</div>
+	</div>
+	
 	<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
 		팔로워 : <span id="followNum"></span>명<button id="follow">팔로</button>
 		<button id="ban">응 차단~</button>
 	</c:if>
 	
-	
 	<hr/>
-	
 	<div class="container">
 		<div class="post row">
 	
@@ -370,6 +390,49 @@ footer {
 				}
 			});
 	 });
+
+
+//	 유저 이미지 불러오는 함수
+	 
+	 function setImage(data){
+	     const previewImage = document.getElementById("user_img")
+	     previewImage.src = data
+	 }
+	 
+	 function load_blob_img() {
+		 	
+		 		$.ajax({
+		 			url: '/user/getByte/${user.user_id}',
+		 			processData: false,
+		 			contentType: false,
+		 			type:"get",
+		 			beforeSend : function(xhr) {
+		 			 xhr.setRequestHeader(_csrf_header, _csrf);
+		 			},
+		 			success: function(result){
+			 			console.log("success")
+			 			console.log("result")
+			 			console.log(result)
+			 			console.log("data")
+			 			console.log(data.responseText)
+			 			setImage(data.responseText)
+		 			},
+		 			
+		 		}).fail(function(data, textStatus, errorThrown){
+		 			console.log("fail")
+		 			console.log("data")
+		 			console.log(data.responseText)
+		 			setImage(data.responseText)
+		 		}).done(function(data, textStatus, errorThrown){
+		 			console.log("done")
+		 			console.log("data")
+		 			console.log(data.responseText)
+		 			setImage(data.responseText)
+		 		}); // ajax
+
+		 };
+		 
+	load_blob_img();
 	 </script>
 	
 	

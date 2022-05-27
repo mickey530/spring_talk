@@ -73,7 +73,7 @@
 				<button onclick="location.href='/user/logout'">로그아웃</button>
 				<button onclick="location.href='/user/delete'">탈퇴</button>
 				<button onclick="location.href='/user/getAllUsers'">전체 회원 조회</button>
-				<button onclick="location.href='/user/update?uid=${princ.username}'">회원정보 수정</button>
+				<button onclick="location.href='/user/update'">회원정보 수정</button>
 				<button onclick="location.href='/user/userInfo/${user_id}'">회원정보 확인</button>
 			</c:if>
 			
