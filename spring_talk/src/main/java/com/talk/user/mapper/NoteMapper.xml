@@ -10,8 +10,14 @@
 </select> -->
 
 <select id ="getList" resultType="com.talk.user.domain.NoteVO">
+	<!-- SELECT * FROM note
+		WHERE note_recipient = #{note_recipient} and note_sender = #{note_sender}
+		or note_recipient = #{note_sender} and note_sender = #{note_recipient}
+		order by note_num  -->
+	
 	<![CDATA[
-		SELECT * FROM note
+		
+	SELECT * FROM note
 		WHERE note_recipient = #{note_recipient} and note_sender = #{note_sender}
 		or note_recipient = #{note_sender} and note_sender = #{note_recipient}
 		order by note_num
