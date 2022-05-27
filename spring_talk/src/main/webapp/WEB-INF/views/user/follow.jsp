@@ -93,35 +93,40 @@ footer {
 <a href="/post/insert" class="col-1 text-left text-black">+</a>
 </header>
 <div class="container">
-<!-- <div id="followList">
-
-
-</div> -->
-
-<br/>
+		
+		<div class="followList followMenu">
+			<div class="subTitle my-3">
+				<a>내가 팔로우하는 사람</a>
+	<hr/>
+			</div>			
+			<ul class="p-0"></ul>
+		
+		</div>
+	
 		<div class="followerList followMenu">
 		
-			<div class="subTitle">
-				<a>팔로우하는 사람</a>
-			</div>			
-			<ul></ul>
-		</div>
+			<div class="subTitle my-3">
+				<a>나를 팔로우하는 사람</a>
 	<hr/>
+			</div>			
+			<ul class="p-0"></ul>
+		</div>
 		<div class="freindList followMenu">
 		
-			<div class="subTitle">
+			<div class="subTitle my-3">
 			
 				<a>맞팔된 사람 목록</a>
-			</div>
-			<ul></ul>
-		</div>
 	<hr/>
+			</div>
+			<ul class="p-0"></ul>
+		</div>
 		<div class="favoriteList followMenu">
 		
-			<div class="subTitle">
+			<div class="subTitle my-3">
 				<a>즐겨찾기</a>
+	<hr/>
 			</div>
-			<ul></ul>
+			<ul class="p-0"></ul>
 		</div>
 	</div>
 	
@@ -183,35 +188,38 @@ footer {
 	
 	 
 	 // 팔로잉
-	 followed_id = "";
 
-	 /* function followed(){
+	  function followed(){
 		$.getJSON("/user/followed/" + login_id, function(data){
+			follow = "";
 
 			console.log(data);
  			$(data).each(
 				function() {
-					followed_id += "<div class='row'><span class='col-9 data-followed='" + this.followed + "'>"
-								+ "<a href='/user/room/"+this.followed+"'>"+this.followed+"</a></span>"
-								+ "<button class='col-2 btn btn-sm btn-primary'>팔로잉</button></div>";
-								
-
+					follow += "<li class='w-100'><div class='d-flex justify-content-between' data-follower='"+this.followed+"'><p class='follower m-0'>"
+					+ "<a href='/user/room/" + this.followed + "'>"
+					+ this.followed +"</a></p>"
+					+ "<div class='d-flex'><button class='btn btn-sm btn-primary m-1'>팔로잉</button>";
+					console.log("favorite "+this.followed+" : "+this.favorite);
+					
 					if(this.favorite == 'Y'){
 
-						followed_id += "<button class='btn btn-sm btn-danger favorite'>☆ 즐겨찾기</button>";
-					}else{
+						follow += "<button class='btn btn-sm btn-danger favorite m-1'>☆ 즐겨찾기</button>";
+					}
+					else{
 
-						followed_id += "<button class='btn btn-sm btn-outline-danger favorite'>☆ 즐겨찾기</button>";
+						follow += "<button class='btn btn-sm btn-outline-danger favorite m-1'>☆ 즐겨찾기</button>";
 					}
 					
-					followed_id += "<hr/>";
+					follow += "</div></div></li>"
+					
 					console.log(this.followed);
 				}
 			
 			); 
-			$("#followList").html("<br/>" + followed_id);			
+			$(".followList > ul").html(follow);			
 		});
-	 } followed(); */
+	 } followed();
 	 
 
 	 function getFollower(){
@@ -224,22 +232,22 @@ footer {
 			
 			$(data).each(
 				function() {
-						follower += "<li><div class='col-4' data-follower='"+this.follower+"'><p class='follower'>"
+						follower += "<li class='w-100'><div class='d-flex justify-content-between' data-follower='"+this.follower+"'><p class='follower m-0'>"
 						+ "<a href='/user/room/" + this.follower + "'>"
 						+ this.follower +"</a></p>"
-						+ "<button class='col-4 btn btn-sm btn-primary'>팔로잉</button>";
+						+ "<div class='d-flex'><button class='btn btn-sm btn-primary m-1'>팔로잉</button>";
 						console.log("favorite "+this.follower+" : "+this.favorite);
 						
 						if(this.favorite == 'Y'){
 
-							follower += "<button class='btn btn-sm btn-danger favorite'>☆ 즐겨찾기</button>";
+							follower += "<button class='btn btn-sm btn-danger favorite m-1'>☆ 즐겨찾기</button>";
 						}
 						else{
 
-							follower += "<button class='btn btn-sm btn-outline-danger favorite'>☆ 즐겨찾기</button>";
+							follower += "<button class='btn btn-sm btn-outline-danger favorite m-1'>☆ 즐겨찾기</button>";
 						}
 						
-						follower += "</div></li><br/>"
+						follower += "</div></div></li>"
 				});
 			$(".followerList > ul").html(follower);			
 		});
@@ -275,6 +283,27 @@ footer {
 			
 			$(data).each(
 				function() {
+						follower += "<li class='w-100'><div class='d-flex justify-content-between' data-follower='"+this.user_id+"'><p class='follower m-0'>"
+						+ "<a href='/user/room/" + this.user_id + "'>"
+						+ this.user_id +"</a></p>"
+						+ "<div class='d-flex'><button class='btn btn-sm btn-primary m-1'>팔로잉</button>";
+						console.log("favorite "+this.follower+" : "+this.favorite);
+						
+						if(this.favorite == 'Y'){
+	
+							follower += "<button class='btn btn-sm btn-danger favorite m-1'>☆ 즐겨찾기</button>";
+						}
+						else{
+	
+							follower += "<button class='btn btn-sm btn-outline-danger favorite m-1'>☆ 즐겨찾기</button>";
+						}
+						
+						follower += "</div></div></li>"
+
+					
+					
+					
+					
 						follower += "<li><div class='col-2'><p class='favorite'>"
 						+ "<a href='/user/room/" + this.user_id + "'>"
 						+ this.user_name +"</a></p></div></li><br/>"
@@ -308,6 +337,7 @@ footer {
 					}
 				}
 			});
+			console.log(${login_id})
 		});
 	 // 밴 기능
 	 $("#ban").on("click", function(){
