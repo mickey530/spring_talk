@@ -304,9 +304,7 @@ footer {
 					
 					
 					
-						follower += "<li><div class='col-2'><p class='favorite'>"
-						+ "<a href='/user/room/" + this.user_id + "'>"
-						+ this.user_name +"</a></p></div></li><br/>"
+						follower += "</div></div></li>"
 				});
 			$(".favoriteList > ul").html(follower);			
 		});

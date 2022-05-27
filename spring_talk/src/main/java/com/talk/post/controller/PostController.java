@@ -76,8 +76,8 @@ public class PostController {
 	@Autowired
 	private AdService adService;
 	
-//	public final String uploadFolder = "/Users/user/upload_data/temp/";
-	public final String uploadFolder = "c:\\upload_data\\temp\\";
+	public final String uploadFolder = "/Users/user/upload_data/temp/";
+//	public final String uploadFolder = "c:\\upload_data\\temp\\";
 	
 	@GetMapping("/insert")
 	public String insert() {
@@ -110,7 +110,7 @@ public class PostController {
 		replyService.removeAllReply(post_num);
 		service.delete(post_num);
 		log.info(post_num + "번 게시글 삭제되었습니다.");
-		return "redirect:post/newsfeed"; // 나중에 마이룸으로 리다이렉트 예정
+		return "redirect:/post/newsfeed"; // 나중에 마이룸으로 리다이렉트 예정
 	}
 	
 	@GetMapping("updateForm/{post_num}")

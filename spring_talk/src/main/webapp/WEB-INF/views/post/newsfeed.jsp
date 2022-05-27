@@ -549,7 +549,7 @@ footer {
 			             + "<img src='https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj' alt='mdo' width='32' height='32' class='rounded-circle cardHeader'>"
 			             + "<a href='/user/room/" + this.company + "' class='nav-link px-2 link-dark fw-bold cardHeader'>" + this.company + "</a>"
 			             + "</div>"
-			             + "<div id='img' href='/post/detail/" + this.ad_num + "'><img src='/resources/logo.png' class='upload_img w-100'></div>"
+			             + "<div id='img'class='border-top border-bottom' href='/post/detail/" + this.ad_num + "'><a href='/pay'><img src='/resources/logo.png' class='upload_img w-100'></a></div>"
 			          	 + "<div class='card-menu py-2' style='margin-left: 0px;'>"
 			          	 + "</div>"
 

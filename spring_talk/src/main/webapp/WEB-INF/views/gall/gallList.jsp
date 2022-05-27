@@ -70,6 +70,9 @@ footer {
 <title>Insert title here</title>
 </head>
 <body>
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.user.user_id" var="login_id"/>
+</sec:authorize>
 	<div id="wrapper">
 		<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
 			<h3 class="col-11 px-0">IN n OUT</h3>
