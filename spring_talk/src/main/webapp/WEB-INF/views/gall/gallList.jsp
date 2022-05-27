@@ -57,10 +57,9 @@
 		        </tr>
 		      </thead>
 		      <tbody>
-		        <c:forEach var="gall" items="${vo }">
+		        <c:forEach var="gall" items="${gall }">
 		          <tr>
-		          	<!--  <td><a href="/gall/list/${gall.gall_name }">${gall.gall_name }</a></td>	-->	
-		          	<td>${gall.gall_name }</td>
+		          	<td><a href="/gall/list/${gall.table_name }">${gall.gall_name }</a></td>
 		          	<td>${gall.table_name }</td>  
 		          </tr>
 		        </c:forEach>
