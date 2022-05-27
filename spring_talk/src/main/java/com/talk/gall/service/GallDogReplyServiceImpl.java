@@ -5,39 +5,39 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.talk.gall.domain.GallReplyVO;
-import com.talk.gall.mapper.GallMapper;
-import com.talk.gall.mapper.GallReplyMapper;
+import com.talk.gall.domain.GallDogReplyVO;
+import com.talk.gall.mapper.GallDogMapper;
+import com.talk.gall.mapper.GallDogReplyMapper;
 
 @Service
-public class GallReplyServiceImpl implements GallReplyService {
+public class GallDogReplyServiceImpl implements GallDogReplyService {
 	
 	@Autowired
-	private GallReplyMapper replymapper;
+	private GallDogReplyMapper replymapper;
 	
 	@Autowired
-	private GallMapper boardmapper;
+	private GallDogMapper boardmapper;
 
 	@Override
-	public List<GallReplyVO> listReply(GallReplyVO vo) {
+	public List<GallDogReplyVO> listReply(GallDogReplyVO vo) {
 		return replymapper.getList(vo);
 	}
 
 	@Override
-	public void addReply(GallReplyVO vo) {
+	public void addReply(GallDogReplyVO vo) {
 		replymapper.create(vo);
 		boardmapper.updateReplyCount(vo.getGall_name(), vo.getBoard_num(), 1);
 		
 	}
 
 	@Override
-	public void modifyReply(GallReplyVO vo) {
+	public void modifyReply(GallDogReplyVO vo) {
 		replymapper.update(vo);
 		
 	}
 
 	@Override
-	public void removeReply(GallReplyVO vo) {
+	public void removeReply(GallDogReplyVO vo) {
 		replymapper.delete(vo);
 //		boardmapper.updateReplyCount(vo.getGall_name(), vo.getBoard_num(), -1);
 

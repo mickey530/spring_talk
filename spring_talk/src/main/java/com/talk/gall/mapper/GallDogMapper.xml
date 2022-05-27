@@ -9,8 +9,28 @@
 			<if test="searchType == 't'.toString()">
 				(TITLE like '%'||#{keyword}||'%') AND
 			</if>
+			<if test="searchType == 'c'.toString()">
+				(CONTENT like '%'||#{keyword}||'%') AND
+			</if>
 			<if test="searchType == 'w'.toString()">
 				(WRITER like '%'||#{keyword}||'%') AND
+			</if>
+			<if test="searchType == 'tc'.toString()">
+				((TITLE like '%'||#{keyword}||'%') 
+				OR
+				(CONTENT like '%'||#{keyword}||'%')) AND
+			</if>
+			<if test="searchType == 'cw'.toString()">
+				((CONTENT like '%'||#{keyword}||'%') 
+				OR
+				(WRITER like '%'||#{keyword}||'%')) AND
+			</if>
+			<if test="searchType == 'tcw'.toString()">
+				((TITLE like '%'||#{keyword}||'%') 
+				OR
+				(CONTENT like '%'||#{keyword}||'%')
+				OR
+				(WRITER like '%'||#{keyword}||'%')) AND
 			</if>
 		</if>
 	</sql>
@@ -40,8 +60,6 @@
 	<select id="allList" parameterType="string" resultType="com.talk.gall.domain.GallDogVO">
 		SELECT * FROM  ${gall_name}
 		ORDER BY board_num DESC
-		
-		<include refid="search"></include>
 	</select>
 	
 	<update id="updateReplyCount" parameterType="string">

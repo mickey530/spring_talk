@@ -6,50 +6,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.talk.gall.domain.GallVO;
+import com.talk.gall.domain.GallDogVO;
 import com.talk.gall.domain.SearchCriteria;
-import com.talk.gall.mapper.GallMapper;
-import com.talk.gall.mapper.GallReplyMapper;
+import com.talk.gall.mapper.GallDogMapper;
+import com.talk.gall.mapper.GallDogReplyMapper;
 
 @Service
-public class GallServiceImpl implements GallService {
+public class GallDogServiceImpl implements GallDogService {
 
 	@Autowired
-	private GallMapper gallDogMapper;
+	private GallDogMapper gallDogMapper;
 	
 	@Autowired
-	private GallReplyMapper gallDogReplyMapper;
-	
-	
+	private GallDogReplyMapper gallDogReplyMapper;
 
 	@Override
-	public void insert(GallVO vo) {
+	public void insert(GallDogVO vo) {
 		gallDogMapper.insert(vo);
 	}
 
 	@Override
-	public GallVO select(GallVO vo) {
+	public GallDogVO select(GallDogVO vo) {
 		return gallDogMapper.select(vo);
 	}
 
 	@Transactional
 	@Override
-	public void delete(GallVO vo) {
+	public void delete(GallDogVO vo) {
 		gallDogMapper.delete(vo);
 		
 	}
 	@Override
-	public GallVO update(GallVO vo) {
+	public GallDogVO update(GallDogVO vo) {
 		return gallDogMapper.update(vo);		
 	}
 
 	@Override
-	public List<GallVO> allList(String gall_name) {
+	public List<GallDogVO> allList(String gall_name) {
 		return gallDogMapper.allList(gall_name);
 	}
 
 	@Override
-	public void upHit(GallVO vo) {
+	public void upHit(GallDogVO vo) {
 		gallDogMapper.upHit(vo);
 		
 	}

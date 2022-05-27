@@ -10,13 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import com.talk.gall.domain.SearchCriteria;
-import com.talk.gall.domain.GallLikeVO;
-import com.talk.gall.domain.GallVO;
+import com.talk.gall.domain.GallDogLikeVO;
+import com.talk.gall.domain.GallDogVO;
+import com.talk.gall.domain.GallListVO;
 import com.talk.gall.domain.PageMaker;
-import com.talk.gall.service.GallLikeService;
-import com.talk.gall.service.GallReplyService;
-import com.talk.gall.service.GallService;
-
+import com.talk.gall.service.GallDogLikeService;
+import com.talk.gall.service.GallDogReplyService;
+import com.talk.gall.service.GallDogService;
+import com.talk.gall.service.GallListService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,16 +32,19 @@ import lombok.extern.log4j.Log4j;
 @Controller
 @Log4j
 @RequestMapping("/gall")
-public class GallController {
+public class GallDogController {
 	
 	@Autowired
-	GallService service;
+	GallDogService service;
 	
 	@Autowired
-	GallReplyService replyservice;
+	GallDogReplyService replyservice;
 	
 	@Autowired
-	GallLikeService doglikeservice;
+	GallDogLikeService doglikeservice;
+	
+	@Autowired
+	GallListService listservice;
 	
 	
 	// 갤러리 구분해놓은 목록
@@ -49,15 +53,13 @@ public class GallController {
 		return "gall/gallList";
 	}
 	
-	
-	
 	// 게시글 작성 http://localhost:8181/gall/insert/gall_dog
 	@GetMapping("/insert/{gall_name}" )
 	public String insert(@PathVariable("gall_name") String gall_name, Model model) {
 		return "gall/insertForm";
 	}
 	@PostMapping("/insert/{gall_name}")
-	public String insert(@PathVariable("gall_name") String gall_name, GallVO vo) {
+	public String insert(@PathVariable("gall_name") String gall_name, GallDogVO vo) {
 		service.insert(vo);
 		return "redirect:/gall/list/"+ gall_name;
 	}
@@ -67,7 +69,7 @@ public class GallController {
 	// 게시글 목록 http://localhost:8181/gall/list/gall_dog
 	@GetMapping("/list/{gall_name}")
 	public String dogList(@PathVariable("gall_name") String gall_name, SearchCriteria cri, Model model) {
-		List<GallVO> dogList = service.allList(gall_name);
+		List<GallDogVO> dogList = service.allList(gall_name);
 		model.addAttribute("dogList", dogList);
 		
 		PageMaker pageMaker = new PageMaker();
@@ -83,8 +85,8 @@ public class GallController {
 	// 게시글 상세 http://localhost:8181/gall/detail/gall_dog
 	@GetMapping("/detail/{gall_name}/{board_num}")
 	public String detail(@PathVariable("gall_name") String gall_name,
-							@PathVariable("board_num") Long board_num, Model model, GallVO vo) {
-		GallVO dog = service.select(vo);
+							@PathVariable("board_num") Long board_num, Model model, GallDogVO vo) {
+		GallDogVO dog = service.select(vo);
 		service.upHit(vo);
 		model.addAttribute("dog", dog);
 		model.addAttribute("gall_name", gall_name);
@@ -94,7 +96,7 @@ public class GallController {
 	
 	// 게시글 삭제
 	@PostMapping("delete/{gall_name}/{board_num}")
-	public String delete(@PathVariable long board_num, @PathVariable("gall_name") String gall_name, GallVO vo, Model model) {
+	public String delete(@PathVariable long board_num, @PathVariable("gall_name") String gall_name, GallDogVO vo, Model model) {
 		service.delete(vo);
 		log.info(gall_name);
 		return "redirect:/gall/list/" + gall_name;
@@ -105,13 +107,13 @@ public class GallController {
 	// 게시글 수정
 	@GetMapping("updateForm/{gall_name}/{board_num}")
 	public String updateForm(@PathVariable("gall_name") String gall_name,
-			@PathVariable("board_num") Long board_num, Model model, GallVO vo) {
-			GallVO board = service.select(vo);
+			@PathVariable("board_num") Long board_num, Model model, GallDogVO vo) {
+			GallDogVO board = service.select(vo);
 			model.addAttribute("board", board);
 		return "gall/updateForm";
 	}
 	@PostMapping("update/{gall_name}/{board_num}")
-	public String update(@PathVariable ("gall_name")String gall_name, long board_num, GallVO vo) {
+	public String update(@PathVariable ("gall_name")String gall_name, long board_num, GallDogVO vo) {
 		service.update(vo);
 		return "redirect:/gall/detail/" +gall_name+"/"+ board_num;
 	
@@ -122,7 +124,7 @@ public class GallController {
 		@PostMapping(value="/islike", consumes="application/json", produces= {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_JSON_UTF8_VALUE})
-		public ResponseEntity<String> islike(@RequestBody GallLikeVO vo){
+		public ResponseEntity<String> islike(@RequestBody GallDogLikeVO vo){
 			ResponseEntity<String> entity= null;
 			try {
 				entity = new ResponseEntity<>(doglikeservice.islike(vo), HttpStatus.OK);
@@ -153,7 +155,7 @@ public class GallController {
 		
 		// 좋아요
 		@PostMapping(value="/{gall_name}/like", consumes="application/json", produces= {MediaType.TEXT_PLAIN_VALUE})
-		public ResponseEntity <String> like(@PathVariable("gall_name")String gall_name, GallLikeVO vo){
+		public ResponseEntity <String> like(@PathVariable("gall_name")String gall_name, GallDogLikeVO vo){
 			System.out.println("vo : "+vo.toString());
 			ResponseEntity<String> entity= null;
 			try {

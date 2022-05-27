@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.talk.gall.mapper.GallListMapper">
+	<insert id="create">
+		INSERT INTO gall_list (gall_num, gall_name, table_name)
+			VALUES
+		(gall_num.nextval, #{gall_name}, #{table_name})
+	</insert>
+	
+	<update id="createTbl" parameterType="string">
+    CREATE table ${gall_name} (
+    board_num number(10, 0),
+    board_title varchar2 (20),
+    board_content varchar2 (2000),
+    writer VARCHAR2 (20),
+    nameless  char(1)  default 'N' check(nameless in ('Y','N')),
+    w_date date default sysdate,
+    m_date date default sysdate,
+    like_count number default 0,
+    replycount number default 0,
+    hit number default 0
+    )
+    </update>
+</mapper>

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+ <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,14 +49,24 @@
 		</header>
 		
 	<div class="container row">
-	
-		<a href="/gall/list/gall_dog">멍 갤</a><br/>
-		<a href="#">냥 갤</a><br/>
-		<a href="#">냠냠 갤</a><br/>
-		<a href="#">운동 갤</a><br/>
-		<a href="#">게임 갤</a><br/>
-		<a href="#">등산 갤</a><br/>
-		
+		<table boarder="1" class="table table-hover">
+		      <thead>
+		        <tr>
+		          <th>커뮤니티 이름</th>
+		          <th>테이블명</th>	
+		        </tr>
+		      </thead>
+		      <tbody>
+		        <c:forEach var="gall" items="${vo }">
+		          <tr>
+		          	<!--  <td><a href="/gall/list/${gall.gall_name }">${gall.gall_name }</a></td>	-->	
+		          	<td>${gall.gall_name }</td>
+		          	<td>${gall.table_name }</td>  
+		          </tr>
+		        </c:forEach>
+		      </tbody>
+		    </table>
+		    <a href="/admin">생성하러가기</a>
 	</div> 
 	
 	</div> <!-- wrapper -->

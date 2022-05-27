@@ -7,7 +7,7 @@ import java.sql.Date;
 import lombok.Data;
 
 @Data
-public class GallReplyVO {
+public class GallDogReplyVO {
 	private Long reply_num;
 	private Long board_num;
 	private Long parent_num;
