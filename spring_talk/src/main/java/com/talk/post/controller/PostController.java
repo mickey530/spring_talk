@@ -107,7 +107,6 @@ public class PostController {
 	
 	@PostMapping("delete/{post_num}")
 	public String delete(@PathVariable long post_num) {
-		replyService.removeAllReply(post_num);
 		service.delete(post_num);
 		log.info(post_num + "번 게시글 삭제되었습니다.");
 		return "redirect:/post/newsfeed"; // 나중에 마이룸으로 리다이렉트 예정
