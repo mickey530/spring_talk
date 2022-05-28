@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC	 "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	
+	<mapper namespace="com.talk.report.mapper.ReportPostMapper">	
+		
+		<insert id="insert">
+			INSERT INTO post_report (report_pnum, report_post_num, report_id, report_reason) 
+			VALUES
+			(report_pnum.nextval, #{report_post_num}, #{report_id}, #{report_reason})
+		</insert>
+		
+		<delete id="delete">
+			DELETE FROM post_report 
+			WHERE report_pnum = #{report_pnum}
+		</delete>
+		
+		<select id="allList" resultType="com.talk.report.domain.ReportPostVO">
+			SELECT * FROM post_report
+			ORDER BY report_post_date DESC
+		</select>	
+		
+		<select id="select" resultType="com.talk.report.domain.ReportPostVO">
+			SELECT * FROM post_report WHERE report_pnum = #{report_pnum}
+		</select>
+		
+		<!-- 
+			<resultMap type="com.talk.report.domain.ReportPostVO" id="reportpostMap">
+				<id property="reportId" column="report_id"/>
+				<result property="reportId" column="report_id"/>
+				<result property="reportPnum" column="report_pnum"/>
+				<result property="reportpostDate" column="report_post_date"/>
+				<result property="reportpostNum" column="report_post_num"/>
+				<result property="reportReason" column="report_reason"/>
+				<collection property="" resultMap=""></collection>
+			</resultMap>
+			
+			<resultMap type="com.ict.domain.AuthVO" id="authMap">
+				<result property="userId" column="userid"/>
+				<result property="auth" column="auth"/>
+			</resultMap>
+		-->
+		
+	</mapper>

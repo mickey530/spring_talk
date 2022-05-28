@@ -16,4 +16,5 @@
 			SELECT * FROM u.*from user_info u where u.user_id in(
 			SELECT r.user_id from reply_at r where r.reply_num = #{reply_num})
 		</select>
+
 	</mapper>
