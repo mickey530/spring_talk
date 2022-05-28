@@ -1,8 +1,11 @@
 package com.talk.gall.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.talk.gall.domain.GallDogVO;
 import com.talk.gall.domain.GallListVO;
 import com.talk.gall.mapper.GallListMapper;
 
@@ -21,7 +24,11 @@ public class GallListServiceImpl implements GallListService{
 	public void createTbl(String gall_name) {
 		gallList.createTbl(gall_name);
 		
+	}
+
+	@Override
+	public List<GallListVO> list(String gall_name) {
+		return gallList.list(gall_name);
 	}	
-	
 
 }

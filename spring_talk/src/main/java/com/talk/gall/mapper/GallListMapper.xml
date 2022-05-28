@@ -3,14 +3,20 @@
 	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 <mapper namespace="com.talk.gall.mapper.GallListMapper">
-	<insert id="create">
+	<insert id="create" parameterType="string">
 		INSERT INTO gall_list (gall_num, gall_name, table_name)
 			VALUES
 		(gall_num.nextval, #{gall_name}, #{table_name})
 	</insert>
 	
+	<select id="list" parameterType="String" resultType="com.talk.gall.domain.GallListVO">
+		SELECT * FROM  gall_list
+		ORDER BY gall_num DESC
+	</select>
+	
 	<update id="createTbl" parameterType="string">
-    CREATE table ${gall_name} (
+    CREATE table ${gall_name}
+    (
     board_num number(10, 0),
     board_title varchar2 (20),
     board_content varchar2 (2000),
