@@ -12,4 +12,5 @@ public class NoteVO {
 	private String note_sender;
 	private String note_recipient;
 	private Date regdate;
+	private long pageNum;
 }
