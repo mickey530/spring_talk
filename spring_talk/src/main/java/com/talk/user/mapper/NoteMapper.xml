@@ -14,15 +14,22 @@
 		WHERE note_recipient = #{note_recipient} and note_sender = #{note_sender}
 		or note_recipient = #{note_sender} and note_sender = #{note_recipient}
 		order by note_num  -->
-	
+<!-- 	
 	<![CDATA[
 		
 	SELECT * FROM note
 		WHERE note_recipient = #{note_recipient} and note_sender = #{note_sender}
 		or note_recipient = #{note_sender} and note_sender = #{note_recipient}
 		order by note_num
-	]]>		
-	
+	]]>
+	 -->
+	 <![CDATA[
+		SELECT * FROM (SELECT * FROM 
+		(SELECT ROW_NUMBER() OVER(ORDER BY note.regdate desc) row_num, note.* FROM note WHERE
+		note_recipient = #{note_recipient} AND note_sender = #{note_sender} OR
+		note_sender = #{note_recipient} AND note_recipient = #{note_sender} ORDER BY note.REGDATE DESC)
+		where rownum <= 3*#{page_num}*#{number}) WHERE row_num > (#{page_num}-1)*#{number}
+	]]>
 </select>
 
 <insert id="insert"> <!-- 보류  -->

@@ -178,9 +178,10 @@ footer {
 			
 			$(data).each(
 					function(){
-						str += "<div data-note_sender='" + this.note_sender + "' class='noteLi m-2 d-flex id_"+this.note_sender+"'>"
+						str = "<div data-note_sender='" + this.note_sender + "' class='noteLi m-2 d-flex id_"+this.note_sender+"'>"
 							+ "<div class='btn btn-light text-start'>" + this.note_content
-							+ "</div></div>";
+							+ "</div></div>"
+							+ str;
 					});
 
 					
