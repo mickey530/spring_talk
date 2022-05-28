@@ -90,6 +90,9 @@ footer {
 		<a href="/post/insert" class="col-1 text-left text-black">+</a>
 	</header>
 <div class="container">
+	<div class=" d-flex justify-content-center m-2">
+	<button id="getAllList" class="btn btn-outline-secondary btn-sm" onclick="getAllList()">와 ! 쪽지 ! 더보기!</button>
+	</div>
 	
 	<div id="notes">
 	
@@ -170,28 +173,31 @@ footer {
 		var note_recipient = '${note_recipient}';
 		var note_sender = '${note_sender}';
 		
+		var page_num = 0
 		function getAllList(){
-		
-		$.getJSON("/user/noteList/" + note_recipient +"/"+ note_sender, function(data){
+		page_num += 1;
+		$.getJSON("/user/noteList/" + note_recipient +"/"+ note_sender + "?page_num=" + page_num, function(data){
 			var str = "";
 			console.log(data.length);
 			
 			$(data).each(
 					function(){
-						str += "<div data-note_sender='" + this.note_sender + "' class='noteLi m-2 d-flex id_"+this.note_sender+"'>"
-							+ "<div class='btn btn-light text-start'>" + this.note_content
-							+ "</div></div>";
+						str = "<div data-note_sender='" + this.note_sender + "' class='noteLi m-2 d-flex id_"+this.note_sender+"'>"
+						+ "<div class='btn btn-light text-start'>" + this.note_content
+						+ "</div></div>"
+						+ str;
 					});
 
 					
-			$("#notes").html(str);
-			document.body.scrollTop = document.body.scrollHeight;
+			$("#notes").html(str + $("#notes").html());
+			document.body.scrollbottom = document.body.scrollHeight;
 			$(".id_"+login_id).addClass("justify-content-end")
 			$(".id_"+login_id).children().removeClass("btn-light")
 			$(".id_"+login_id).children().addClass("btn-primary")
 		});
 		}
 		getAllList();
+		
 		
 		
 		
@@ -221,10 +227,12 @@ footer {
 		            },
 					 success : function(result){
 					    	if(result == 'SUCCESS'){
-					    		
+					    		var str = "<div data-note_sender='" + login_id + "' class='noteLi m-2 d-flex id_"+login_id+" justify-content-end'>"
+								+ "<div class='btn btn-primary text-start'>" + note_content
+								+ "</div></div>"
+					    		$("#notes").append(str);
+								document.body.scrollTop = document.body.scrollHeight;
 					    		alert("전송 되었습니다.");
-					    		getAllList();
-					    		document.body.scrollTop = document.body.scrollHeight;
 					    		refresh();
 					    	}
 					 }

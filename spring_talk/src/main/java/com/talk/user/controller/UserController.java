@@ -39,6 +39,7 @@ import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
 import com.talk.user.domain.MemberVO;
+import com.talk.user.domain.NoteCriteria;
 import com.talk.user.domain.NoteVO;
 import com.talk.user.domain.SecurityUser;
 import com.talk.user.domain.UserVO;
@@ -723,10 +724,10 @@ public class UserController {
 	@GetMapping(value="/noteList/{note_sender}/{note_recipient}",
 			produces= {MediaType.APPLICATION_XML_VALUE,
 					 MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<NoteVO>> list(@PathVariable("note_sender") String note_sender, NoteVO vo){
+	public ResponseEntity<List<NoteVO>> list(NoteCriteria cri){
 		ResponseEntity<List<NoteVO>> entity = null;
 		try {
-			entity = new ResponseEntity<>(noteService.getList(vo), HttpStatus.OK);
+			entity = new ResponseEntity<>(noteService.getList(cri), HttpStatus.OK);
 		}catch(Exception e) {
 			e.printStackTrace(); // 이게 있어야 에러를 콘솔에 찍을수 있음
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
