@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.talk.user.mapper.FriendBookMapper">
+	
+	
+	<select id="getFriendBook" resultType="com.talk.user.domain.FriendBookVO">
+		SELECT *
+				from
+				friend_book
+				where book_owner= #{user_id}
+	</select>
+	
+	<insert id="insert">
+		insert into friend_book
+			values (#{book_owner}, #{friend}, #{book_comment})
+	</insert>
+	
+	<delete id="delete">
+		delete from friend_book
+			where (book_owner = #{book_owner} and friend = #{friend})
+	</delete>
+	
+	<update id="update">
+		update friend_book 
+			set book_comment = #{book_comment}
+			where (book_owner = #{book_owner} and friend = #{friend})
+	</update>
+</mapper>

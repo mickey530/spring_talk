@@ -66,6 +66,14 @@ public class FollowServiceImpl implements FollowService {
 	}
 
 	@Override
+	public boolean checkFavorite(FollowVO vo) {
+		// TODO Auto-generated method stub
+		
+		return FollowMapper.checkFavorite(vo).size() > 0;
+	}
+
+
+	@Override
 	public void insert(FollowVO vo) {
 		FollowMapper.insert(vo);
 	}
@@ -79,5 +87,4 @@ public class FollowServiceImpl implements FollowService {
 		System.out.println("update FollowVO : " + vo.toString());
 		FollowMapper.update(vo);
 	}
-
 }

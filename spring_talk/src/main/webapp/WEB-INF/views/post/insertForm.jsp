@@ -123,7 +123,7 @@ $(document).ready(function(){
 	var cloneObj = $(".uploadDiv").clone();
 	
 	
-	$('#uploadBtn').on("click", function(e){
+	$('#uploadBtn').on("click", function(){
 		
 		var formData = new FormData();
 		
@@ -224,15 +224,14 @@ $(document).ready(function(){
 		var str = "";
 		$(".uploadResult ul li").each(function(i, obj){
 			var jobj = $(obj);
-			console.log(jobj);
 			str += "<input type='hidden' name='ifVOs[" + i + "].file_name'"
-				+ " value='" + jobj.data("filename") + "'>"
-				+ "<input type='hidden' name='ifVOs[" + i + "].uuid'"
-				+ " value='" + jobj.data("uuid") + "'>"
-				+ "<input type='hidden' name='ifVOs[" + i + "].upload_path'"
-				+ " value='" + jobj.data("path") + "'>"
-				+ "<input type='hidden' name='ifVOs[" + i + "].file_type'"
-				+ " value='" + jobj.data("type") + "'>";
+			+ " value='" + jobj.data("filename") + "'>"
+			+ "<input type='hidden' name='ifVOs[" + i + "].uuid'"
+			+ " value='" + jobj.data("uuid") + "'>"
+			+ "<input type='hidden' name='ifVOs[" + i + "].upload_path'"
+			+ " value='" + jobj.data("path") + "'>"
+			+ "<input type='hidden' name='ifVOs[" + i + "].file_type'"
+			+ " value='" + jobj.data("type") + "'>";
 		});
 		//폼태그에 위의 str내부 태그를 추가해주는 명령어, .submit() 을 추가로 넣으면 제출 완료
 		formObj.append(str).submit();
@@ -256,16 +255,16 @@ $(document).ready(function(){
 <div class="container">
 	
 	<form action="/post/insert" method="post">
-		<input type="hidden" name="writer" value="${login_id }" placeholder="작성자">
+		<input type="hidden" name="postVO.writer" value="${login_id }" placeholder="작성자">
 		<br/>
-  		<input type="text" name="title" class="form-control" id="exampleFormControlInput1" placeholder="제목 !">
+  		<input type="text" name="postVO.title" class="form-control" id="exampleFormControlInput1" placeholder="제목 !">
 		<br/>
-  		<textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="3"></textarea>
+  		<textarea class="form-control" name="postVO.content" id="exampleFormControlTextarea1" rows="3"></textarea>
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<br/>
 	
 		<div class="uploadDiv">
-		<input type="file" name="uploadFile" accept="image/*" multiple><span><button id="uploadBtn" class="btn btn-outline-secondary">Upload</button></span>
+		<input type="file" name="uploadFile" accept="image/*" multiple><span><button id="uploadBtn" class="btn btn-outline-secondary" type="button">Upload</button></span>
 		
 		</div>
 		

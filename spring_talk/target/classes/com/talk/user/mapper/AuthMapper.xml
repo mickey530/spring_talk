@@ -12,7 +12,9 @@
 		<result property="last_name" column="last_name" />
 		<result property="user_age" column="user_age" />
 		<result property="phone_num" column="phone_num" />
-		<collection property="avos" resultMap="authMap"></collection>
+		<result property="user_comment" column="user_comment" />
+		
+		<collection property="avos" resultMap="authMap" javaType="ArrayList"></collection>
 	</resultMap>
 	
 	<resultMap type="com.talk.user.domain.AuthVO" id="authMap">
@@ -21,7 +23,7 @@
 	</resultMap>
 	
 	<select id="getUserAuth" resultMap="userMap">
-		SELECT u.user_id, u.user_pw, a.authority
+		SELECT u.*, a.authority
 				from
 				user_info u left outer join user_auth a on u.user_id = a.user_id
 				where u.user_id= #{userId}

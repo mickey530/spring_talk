@@ -34,9 +34,12 @@ public interface FollowMapper {
 	
 	//user_id로 Follow 정보 조회
 	public int countFollowed(String user_id);
-	
+
 	//모든 사람들 조회
 	public List<FollowVO> selectAll();
+	
+	//맞팔인지 판단
+	public List<FollowVO> checkFavorite(FollowVO vo);
 	
 	//넣고
 	public void insert(FollowVO vo);

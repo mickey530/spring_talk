@@ -9,9 +9,9 @@
 		where post_num = #{post_num}
 	</select>
 	
-	<delete id="delete">
+	<delete id="deleteAll">
 	
-		DELETE FROM img_file WHERE img_num = #{img_num}
+		DELETE FROM img_file WHERE post_num = #{post_num}
 	</delete>
 	
 	

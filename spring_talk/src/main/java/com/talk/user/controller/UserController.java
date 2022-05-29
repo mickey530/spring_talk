@@ -38,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
+import com.talk.user.domain.FriendBookVO;
 import com.talk.user.domain.MemberVO;
 import com.talk.user.domain.NoteCriteria;
 import com.talk.user.domain.NoteVO;
@@ -56,6 +57,7 @@ import com.talk.post.domain.PostVO;
 import com.talk.post.service.TagService;
 import com.talk.reply.domain.ReplyVO;
 import com.talk.user.service.FollowServiceImpl;
+import com.talk.user.service.FriendBookService;
 import com.talk.user.service.NoteService;
 import com.talk.user.service.UserService;
 import com.talk.user.service.UserServiceImpl;
@@ -90,6 +92,10 @@ public class UserController {
 	
 	@Autowired
 	private NoteService noteService;
+	
+	//방명록
+	@Autowired
+	private FriendBookService friendService;
 	
 	@GetMapping(value={ "/", ""})
 	public String userHome() {
@@ -181,7 +187,7 @@ public class UserController {
 			System.out.println("user_id : " +user_id);
 			String encoding;
 			byte[] bytes = userService.selectById(user_id).getUser_img();
-			if(bytes == null) {
+			if(bytes == null || bytes.length < 2) {
 				encoding ="/resources/file.png";
 				entity = new ResponseEntity<>("/resources/file.png",HttpStatus.OK);
 			}else {
@@ -210,7 +216,11 @@ public class UserController {
 
 		try { 
 			if(file[0].getBytes().length <= 0) {
-				vo.setUser_img(userService.select(vo.getUser_num()).getUser_img());
+				byte[] user_img = userService.select(vo.getUser_num()).getUser_img();
+				if(user_img == null) {
+					user_img = new byte[1];
+				}
+				vo.setUser_img(user_img);
 			}else {
 		    vo.setUser_img(file[0].getBytes());
 			}
@@ -348,6 +358,29 @@ public class UserController {
 	
 	//팔로우, 밴 단
 
+	// check Friend
+	@PostMapping(value="/isFriend")
+	
+	public ResponseEntity<String> isFriend(@RequestBody FollowVO vo){
+		System.out.println("isFriend vo : " + vo.toString());
+		
+		ResponseEntity<String> entity= null;
+
+		String favorite = "NO";
+		try {
+			if(followService.checkFavorite(vo)) {
+				favorite = "YES";
+			}
+			entity = new ResponseEntity<>(favorite,HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(favorite,HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("countFollower : "+ entity);
+		return entity;
+	}
+	
+	
 
 	// count follower
 	@GetMapping(value="/countFollower/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
@@ -757,6 +790,49 @@ public class UserController {
 		}
 		return entity;
 	}
+	
+
+	//권한 추가 메서드
+
+	@PostMapping(value="/addAuth)", produces = {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity<String> addAuth(String user_id,String authName){
+		ResponseEntity<String> entity = null;
+		try {
+			UserVO vo = userService.selectById(user_id);
+			for(AuthVO avo : vo.getAvos()) {
+				if(avo.getAuthority().equals(vo)) {}
+			}
+			
+			authService.insert(vo);
+			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		}catch(Exception e) {
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+		}
+		return entity;
+	}
+	
+
+	//방명록 관련 메서드
+
+	@PostMapping(value="/ajaxBookData)", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<List<String>> returnBook(String user_id){
+		ResponseEntity<List<String>> entity = null;
+		
+		try {
+			List<String> comment_list = new ArrayList<String>();
+			for(FriendBookVO vo : friendService.getFriendBook(user_id)) {
+				comment_list.add(vo.getBook_comment());
+			} 
+			entity = new ResponseEntity<List<String>>(comment_list, HttpStatus.OK);
+		}catch(Exception e) {
+			entity = new ResponseEntity<List<String>>(HttpStatus.BAD_REQUEST);
+
+		}
+		return entity;
+	}
+	
+	
 	
 		
 	}

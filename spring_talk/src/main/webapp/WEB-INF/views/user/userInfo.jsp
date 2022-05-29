@@ -26,8 +26,8 @@
 					<th>전화번호</th>
 					<th>밴 한 횟수</th>
 					<th>밴 당한 횟수</th>
-					<th>팔로워 수</th>
 					<th>팔로우 한 수</th>
+					<th>팔로워 수</th>
 				</tr>
 			</thead>	
 			<tbody>
@@ -75,6 +75,7 @@
 				<button onclick="location.href='/user/getAllUsers'">전체 회원 조회</button>
 				<button onclick="location.href='/user/update'">회원정보 수정</button>
 				<button onclick="location.href='/user/userInfo/${user_id}'">회원정보 확인</button>
+				
 			</c:if>
 			
 			<!-- 타인 -->
@@ -91,10 +92,10 @@
 	<script>
 	var _csrf = '${_csrf.token}';
 	var _csrf_header = '${_csrf.headerName}';
-
+	
 	// 팔로우 정보 가져오기
-	function getFollow(){
-		$.getJSON("/user/getFollow/${userInfo.user_id }" , function(data){
+	function getFollowed(){
+		$.getJSON("/user/countFollowed/${userInfo.user_id }" , function(data){
 			$("#followed").html(data);
 		});
 	}
@@ -122,11 +123,40 @@
 		});
 	}
 	
+	function getIsFriend(){
+
+			var jsonData = {
+				
+					follower:'${princ.username}',
+					followed:$("#user_id").text(),
+					favorite:'Y'
+			};
+			 
+			$.ajax({
+				type : 'post', 
+				url : '/user/isFriend',
+				header : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "post" 
+				},	
+			    beforeSend: function(xhr){
+			        xhr.setRequestHeader(_csrf_header, _csrf);
+			    },
+				contentType:"application/json", // json 자료를 추가로 입력받기 때문에
+				data: JSON.stringify(jsonData),
+				dataType : 'text',
+				success : function(result){
+					console.log("friend result: " + result);
+				}
+			});
+	}
+	
 	function getAllData(){
 		getFollower()
-		getFollow();
+		getFollowed();
 		getBan();
 		getBaned();
+		getIsFriend();
 	}
 	
 	getAllData();

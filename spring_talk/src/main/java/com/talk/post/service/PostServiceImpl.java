@@ -41,7 +41,7 @@ public class PostServiceImpl implements PostService{
 		postMapper.insert(vo);
 		System.out.println("postNum = "+vo.getPost_num());;
 		
-		if(ifVOs != null || ifVOs.size() > 0) {
+		if(ifVOs != null && ifVOs.size() > 0) {
 			ifVOs.forEach(imageFile -> {
 				imageFile.setPost_num(vo.getPost_num());
 			});
