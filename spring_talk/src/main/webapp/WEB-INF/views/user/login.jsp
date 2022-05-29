@@ -110,6 +110,16 @@ footer {
       </label>
     </div>
     <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+    <br/>
+    <button class="w-100 btn btn-sm text-muted p-3" onclick="location.href='/user/insert'">아직 회원이 아니신가요?</button>
+    
+    <c:if test="${url ne null }">
+		<div id="naver_id_login" class="w-100">
+			<a href="${url }"><img width="223" 
+				src="https://developers.naver.com/doc/review_201802/CK_bEFnWMeEBjXpQ5o8N_20180202_7aot50.png"/></a>
+		</div>
+	</c:if>
+    
     <p class="mt-5 mb-3 text-muted">&copy; IN n OUT</p>
   </form>
 </main>

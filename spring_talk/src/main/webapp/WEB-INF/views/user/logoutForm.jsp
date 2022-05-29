@@ -78,11 +78,7 @@ footer {
 	<title>Home</title>
 </head>
 <body>
-<sec:authorize access="isAuthenticated()">
-	<script>
-		location.href="/user";
-	</script>
-</sec:authorize>
+
 
 <div id="wrapper">
 <header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
@@ -90,8 +86,8 @@ footer {
 </header>
 <div class="container">
 
-	<form action="/user/logout" method="post">
-		<input type="submit" value="로그아웃">
+	<form action="/user/logout" method="post" class="form-signin">
+		<input type="submit" value="로그아웃" class="btn btn-lg btn-outline-danger w-100">
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 	</form>
 
