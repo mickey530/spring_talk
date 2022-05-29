@@ -3,12 +3,13 @@ package com.talk.user.service;
 
 import java.util.List;
 
+import com.talk.user.domain.NoteCriteria;
 import com.talk.user.domain.NoteVO;
 
 
 public interface NoteService {
 	
-	public List<NoteVO> getList(NoteVO vo);
+	public List<NoteVO> getList(NoteCriteria cri);
 
 	public NoteVO select(NoteVO vo);
 	

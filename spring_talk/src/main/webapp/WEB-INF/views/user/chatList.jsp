@@ -37,7 +37,7 @@
     color: black;
     font-family: 'CookieRun-Regular';    
   }
-  h3, .title {
+  h3, .title, .user_id {
       font-family: 'CookieRunOTF-Bold';
       margin: 0px;
   }
@@ -94,44 +94,15 @@ footer {
 </header>
 <div class="container">
 		
-		<div class="followList followMenu">
-			<div class="subTitle my-3">
-				<a>내가 팔로우하는 사람</a>
-	<hr/>
-			</div>			
-			<ul class="p-0"></ul>
 		
-		</div>
-	
-		<div class="followerList followMenu">
-		
-			<div class="subTitle my-3">
-				<a>나를 팔로우하는 사람</a>
-	<hr/>
-			</div>			
-			<ul class="p-0"></ul>
-		</div>
-		<div class="freindList followMenu">
-		
-			<div class="subTitle my-3">
-			
-				<a>맞팔된 사람 목록</a>
-	<hr/>
-			</div>
-			<ul class="p-0"></ul>
-		</div>
-		<div class="favoriteList followMenu">
-		
-			<div class="subTitle my-3">
-				<a>즐겨찾기</a>
-	<hr/>
-			</div>
-			<ul class="p-0"></ul>
-		</div>
-	</div>
-	
 
 
+<li class='w-100 p-2 border-bottom'>
+<div class='d-flex justify-content-between row'>
+<p class='follower m-0 user_id'>아이디</p>
+<span class="text-secondary"> 최근 메세지</span>
+</div>
+</li>
 
 
 	

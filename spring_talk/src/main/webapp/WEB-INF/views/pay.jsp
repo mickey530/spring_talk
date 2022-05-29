@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,45 +9,116 @@
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <!-- 제이쿼리 임포트 (제이쿼리가 입력되어야 위의 모튤이 작동합니다.) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+
+@font-face {
+    font-family: 'CookieRunOTF-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/CookieRunOTF-Bold00.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'CookieRun-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }  
+  html, body {height:100%;}
+  body {
+    background-color: white;
+    color: black;
+    font-family: 'CookieRun-Regular';    
+  }
+  h3, h2, .title {
+      font-family: 'CookieRunOTF-Bold';
+      margin: 0px;
+  }
+  #wrapper{
+      height: auto;
+      min-height: 100%;
+      padding-bottom: 50px;
+  }
+  .container{
+  	height: 100%;
+    min-height: 100%;
+  }
+  a{
+	  text-decoration:none;
+	  text-align:center;
+	  color: black;
+  }
+  .itemSection {
+  	max-width: 390px;
+    position: absolute;
+    width: 100%;
+	padding: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+header{
+        background-color: white;
+}
+
+footer {
+        display: flex !important;
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        height: 50px;
+        font-size: 15px;
+        align-items: center;
+        background-color: white;
+        z-index: 2;
+}
+</style>
+
 </head>
 <body>
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.user.user_id" var="login_id"/>
+</sec:authorize>
 
-	<h1>품질좋은 상품목록</h1>
+<div id="wrapper">
+<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
+<h3 class="col-12 px-0">IN n OUT</h3>
+</header>
+<div class="container">
+
 	
-	<div class="itemSection">
+	<div class="itemSection d-flex justify-content-center">
 		<div class="itemCard">
 			<div class="itemTitle">
-				<h2>인스타 광고</h2>			
-			</div>
+				<h2>인앤아웃 프리미엄</h2>		
+			</div><br/>
 			<div class="itemContent">
-				<h2>광고1</h2>
+				<h4>월 4만원에 <br/> 광고 없는 인앤아웃을 즐겨보세요!</h4>
 			</div>
 			<div class="itemPrice">
-				<p data-price="40000">40000원</p>
+				<p data-price="40000" class="justify-content-end"></p>
 			</div>
-			<div class="itemButton">
-				<button class="orderBtn">주문하기</button>
-			</div>
-		</div>
-		
-		<div class="itemCard">
-			<div class="itemTitle">
-				<h2>인스타광고2</h2>			
-			</div>		
-			<div class="itemContent">
-				<h2>광고2</h2>			
-			</div>
-			<div class="itemPrice">
-				<p data-price="6000">6000원</p>
-			</div>
-			<div class="itemButton">
-				<button class="orderBtn">주문하기</button>
+			<div class="itemButton d-flex justify-content-end">
+				<div class="btn">40,000원</div><button class="orderBtn btn btn-primary">결제하기</button>
 			</div>
 		</div>
 	</div>
-	
+</div> <!-- container -->
+ 
+ 
+</div> <!-- wrapper -->	
+<footer class="mx-0 py-2 w-100 border-top row justify-content-between">
+     <a href="/user/follow" class="col-2">팔로우</a>
+     <a href="/chatting/chat" class="col-2">채팅</a>
+     <a href="/post/newsfeed" class="col-2">피드</a>
+     <a href="/gall/gallList" class="col-2">커뮤</a>
+     <a href="/user/room/${login_id }" class="col-2">마이룸</a>
+</footer>	
 	<script>
 	// 미리 받아와야할 정보들 변수를 전역변수처럼 쓰기위해 선언해두기
 	var itemPrice = 0; // 가격

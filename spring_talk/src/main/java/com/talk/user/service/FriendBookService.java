@@ -12,7 +12,7 @@ public interface FriendBookService {
 
 	public void insert(FriendBookVO fbVO);
 	
-	public void update(FriendBookVO fbVO);
+	public void update(FriendBookVO vo);
 	
-	public void delete(FriendBookVO fbVO);
+	public void delete(long rownum);
 }

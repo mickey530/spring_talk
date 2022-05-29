@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.talk.user.domain.NoteCriteria;
 import com.talk.user.domain.NoteVO;
 import com.talk.user.mapper.NoteMapper;
 
@@ -16,8 +17,8 @@ public class NoteServiceImpl implements NoteService{
 	
 	
 	@Override
-	public List<NoteVO> getList(NoteVO vo) {
-		return noteMapper.getList(vo);
+	public List<NoteVO> getList(NoteCriteria cri) {
+		return noteMapper.getList(cri);
 	}
 
 	@Override

@@ -18,4 +18,6 @@ public interface AuthService {
 	public void delete(UserVO vo);
 
 	public void update(UserVO vo);
+	
+	public void addAuth(String user_id,String authName);
 }

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.talk.gall.domain.GallDogReplyVO;
+import com.talk.gall.domain.GallDogReplyVO;
+import com.talk.gall.service.GallDogReplyService;
 import com.talk.gall.service.GallDogReplyService;
 
 import lombok.extern.log4j.Log4j;
