@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC	 "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	
+<mapper namespace="com.talk.gall.mapper.GallDogLikeMapper">
+
+	<select id="islike" resultType="string">
+		SELECT user_id FROM gall_dog_like WHERE board_num=#{board_num} AND user_id=#{user_id}
+	</select>
+	
+	<insert id="like">
+		INSERT INTO gall_dog_like (board_num , user_id)
+			VALUES
+		(#{board_num}, #{user_id})
+	</insert>
+	
+	<delete id="unlike">
+		DELETE FROM gall_dog_like
+			WHERE
+		board_num = #{board_num} AND user_id = #{user_id}
+	</delete>
+	
+	<select id="likeCount" resultType="long">
+		SELECT count(*) FROM gall_dog_like
+			WHERE board_num = #{board_num}
+	</select>
+
+	
+</mapper>

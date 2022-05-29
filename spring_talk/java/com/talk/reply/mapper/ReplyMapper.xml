@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC	 "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	
+	<mapper namespace="com.talk.reply.mapper.ReplyMapper">
+
+		<select id="getList" resultType="com.talk.reply.domain.ReplyVO">
+<!-- 			SELECT * FROM reply
+				WHERE post_num = #{post_num}
+				START WITH parent_num IS NULL
+				CONNECT BY PRIOR reply_num = parent_num -->
+  				<![CDATA[
+  				SELECT * FROM
+					(SELECT /*+ INDEX_DESC(reply pk_reply_reply_num) */ rownum rn, reply.* FROM reply WHERE post_num = #{post_num} AND rownum <= #{page_num}*#{number})
+				WHERE rn > (#{page_num}-1)*#{number}
+				]]>
+		
+		</select>
+		
+		<select id="replyPreview" resultType="com.talk.reply.domain.ReplyVO">
+			<![CDATA[
+				SELECT * FROM
+				 (SELECT * FROM reply WHERE post_num = #{post_num} ORDER BY like_count DESC)
+				WHERE ROWNUM <= 2
+			]]>
+		</select>
+		
+		<insert id="create">
+			INSERT INTO reply
+			(reply_num, post_num, reply_content, reply_id)
+				VALUES
+			(reply_num.nextval, #{post_num}, #{reply_content}, #{reply_id})	
+		</insert>
+		
+		<update id="update">
+			UPDATE reply
+				SET
+			reply_content = #{reply_content}, update_date = SYSDATE
+			WHERE reply_num = #{reply_num}
+		</update>
+		
+		<delete id="delete">
+			DELETE FROM reply
+				WHERE reply_num = #{reply_num}	
+		</delete>
+		
+		<delete id="deleteAll">
+			DELETE FROM reply
+				WHERE post_num = #{post_num}	
+		</delete>
+		
+		<select id ="getPost_num" resultType="long">
+			SELECT 	post_num FROM reply
+				WHERE reply_num = #{reply_num}		
+		</select>
+		
+		<select  id ="select" resultType="com.talk.reply.domain.ReplyVO">
+		SELECT * FROM reply WHERE reply_num = #{reply_num}
+		</select>
+		
+		<delete id="deleteAllReplies">
+			delete from reply
+				WHERE post_num = #{post_num}
+		</delete>
+
+		<select id="getReplySequence" resultType="long">
+			SELECT last_number FROM user_sequences WHERE SEQUENCE_NAME = 'REPLY_NUM'
+		</select>
+		
+		<update id="updateLikeCount">
+			UPDATE reply
+				set
+			like_count = like_count + #{amount} WHERE reply_num = #{reply_num}	
+		</update>
+	</mapper>
