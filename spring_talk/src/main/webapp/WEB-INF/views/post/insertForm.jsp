@@ -124,6 +124,7 @@ $(document).ready(function(){
 	
 	
 	$('#uploadBtn').on("click", function(e){
+		e.preventDefault();
 		
 		var formData = new FormData();
 		
