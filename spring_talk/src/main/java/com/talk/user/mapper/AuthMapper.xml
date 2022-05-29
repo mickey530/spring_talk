@@ -40,6 +40,11 @@
 			values (#{user_id}, #{user_auth})
 	</insert>
 	
+	<insert id="addAuth">
+		insert into user_auth
+			values (#{user_id}, #{user_auth})
+	</insert>
+	
 	<delete id="deleteAll">
 		delete from user_auth
 			where (user_id = #{user_id})

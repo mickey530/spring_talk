@@ -50,7 +50,17 @@
   li{
   	list-style: none;
   }
-  
+  #friend_book{
+  		border:1px black solid;
+       position: fixed;
+       top: 10%;
+       right: 10%;
+       width: 30%;
+       font-size: 15px;
+       align-items: center;
+       background-color: white;
+       z-index: 2;
+  }
   
   #user_img{
   	width: 300px;
@@ -67,6 +77,8 @@
  	#sideMenu > ul > li{
  		list-style: none;
  	}
+ 	
+ 	
  	
  	#modDiv{width: 100%;max-width: 600px;
 margin: 0 auto;
@@ -99,11 +111,13 @@ footer {
 </header>
 <div class="container">
 
-	<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
-	  		<textarea class="form-control" onkeyup="enterkey()" name="book_comment" 
-	  			id="exampleFormControlTextarea1" placeholder="방명록을 남겨주세요!"></textarea>
-			
-	</c:if>
+	<div id="friend_book">
+		
+		<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
+		  		<textarea class="form-control" onkeyup="enterkey()" name="book_comment" 
+		  			id="exampleFormControlTextarea1" placeholder="방명록을 남겨주세요!"></textarea>
+				
+		</c:if>
 	
 	
 		<div class="uploadBookResult">
@@ -112,6 +126,7 @@ footer {
 				
 			</ul>
 		</div>
+	</div>
 
 	<div id="profile_img">
 	
@@ -409,16 +424,11 @@ footer {
 		function getBook(){
 
 				$.getJSON("/user/bookData/" + ${user.user_id}, function(data){
-					console.log("getBook : "+data);
 
 					$(data).each(
 						function() {
-
-							console.log("data");
-							console.log(this);
 							let str = "";
-							str += "<li>"+this.friend+" : "+this.book_comment+"</li>"
-							+ "<span data-rownum='"+this.rownum+"'> X </span>";
+							str += "<li>"+this.friend+" : "+this.book_comment+"<span data-rownum='"+this.rownum+"'> \tX </span></li>";
 
 							uploadResult.append(str);
 							$("#exampleFormControlTextarea1").val("");

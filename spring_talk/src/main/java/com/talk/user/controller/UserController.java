@@ -362,15 +362,11 @@ public class UserController {
 	//권한 추가 메서드
 
 	@PostMapping(value="/addAuth)", produces = {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> addAuth(String user_id,String authName){
+	public ResponseEntity<String> addAuth(String user_id){
 		ResponseEntity<String> entity = null;
 		try {
-			UserVO vo = userService.selectById(user_id);
-			for(AuthVO avo : vo.getAvos()) {
-				if(avo.getAuthority().equals(vo)) {}
-			}
 			
-			authService.insert(vo);
+			authService.addAuth(user_id,"MEMBER");
 			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 		}catch(Exception e) {
 			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
