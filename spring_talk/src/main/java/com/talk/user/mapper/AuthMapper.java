@@ -18,4 +18,6 @@ public interface AuthMapper {
 	
 	public void delete(@Param("user_id") String user_id, @Param("user_auth") String user_auth);
 
+	
+	public void addAuth(@Param("user_id") String user_id, @Param("user_auth")String user_auth);
 }

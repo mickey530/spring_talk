@@ -1,6 +1,9 @@
 package com.talk.user.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -354,11 +357,127 @@ public class UserController {
 
 		return "redirect:/user";
 	}
+	
 
+	//권한 추가 메서드
+
+	@PostMapping(value="/addAuth)", produces = {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity<String> addAuth(String user_id){
+		ResponseEntity<String> entity = null;
+		try {
+			
+			authService.addAuth(user_id,"MEMBER");
+			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		}catch(Exception e) {
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+		}
+		return entity;
+	}
+
+	//방명록 관련 메서드
+	@GetMapping(value="/bookData/{user_id}")
+	public ResponseEntity<List<FriendBookVO>>bookDataGet(@PathVariable("user_id") String user_id){
+	System.out.println("user_id : " + user_id);
+	ResponseEntity<List<FriendBookVO>> entity= null;
+	
+	try {
+		List<FriendBookVO> vos = friendService.getFriendBook(user_id);
+		entity = new ResponseEntity<List<FriendBookVO>>(vos, HttpStatus.OK);
+	}catch(Exception e) {
+		e.printStackTrace();
+		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+		return entity;
+	}
+
+
+	@PostMapping("/deleteBook")
+	@ResponseBody
+	public ResponseEntity<String> deleteBook(long rownum){
+		
+		
+		try {
+			friendService.delete(rownum);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+		}
+		
+		return new ResponseEntity<String>("deleted", HttpStatus.OK);
+		
+	}
+
+	@PostMapping("/updateBook")
+	@ResponseBody
+	public ResponseEntity<String> updateBook(FriendBookVO vo){
+		
+		
+		try {
+			friendService.update(vo);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+		}
+		
+		return new ResponseEntity<String>("deleted", HttpStatus.OK);
+		
+	}
+
+	@ResponseBody
+	@PostMapping(value="/insertBookData", produces= {
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<String> insertBookData(@RequestBody FriendBookVO vo){
+	ResponseEntity<String> entity= null;
+	
+		if(vo != null) {
+			System.out.println("vo : " + vo.toString());
+
+			
+			try {
+				friendService.insert(vo);
+				entity = new ResponseEntity<String>("OK",HttpStatus.OK);
+			}catch(Exception e) {
+				e.printStackTrace();
+				entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}else {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("insertBookData : " + entity);
+		return entity;
+	}
+	
+
+
+	@PostMapping(value="/getBookData")
+	public ResponseEntity<List<FriendBookVO>> getBookData(String user_id){
+	ResponseEntity<List<FriendBookVO>> entity= null;
+	System.out.println(user_id);
+	
+		if(user_id != null) {
+			System.out.println("getBookData user_id : " + user_id);
+
+			
+			try {
+				List<FriendBookVO> vos = friendService.getFriendBook(user_id);
+				System.out.println("vos size : " + vos.size());
+				entity = new ResponseEntity<List<FriendBookVO>>(vos,HttpStatus.OK);
+			}catch(Exception e) {
+				e.printStackTrace();
+				entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}else {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("insertBookData : " + entity);
+		return entity;
+	}
 	
 	//팔로우, 밴 단
 
 	// check Friend
+	@ResponseBody
 	@PostMapping(value="/isFriend")
 	
 	public ResponseEntity<String> isFriend(@RequestBody FollowVO vo){
@@ -643,7 +762,6 @@ public class UserController {
 		
 		// response의 nickname값 파싱
 		String id = (String) response_obj.get("id");
-		String email = (String) response_obj.get("email");
 		String userName = (String) response_obj.get("nickname");
 		
 		UserVO user = new UserVO();
@@ -792,48 +910,5 @@ public class UserController {
 	}
 	
 
-	//권한 추가 메서드
-
-	@PostMapping(value="/addAuth)", produces = {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> addAuth(String user_id,String authName){
-		ResponseEntity<String> entity = null;
-		try {
-			UserVO vo = userService.selectById(user_id);
-			for(AuthVO avo : vo.getAvos()) {
-				if(avo.getAuthority().equals(vo)) {}
-			}
-			
-			authService.insert(vo);
-			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
-		}catch(Exception e) {
-			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-
-		}
-		return entity;
-	}
-	
-
-	//방명록 관련 메서드
-
-	@PostMapping(value="/ajaxBookData)", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<String>> returnBook(String user_id){
-		ResponseEntity<List<String>> entity = null;
 		
-		try {
-			List<String> comment_list = new ArrayList<String>();
-			for(FriendBookVO vo : friendService.getFriendBook(user_id)) {
-				comment_list.add(vo.getBook_comment());
-			} 
-			entity = new ResponseEntity<List<String>>(comment_list, HttpStatus.OK);
-		}catch(Exception e) {
-			entity = new ResponseEntity<List<String>>(HttpStatus.BAD_REQUEST);
-
-		}
-		return entity;
-	}
-	
-	
-	
-		
-	}
-
+}
