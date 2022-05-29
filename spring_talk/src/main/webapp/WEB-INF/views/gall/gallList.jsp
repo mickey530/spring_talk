@@ -75,31 +75,29 @@ footer {
 </sec:authorize>
 	<div id="wrapper">
 		<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
-			<h3 class="col-11 px-0">IN n OUT</h3>
+			<h3 class="col-11 px-0">Community</h3>
 			<a href="/post/insert" class="col-1 text-left text-black">+</a>
 		</header>
 		
-	<div class="container row">
+	<div class="container">
+	<br/>
 		<table boarder="1" class="table table-hover">
 		      <thead>
 		        <tr>
-		          <th>커뮤니티 이름</th>
-		          <th>테이블명</th>	
+		          <th>갤러리 리스트</th>
 		        </tr>
 		      </thead>
 		      <tbody>
-		        <c:forEach var="gall" items="${vo }">
-		          <tr>
-		          	<!--  <td><a href="/gall/list/${gall.gall_name }">${gall.gall_name }</a></td>	-->	
+		        <c:forEach var="gall" items="${gallList }">
+		          <tr onclick="location.href='/gall/list/${gall.table_name }'"></td>
 		          	<td>${gall.gall_name }</td>
-		          	<td>${gall.table_name }</td>  
 		          </tr>
 		        </c:forEach>
 		      </tbody>
 		    </table>
 		    <a href="/admin">생성하러가기</a>
-	</div> 
-	
+	</div> <!-- container -->
+
 	</div> <!-- wrapper -->
 	
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
