@@ -7,6 +7,8 @@ public interface GallListMapper {
 	
 	public void create(GallListVO vo);
 	
-	public void createTbl(String gall_name);
+	public void createTbl(GallListVO vo);
+	
+	public String getGallName(String table_name);
 
 }
