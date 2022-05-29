@@ -8,7 +8,7 @@
 <head>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
@@ -51,6 +51,9 @@
 	  text-align:center;
 	  color: black;
   }
+  .boardHeader{
+    display: inline-block;
+} 	
 #replyBar{
        display: flex !important;
        background-color:white;
@@ -90,37 +93,43 @@ opacity : 0.95;
 </head>
 <body>
 <sec:authorize access="isAuthenticated()">
-<sec:authentication property="principal.user.user_id" var="login_id"/>
+	<sec:authentication property="principal.user.user_id" var="login_id"/> 	
 </sec:authorize>
 
-<!-- 대충 헤더임 -->
-
 <div id="wrapper">
-
 	<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
-		<h3 class="col-11 px-0">IN n OUT</h3>
+		<h3 class="col-11 px-0">${gall_title } 갤</h3>
 		<a href="/post/insert" class="col-1 text-left text-black">+</a>
 	</header>
 
 <div class="container">
-	
-	
-	<div>
+
+
+
 	<div class="py-2">
-	<img src="https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj" alt="mdo" width="32" height="32" class="rounded-circle cardHeader"><a href="/user/room/1234" class="nav-link px-2 link-dark fw-bold postHeader">${post.writer }</a></div>
+		<img src="https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj" alt="mdo" width="32" height="32" class="rounded-circle cardHeader">
+		<a href="/user/room/${board.writer }" class="nav-link px-2 link-dark fw-bold boardHeader">${board.writer}</a>
+	</div>
 	<div id="img"></div>
 	<div id="content">
+	
+	<div>
+	<span> ${board.board_title }</span>
+	<br/>
+	 ${board.board_content }
+	</div>
+	
 	<div class="btnBar py-2">
-		<c:if test="${login_id ne post.writer}">
+		<c:if test="${login_id ne board.writer}">
 			<button class="btn btn-outline-danger" id="postLike">♡</button>
-			<a href="/report/post/${post.post_num}" class="btn btn-outline-dark">신고🚨</a>
+			<a href="/report/post/${board.board_num}" class="btn btn-outline-dark">신고🚨</a>
 		</c:if>
-		<c:if test="${login_id eq post.writer}">
+		<c:if test="${login_id eq board.writer}">
 		<div>
 			<button class="btn btn-outline-danger" id="postLike">♡</button>
 		
-			<a href="/post/updateForm/${post.post_num}" class="btn">수정</a>
-			<form action="/post/delete/${post.post_num}" method="post" class="d-inline">
+			<a href="/gall/updateForm/${gall_name}/${board.board_num}" class="btn">수정</a>
+			<form action="/gall/delete/${gall_name}/${board.board_num}" method="post" class="d-inline">
 				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 				<input type="submit" class="btn" value="삭제">
 			</form>
@@ -129,95 +138,65 @@ opacity : 0.95;
 		</c:if>
 		
 	</div>
-	<strong>@${post.writer }</strong><span> ${post.title }</span>
-	<br/>
-	 ${post.content }
-	 </div>
-</div>
 	
-	
-	
-	<div>
-	<h2>${dog.board_num  }번 게시글</h2>
-	<p>작성자 : ${dog.writer }</p>
-	<p>제목 : ${dog.board_title }</p>
-	
-	
-	<p id="content">내용 : ${dog.board_content }</p>
-	<div>
-		<c:if test="${login_id ne dog.writer}">
-				<button class="btn btn-outline-danger" id="boardLike">♡</button>
-		</c:if>
-		<c:if test="${login_id eq dog.writer}">
-		<div>
-			<button class="btn btn-outline-danger" id="boardLike">♡</button>
-		
-			<form action="/gall/updateForm/${gall_name }/${dog.board_num}" method="get">
-				<input type="submit" class="btn" value="수정">
-				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
-			</form>
-			<form action="/gall/delete/${gall_name }/${dog.board_num}" method="post">
-				<input type="submit" class="btn" value="삭제">
-				<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
-			</form>
-		</div>
-		</c:if>
-		<%-- <a href="/report/post/${dog.board_num}" class="btn btn-outline-dark">신고🚨</a> --%>
-		
-	</div>
 </div>
 
 <hr/>
-<p>좋아요 <span id="likeCount">${dog.like_count}</span>개 / 댓글 <span id="replyCount">${dog.replycount }</span>개</p>
-<hr/>	
+<p>좋아요 <span id="likeCount">${board.like_count}</span>개 / 댓글 <span id="replyCount">${board.replycount }</span>개</p>
 
-	
+<hr/>
 
 	<div id="replies"></div>
-	<br/>
-	<button id="more" class="btn btn-outline-secondary btn-sm" onclick="getReplyList()">와 ! 댓글 ! 더보기!</button>
+<br/>	
+<button id="more" class="btn btn-outline-secondary btn-sm" onclick="getReplyList()">와 ! 댓글 ! 더보기!</button>
+
 	<!-- 댓글 작성란 -->
 	<div id="replyBar" class="mx-0 py-2 w-100 row justify-content-between">
 		<br/>
-	
-	 <sec:authorize access="isAuthenticated()">
-		<div>			
-			<div>
-			<input id="newReplyText" onkeyup="enterkey()" class="form-control" type="text" placeholder="댓글!" aria-label="default input example">
-				<!-- REPLY TEXT <input type="text" id="newReplyText">
-				<button id="replyAddBtn">ADD REPLY</button> -->
+		
+		 <sec:authorize access="isAuthenticated()">
+			<div>			
+				<div>
+					<input id="newReplyText" onkeyup="enterkey()" class="form-control" type="text" placeholder="댓글!" aria-label="default input example">
+ 					<!-- <input type="text" id="newReplyText"> -->
+					<!-- <button id="replyAddBtn">ADD REPLY</button> -->
+				</div>
 			</div>
-		</div>
-	</sec:authorize>
+		</sec:authorize>
+		
+		<sec:authorize access="isAnonymous()">
+			<a href="/user/login">로그인</a>
+		</sec:authorize>
+		<br/>
+	</div>
 	
-	<sec:authorize access="isAnonymous()">
-		<a href="http://localhost:8181/user/login">로그인</a>
-	</sec:authorize>
-	<br/>
-	
-</div>
 
+		<!-- 본인 =  답글 수정 삭제 닫기
+			 본인x = 답글         닫기 -->
+	
 	<!-- 모달창 -->
 	<div id="modDiv" style="display:none;">
 		<div class="modal-title visually-hidden">
 		</div>
-			<div class="modal-dialog" role="document">
-		<div class="modal-content rounded-6 shadow">
-		
-		<div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-			<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 " id="reReplyBtn" >답글달기</button>	
-			<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="btn">수정</button>
-			<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="replyDelBtn">삭제</button>
-			<button type="button" class="btn btn-lg btn-outline-dark w-100 mx-0 modalArea" onclick="closeModal()">닫기</button>
-		</div>
+		  <div class="modal-dialog" role="document">
+    <div class="modal-content rounded-6 shadow">
+
+    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 " id="reReplyBtn" >답글달기</button>	
+		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 auth visually-hidden" id="btn">수정</button>
+		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="replyDelBtn">삭제</button>
+		<button type="button" class="btn btn-lg btn-outline-dark w-100 mx-0 modalArea" onclick="closeModal()">닫기</button>
+  	</div>
+    </div>
+  </div>
 	</div>
-</div>
-</div>
+
+
 
 </div> <!-- container -->
  
  
-</div> <!-- wrapper -->
+</div> <!-- wrapper -->	
 
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
 	<a href="/user/follow" class="col-2">
@@ -264,7 +243,7 @@ opacity : 0.95;
 	/* 댓글 불러오는 로직 */
 	
 	/* 게시글 번호, 갤러리 이름, 갤러리 이름(댓글) 변수 선언 */
-	let board_num = '${dog.board_num}';	
+	let board_num = '${board.board_num}';	
 	let gall_name = '${gall_name}';
 	let gall_name_reply = '${gall_name}_reply';
 
@@ -273,7 +252,7 @@ opacity : 0.95;
 		 
 		$.getJSON("/gallreplies/all/" + gall_name + "/" + board_num, function(data){
 
-			var str = "";
+			replyList = $("#replies").html();
 			console.log(data);
 			
 			$(data).each(
@@ -302,17 +281,15 @@ opacity : 0.95;
 										formattedTime += '&nbsp;';
 										+ "<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
 										
-					str += "<div class='replyLi p-2' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>"
-						+ "<a href='/user/room/" + this.writer + "'>@"+this.writer + "</a></strong> : " /* + formattedTime */
-						+ "<span class='reply_content'>" + this.reply_content 
-						+ "</span>"
-						+ "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>"
-						+ "<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
-						
-						+ "</div>";												
+									replyList += "<div class='replyLi p-2 row' data-reply_num='" + this.reply_num + "'><div class='col-10'><strong class='reply_id'>"
+									+ "<a href='/user/room/" + this.writer + "'>@" + this.writer + "</a> </strong>" /* + formattedTime */
+									+ "<span class='reply_content modalBtn'>" + this.reply_content 
+									+ "</span></div><div class='col-2'>"
+									+ "<button class='btn btn-outline-danger replyLike' id='replyNum_" + this.reply_num + "'>♡</button>"
+									
+									+ "</div></div>";						
 				});
-			console.log("str : " + str);
-			$("#replies").html(str);			
+			$("#replies").html(replyList);			
 		});
 	 }
 	 getAllList();
@@ -400,11 +377,11 @@ opacity : 0.95;
 		  
 		
 		
-	// 선택한 댓글 외부에서 사용 ///////////////////
+		// 선택한 댓글 외부에서 사용 ///////////////////
 	 	let select = "";
 	 	
 	// 모달 이벤트 위임
-	 let modalArea = false; // 모달 열려있는지 확인
+	 var modalArea = false; // 모달 열려있는지 확인
 
 	 $("#replies").on("click", ".modalBtn", function(){
 
@@ -432,7 +409,7 @@ opacity : 0.95;
 
 		$("#modDiv").show(400);
 		
-		modalArea = true; // 모달 열려있음
+		modalArea = true;
 		if(modalArea){
 			$('html').click(function(e) {
 				if(!$(e.target).hasClass("modalArea")) {
@@ -441,13 +418,25 @@ opacity : 0.95;
 				});		 
 		 }
 		
-		// select					alert("삭제 되었습니다.");
-					$("#replyCount").html(parseInt($("#replyCount").html())-1); // 댓글 개수 - 반영 로직
-					console.log("??:"+ $(this))
-					$(this).hide("slow");
-					console.log(select.parent().parent());
-					select.parent().parent().hide();
-					closeModal();tle").html();
+		// select 에 저장 //////////////////////
+		select = $(this);
+		$(".reply_content").toggleClass("modalArea");
+
+		console.log("??? : " + select.html())
+	 });
+	
+	 // 모달 닫기
+	 function closeModal(){
+		 $("#modDiv").hide("400");
+		 $(".modalBtn").removeClass("modalArea");
+
+		 modalArea = false;
+		 console.log("근데 이게 자꾸 찍힘;;")
+	 };
+	 
+	 // 삭제
+	 $("#replyDelBtn").on("click", function(){
+		 let reply_num = select.parent().parent().attr("data-reply_num");
 		$.ajax({
 			type : 'DELETE',
 			url : '/gallreplies/' + gall_name + "/" + reply_num + "/" + board_num,
@@ -463,12 +452,12 @@ opacity : 0.95;
 				console.log("result: " + result);
 				if(result == 'SUCCESS'){
 					alert("삭제 되었습니다.");
-					$("#replyCount").html(parseInt($("#replyCount").html())-1);
+					$("#replyCount").html(parseInt($("#replyCount").html())-1); // 댓글 개수 - 반영 로직
+					console.log("??:"+ $(this))
 					$(this).hide("slow");
-					console.log(select.parent());
-					select.parent().hide();
-					$("#modDiv").hide("slow");
-					 /* getAllList();  */
+					console.log(select.parent().parent());
+					select.parent().parent().hide();
+					closeModal();
 				}
 			}
 		});
@@ -476,21 +465,25 @@ opacity : 0.95;
 	 
 	 // 수정버튼
 	 $("#btn").click(function(){
+		 console.log("select : " + select);
 			closeModal();
 			$(".modalBtn").toggleClass("modalBtn");
 			let replyText = select.html();
-			let input = "<input type='text' class='reply' value='"+ replyText +"'>"
+			console.log("select"+select)
+			let input = "<input type='text' class='reply form-control' value='"+ replyText +"'>"
+			let modify = "<button type='button' class='btn btn-outline-success' onclick='replyMod()'>✓</button>";
 			
-			let modify = "<button type='button' onclick='replyMod()'>저장</button>";
-
-			select.html(input + modify);
+			likeBackup = select.parent().siblings()[0].innerHTML;
+			select.parent().children(".reply_id").hide()
+			select.html(input);
+			select.parent().siblings()[0].innerHTML = modify;
 		})
 		
 	 // 수정사항 저장 버튼
 	 function replyMod(){
 		 
-		$(".memu").toggleClass("modalBtn");
-		let reply_num = $(".modal-title").html();
+		$(".reply_content").toggleClass("modalBtn");
+		let reply_num = select.parent().parent().attr("data-reply_num");
 		let reply_content = $(".reply").val();
 		$.ajax({
 			type : 'patch', 
@@ -510,9 +503,10 @@ opacity : 0.95;
 				if(result == 'SUCCESS'){
 					alert("수정되었습니다.");
 					select.html(reply_content);
-					$(".menu").addClass("modalBtn");
-					modalarea = false;
-					/* getAllList(); */ //수정된 댓글 반영한 새 댓글목록 갱신 
+					select.parent().children(".reply_id").show()
+					select.parent().siblings()[0].innerHTML = likeBackup;
+					$(".reply_content").addClass("modalBtn");
+					$("#modDiv").hide(); // 수정사항 저장하는 순간 자꾸 모달 튀어나와서 그냥 막아버림 
 				}
 			}
 		});
@@ -589,6 +583,9 @@ opacity : 0.95;
        				}
        			});
        		});	 
+       	
+  	 
+       	
 	 </script>	
 </body>
 </html>

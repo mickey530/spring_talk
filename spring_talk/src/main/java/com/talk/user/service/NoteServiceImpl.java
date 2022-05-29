@@ -1,5 +1,6 @@
 package com.talk.user.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,23 @@ public class NoteServiceImpl implements NoteService{
 		
 	}
 
+	@Override
+	public List<String> noteUserList(String login_id) {
+		ArrayList<String> userList = new ArrayList<>();
+		ArrayList<String> list = new ArrayList<>();
+		list.addAll(noteMapper.left(login_id));
+		list.addAll(noteMapper.right(login_id));
+		
+		for(String item : list){
+            if(!userList.contains(item))
+                userList.add(item);
+        }
+		return userList;
+	}
 	
+	@Override
+	public String recent(NoteVO vo) {
+		return noteMapper.recent(vo);
+	}
 
 }

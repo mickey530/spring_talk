@@ -845,11 +845,28 @@ public class UserController {
 	
 	
 	
-	// 쪽지 주고 받은 유저 리스트
-	@GetMapping(value="/chatList")
-	public String chatList(String login_id) {
-
+	// 채팅목록 (쪽지 주고 받은 유저 리스트)
+	@GetMapping(value="/chatList/{login_id}")
+	public String chatList(@PathVariable("login_id") String login_id, Model model) {
+		List<String> chatList = noteService.noteUserList(login_id);
+		model.addAttribute("chatList", chatList);
+		log.warn("?????? : " + chatList);
 		return "user/chatList";
+	}
+	
+	// 특정 유저와 주고받은 쪽지 중 최신내용
+	@ResponseBody
+	@PostMapping(value="/chatRecent", consumes="application/json",
+			produces = "application/text; charset=utf8")
+	public ResponseEntity<String> recent(@RequestBody NoteVO vo){
+		ResponseEntity<String> entity = null;
+		try {
+			entity = new ResponseEntity<>(noteService.recent(vo), HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace(); // 이게 있어야 에러를 콘솔에 찍을수 있음
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return entity;
 	}
 	
 	

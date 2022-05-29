@@ -16,5 +16,9 @@ public interface NoteService {
 	public void insert(NoteVO vo);
 	
 	public void delete(long note_num);
+
+	public List<String> noteUserList(String login_id);
 	
+	public String recent(NoteVO vo);
+
 }
