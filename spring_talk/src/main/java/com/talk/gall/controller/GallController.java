@@ -32,7 +32,7 @@ import lombok.extern.log4j.Log4j;
 @Controller
 @Log4j
 @RequestMapping("/gall")
-public class GallDogController {
+public class GallController {
 	
 	@Autowired
 	GallDogService service;
@@ -44,12 +44,14 @@ public class GallDogController {
 	GallDogLikeService doglikeservice;
 	
 	@Autowired
-	GallListService listservice;
+	GallListService listService;
 	
 	
 	// 갤러리 구분해놓은 목록
 	@GetMapping("gallList")
-	public String gallList() {
+	public String gallList(Model model) {
+		List<GallListVO> gallList = service.gallList();
+		model.addAttribute("gallList", gallList);
 		return "gall/gallList";
 	}
 	
@@ -70,6 +72,9 @@ public class GallDogController {
 	@GetMapping("/list/{gall_name}")
 	public String dogList(@PathVariable("gall_name") String gall_name, SearchCriteria cri, Model model) {
 		List<GallDogVO> dogList = service.allList(gall_name);
+		
+		String gall_title = listService.getGallName(gall_name);
+		model.addAttribute("gall_title", gall_title);
 		model.addAttribute("dogList", dogList);
 		
 		PageMaker pageMaker = new PageMaker();
