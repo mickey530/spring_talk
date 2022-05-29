@@ -38,6 +38,7 @@ import com.talk.file.domain.ThumbnailVO;
 import com.talk.file.service.FileService;
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.FollowCriteria;
+import com.talk.post.domain.PostDTO;
 import com.talk.post.domain.PostLikeVO;
 import com.talk.post.domain.PostVO;
 import com.talk.post.domain.UserCriteria;
@@ -81,11 +82,14 @@ public class PostController {
 	}
 	
 	@PostMapping("/insert")
-	public String insert(PostVO vo,@PathVariable (value = "ifVOs", required = false) ImageFileDTO ifVOs) {
-		if(ifVOs == null) {
-			service.insert(vo,null);
+	public String insert(PostDTO vo) {
+		System.out.println("pvo : " + vo.getPostVO().toString());
+		if(vo.getIfVOs() == null) {
+			System.out.println("ifVOs : null");
+			service.insert(vo.getPostVO(),null);
 		}else {
-			service.insert(vo,ifVOs.getIfVOs());
+			System.out.println("ifVOs : " + vo.getIfVOs().size());
+			service.insert(vo.getPostVO(),vo.getIfVOs());
 		}
 		return "post/newsfeed"; // 나중에 뉴스피드로 리다이렉트 예정
 	}
@@ -300,6 +304,9 @@ public ResponseEntity<List<ThumbnailVO>> uploadAjaxPost(MultipartFile[] uploadFi
 			
 			
 			File saveFile = new File(uploadPath, uploadFileName);
+			
+			System.out.println("saveFile :" + saveFile );
+			
 			multipartFile.transferTo(saveFile);
 			
 			attachVO.setUuid(uuid.toString());
@@ -317,6 +324,7 @@ public ResponseEntity<List<ThumbnailVO>> uploadAjaxPost(MultipartFile[] uploadFi
 			}
 			catch(Exception e) {
 				e.printStackTrace();
+				continue;
 			}
 			
 			// 이 아래부터 썸네일 생성로직
@@ -353,15 +361,13 @@ public ResponseEntity<List<ThumbnailVO>> uploadAjaxPost(MultipartFile[] uploadFi
 			
 			file.delete();
 			
-			if(type.equals("image")) {
-				String largeFileName = file.getAbsolutePath().replace("s_", "");
+			String largeFileName = file.getAbsolutePath().replace("s_", "");
 				
-				log.info("largeFileName : " + largeFileName);
+			log.info("largeFileName : " + largeFileName);
 				
-				file = new File(largeFileName);
+			file = new File(largeFileName);
 				
-				file.delete();
-			}
+			file.delete();
 		} catch(UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
