@@ -11,7 +11,7 @@ public interface AuthService {
 
 	public List<UserVO> readAllAuthList();
 
-	public void insert(String user_id,String authName);
+	public void insert(UserVO vo);
 
 	public void deleteAll(String user_id);
 	

@@ -95,6 +95,8 @@ footer {
 </header>
 <div class="container">
 
+<button onclick="getBookComment()">asdf</button>
+
 
 
 	<div id="profile_img">
@@ -175,6 +177,31 @@ footer {
 	let page_num = 0;
 	let user_id = '${user.user_id}';
 	var post = "";
+	
+	function getBookComment(){
+		$.ajax({
+			type : 'post',
+			url : '/user/ajaxBookData',
+			headers : {
+				"Content-Type" : "application/json",
+				"X-HTTP-Method-Override" : "POST"
+			},
+			dataType : 'text',
+			data : JSON.stringify({
+				book_owner : login_id, 
+				friend : user_id
+			}),
+            beforeSend: function(xhr){
+                xhr.setRequestHeader(_csrf_header, _csrf);
+            },
+			success : function(result){
+				console.log(result)
+				if(result == 'FOLLOW SUCCESS'){
+					
+				}
+			}
+		}) 
+	}
 
 	 function more(){
 		page_num += 1;
