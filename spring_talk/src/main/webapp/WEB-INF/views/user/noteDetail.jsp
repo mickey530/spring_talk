@@ -234,7 +234,6 @@ footer {
 								+ "</div></div>"
 					    		$("#notes").append(str);
 								document.body.scrollTop = document.body.scrollHeight;
-					    		alert("전송 되었습니다.");
 					    		refresh();
 					    	}
 					 }
