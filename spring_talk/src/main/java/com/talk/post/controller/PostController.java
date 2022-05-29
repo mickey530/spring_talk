@@ -85,11 +85,14 @@ public class PostController {
 	}
 	
 	@PostMapping("/insert")
-	public String insert(PostVO vo,ImageFileDTO ifVOs) {
-		service.insert(vo,ifVOs.getIfVOs());
-		
-		return "post/newsfeed"; // 나중에 뉴스피드로 리다이렉트 예정
-	}
+    public String insert(PostVO vo,@PathVariable (value = "ifVOs", required = false) ImageFileDTO ifVOs) {
+        if(ifVOs == null) {
+            service.insert(vo,null);
+        }else {
+            service.insert(vo,ifVOs.getIfVOs());
+        }
+        return "post/newsfeed"; // 나중에 뉴스피드로 리다이렉트 예정
+    }
 	
 	@GetMapping("/detail/{post_num}")
 	public String detail(@PathVariable long post_num, Model model) {

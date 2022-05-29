@@ -118,6 +118,11 @@ public class UserController {
         return "user/room";
     }
 	
+	@GetMapping("/room")
+    public String roomRedirect() {
+        return "user/login";
+    }
+	
 	@GetMapping(value="/getAllUsers")
 	public String getAllUsers( Model model) {
 		List<UserVO> user_info_list = userService.selectAll();
@@ -689,8 +694,12 @@ public class UserController {
 	
 	
 	
-	
-	
+	// 쪽지 주고 받은 유저 리스트
+	@GetMapping(value="/chatList")
+	public String chatList(String login_id) {
+
+		return "user/chatList";
+	}
 	
 	
 	
@@ -720,7 +729,7 @@ public class UserController {
 	}
 		
 
-	// 주고받은 쪽지 리스트
+	// 특정 유저와 주고받은 쪽지 리스트
 	@GetMapping(value="/noteList/{note_sender}/{note_recipient}",
 			produces= {MediaType.APPLICATION_XML_VALUE,
 					 MediaType.APPLICATION_JSON_UTF8_VALUE})
