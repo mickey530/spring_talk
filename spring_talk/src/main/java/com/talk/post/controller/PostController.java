@@ -76,8 +76,8 @@ public class PostController {
 	@Autowired
 	private AdService adService;
 	
-	public final String uploadFolder = "/Users/user/upload_data/temp/";
-//	public final String uploadFolder = "c:\\upload_data\\temp\\";
+//	public final String uploadFolder = "/Users/user/upload_data/temp/";
+	public final String uploadFolder = "c:\\upload_data\\temp\\";
 	
 	@GetMapping("/insert")
 	public String insert() {
