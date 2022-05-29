@@ -8,7 +8,7 @@
 <head>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>		
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
@@ -441,19 +441,13 @@ opacity : 0.95;
 				});		 
 		 }
 		
-		// select 에 저장 //////////////////////
-		select = $(this).siblings(".reply_content");
-	 });
-	
-	 // 모달 닫기
-	 function closeModal(){
-		 $("#modDiv").hide("400");
-		 modalArea = false;
-	 };
-	 
-	 // 삭제
-	 $("#replyDelBtn").on("click", function(){
-		let reply_num = $(".modal-title").html();
+		// select					alert("삭제 되었습니다.");
+					$("#replyCount").html(parseInt($("#replyCount").html())-1); // 댓글 개수 - 반영 로직
+					console.log("??:"+ $(this))
+					$(this).hide("slow");
+					console.log(select.parent().parent());
+					select.parent().parent().hide();
+					closeModal();tle").html();
 		$.ajax({
 			type : 'DELETE',
 			url : '/gallreplies/' + gall_name + "/" + reply_num + "/" + board_num,
