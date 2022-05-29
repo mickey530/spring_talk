@@ -34,6 +34,10 @@
 			</if>
 		</if>
 	</sql>
+	
+	<select id="gallList" resultType="com.talk.gall.domain.GallListVO">
+		SELECT * FROM gall_list
+	</select>
 
 	<insert id="insert" parameterType="string">
 		INSERT INTO ${gall_name} (board_num, board_title, board_content, writer)

@@ -225,7 +225,7 @@ footer {
 	 
 	 let login_id = '${login_id}';
 	 function followerNum(){
-			$.getJSON("/user/countFollower/" + user_id, function(data){
+			$.getJSON("/user/countFollowed/" + user_id, function(data){
 
 				console.log(data)
 			

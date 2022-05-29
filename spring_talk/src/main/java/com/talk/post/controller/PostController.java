@@ -36,12 +36,14 @@ import com.talk.file.domain.ImageFileDTO;
 import com.talk.file.domain.ImageFileVO;
 import com.talk.file.domain.ThumbnailVO;
 import com.talk.file.service.FileService;
+import com.talk.post.domain.AdVO;
 import com.talk.post.domain.Criteria;
 import com.talk.post.domain.FollowCriteria;
 import com.talk.post.domain.PostDTO;
 import com.talk.post.domain.PostLikeVO;
 import com.talk.post.domain.PostVO;
 import com.talk.post.domain.UserCriteria;
+import com.talk.post.service.AdService;
 import com.talk.post.service.PostAtService;
 import com.talk.post.service.PostLikeService;
 import com.talk.post.service.PostService;
@@ -72,6 +74,8 @@ public class PostController {
 	private ReplyService replyService;
 	@Autowired
 	private FileService fileService;
+	@Autowired
+	private AdService adService;
 	
 //	public final String uploadFolder = "/Users/user/upload_data/temp/";
 	public final String uploadFolder = "c:\\upload_data\\temp\\";
@@ -110,10 +114,9 @@ public class PostController {
 	
 	@PostMapping("delete/{post_num}")
 	public String delete(@PathVariable long post_num) {
-		replyService.removeAllReply(post_num);
 		service.delete(post_num);
 		log.info(post_num + "번 게시글 삭제되었습니다.");
-		return "redirect:post/newsfeed"; // 나중에 마이룸으로 리다이렉트 예정
+		return "redirect:/post/newsfeed"; // 나중에 마이룸으로 리다이렉트 예정
 	}
 	
 	@GetMapping("updateForm/{post_num}")
@@ -253,6 +256,23 @@ public class PostController {
 		return entity;
 	}
 	
+	// 뉴스피드 광고
+	@ResponseBody
+	@GetMapping(value="/ad", produces= {
+//			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<AdVO> ad(int ad_num){
+	
+	ResponseEntity<AdVO> entity= null;
+	
+	try {
+		entity = new ResponseEntity<>(adService.select(ad_num),HttpStatus.OK);
+	}catch(Exception e) {
+		e.printStackTrace();
+		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+		return entity;
+	}
 	
 	
 

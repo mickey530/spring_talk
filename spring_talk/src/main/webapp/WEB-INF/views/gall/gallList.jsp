@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+ <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,7 +46,12 @@
 	  text-align:center;
 	  color: black;
   }
-  footer {
+
+header{
+        background-color: white;
+}
+
+footer {
         display: flex !important;
         position: fixed;
         bottom: 0px;
@@ -56,7 +61,7 @@
         align-items: center;
         background-color: white;
         z-index: 2;
-  }
+}
 </style>
 <!DOCTYPE html>
 <html>
@@ -66,27 +71,33 @@
 </head>
 <body>
 <sec:authorize access="isAuthenticated()">
-<sec:authentication property="principal.user.user_id" var="login_id"/>
+	<sec:authentication property="principal.user.user_id" var="login_id"/>
 </sec:authorize>
 	<div id="wrapper">
-<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
-<h3 class="col-11 px-0">IN n OUT</h3>
-<a href="/post/insert" class="col-1 text-left text-black">+</a>
-</header>
+		<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
+			<h3 class="col-11 px-0">Community</h3>
+			<a href="/post/insert" class="col-1 text-left text-black">+</a>
+		</header>
 		
 	<div class="container">
-	
-	<div class="mx-0 py-2 w-100 border-top row justify-content-between">
-		<a href="/gall/dogList" class="p-3 border-bottom">멍 갤</a><br/>
-		<a href="#" class="p-3 border-bottom">냥 갤</a><br/>
-		<a href="#" class="p-3 border-bottom">냠냠 갤</a><br/>
-		<a href="#" class="p-3 border-bottom">운동 갤</a><br/>
-		<a href="#" class="p-3 border-bottom">게임 갤</a><br/>
-		<a href="#" class="p-3 border-bottom">등산 갤</a><br/>
-	</div>
-	
-	</div> 
-	
+	<br/>
+		<table boarder="1" class="table table-hover">
+		      <thead>
+		        <tr>
+		          <th>갤러리 리스트</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+		        <c:forEach var="gall" items="${gallList }">
+		          <tr onclick="location.href='/gall/list/${gall.table_name }'"></td>
+		          	<td>${gall.gall_name }</td>
+		          </tr>
+		        </c:forEach>
+		      </tbody>
+		    </table>
+		    <a href="/admin">생성하러가기</a>
+	</div> <!-- container -->
+
 	</div> <!-- wrapper -->
 	
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
@@ -116,7 +127,7 @@
           <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
         </svg>	
 	</a>
-</footer>	
+</footer>
 	
 </body>
 </html>
