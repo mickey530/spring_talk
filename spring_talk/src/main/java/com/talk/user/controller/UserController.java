@@ -1,8 +1,12 @@
 package com.talk.user.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,10 +36,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.BanVO;
 import com.talk.user.domain.FollowVO;
+import com.talk.user.domain.FriendBookVO;
 import com.talk.user.domain.MemberVO;
 import com.talk.user.domain.NoteCriteria;
 import com.talk.user.domain.NoteVO;
@@ -54,6 +60,7 @@ import com.talk.post.domain.PostVO;
 import com.talk.post.service.TagService;
 import com.talk.reply.domain.ReplyVO;
 import com.talk.user.service.FollowServiceImpl;
+import com.talk.user.service.FriendBookService;
 import com.talk.user.service.NoteService;
 import com.talk.user.service.UserService;
 import com.talk.user.service.UserServiceImpl;
@@ -89,6 +96,10 @@ public class UserController {
 	@Autowired
 	private NoteService noteService;
 	
+	//방명록
+	@Autowired
+	private FriendBookService friendService;
+	
 	@GetMapping(value={ "/", ""})
 	public String userHome() {
 		return "user/userHome";
@@ -114,6 +125,11 @@ public class UserController {
         UserVO user = userService.selectById(user_id);
         model.addAttribute("user", user);
         return "user/room";
+    }
+	
+	@GetMapping("/room")
+    public String roomRedirect() {
+        return "user/login";
     }
 	
 	@GetMapping(value="/getAllUsers")
@@ -154,28 +170,66 @@ public class UserController {
 		return entity;
 	}
 	
+
 	
 	@GetMapping(value="/update")
-	public String update(String uid,
-			Model model) {
-		
-		System.out.println("uid : " + uid);
-		
-		UserVO user = userService.selectById(uid);
-		
-		model.addAttribute("userInfo",user);
-
+	public String update() {
 		return "/user/updateForm";
 	}
 	
-	@GetMapping(value="/updateUser")
-	public String updateUser(
-				UserVO vo, 
-				Model model)
-			throws DataIntegrityViolationException
-	{
+
+	@GetMapping(value="/getByte/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
+													MediaType.APPLICATION_JSON_UTF8_VALUE})
+	
+	public ResponseEntity<String> getByte(@PathVariable("user_id")String user_id){
+		
+		ResponseEntity<String> entity= null;
 		
 		try {
+
+			System.out.println("user_id : " +user_id);
+			String encoding;
+			byte[] bytes = userService.selectById(user_id).getUser_img();
+			if(bytes == null || bytes.length < 2) {
+				encoding ="/resources/file.png";
+				entity = new ResponseEntity<>("/resources/file.png",HttpStatus.OK);
+			}else {
+			      Base64.Encoder encoder = Base64.getEncoder();
+			      encoding = "data:image/png;base64," + encoder.encodeToString(bytes);
+			      System.out.println("encoding : " + encoding);
+			}
+			
+//		      ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+//		      BufferedImage bImage2 = ImageIO.read(bis);
+//		      ImageIO.write(bImage2, "png", new File("C:\\upload_data\\temp\\output.png") );
+//		      System.out.println("image created");
+		      
+			entity = new ResponseEntity<>(encoding,HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("getByte : "+ entity);
+		return entity;
+	}
+	
+
+	@PostMapping(value="/updateUser")
+	public String updateUser(UserVO vo,@RequestParam("file") MultipartFile[] file){
+
+		try { 
+			if(file[0].getBytes().length <= 0) {
+				byte[] user_img = userService.select(vo.getUser_num()).getUser_img();
+				if(user_img == null) {
+					user_img = new byte[1];
+				}
+				vo.setUser_img(user_img);
+			}else {
+		    vo.setUser_img(file[0].getBytes());
+			}
+			List<AuthVO> authList = authService.userAuthList(vo.getUser_id());
+			vo.setAvos(authList);
+			
 			userService.update(vo);
 			return "redirect:/user/";
     	} catch(DataIntegrityViolationException e) {
@@ -186,6 +240,7 @@ public class UserController {
 		
 		return "redirect:/user/";
 	}
+	
 	
 	@GetMapping(value="/delete")
 	public String delete() {
@@ -302,10 +357,149 @@ public class UserController {
 
 		return "redirect:/user";
 	}
+	
 
+	//권한 추가 메서드
+
+	@PostMapping(value="/addAuth)", produces = {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity<String> addAuth(String user_id){
+		ResponseEntity<String> entity = null;
+		try {
+			
+			authService.addAuth(user_id,"MEMBER");
+			entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+		}catch(Exception e) {
+			entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+		}
+		return entity;
+	}
+
+	//방명록 관련 메서드
+	@GetMapping(value="/bookData/{user_id}")
+	public ResponseEntity<List<FriendBookVO>>bookDataGet(@PathVariable("user_id") String user_id){
+	System.out.println("user_id : " + user_id);
+	ResponseEntity<List<FriendBookVO>> entity= null;
+	
+	try {
+		List<FriendBookVO> vos = friendService.getFriendBook(user_id);
+		entity = new ResponseEntity<List<FriendBookVO>>(vos, HttpStatus.OK);
+	}catch(Exception e) {
+		e.printStackTrace();
+		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+		return entity;
+	}
+
+
+	@PostMapping("/deleteBook")
+	@ResponseBody
+	public ResponseEntity<String> deleteBook(long rownum){
+		
+		
+		try {
+			friendService.delete(rownum);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+		}
+		
+		return new ResponseEntity<String>("deleted", HttpStatus.OK);
+		
+	}
+
+	@PostMapping("/updateBook")
+	@ResponseBody
+	public ResponseEntity<String> updateBook(FriendBookVO vo){
+		
+		
+		try {
+			friendService.update(vo);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+		}
+		
+		return new ResponseEntity<String>("deleted", HttpStatus.OK);
+		
+	}
+
+	@ResponseBody
+	@PostMapping(value="/insertBookData", produces= {
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<String> insertBookData(@RequestBody FriendBookVO vo){
+	ResponseEntity<String> entity= null;
+	
+		if(vo != null) {
+			System.out.println("vo : " + vo.toString());
+
+			
+			try {
+				friendService.insert(vo);
+				entity = new ResponseEntity<String>("OK",HttpStatus.OK);
+			}catch(Exception e) {
+				e.printStackTrace();
+				entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}else {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("insertBookData : " + entity);
+		return entity;
+	}
+	
+
+
+	@PostMapping(value="/getBookData")
+	public ResponseEntity<List<FriendBookVO>> getBookData(String user_id){
+	ResponseEntity<List<FriendBookVO>> entity= null;
+	System.out.println(user_id);
+	
+		if(user_id != null) {
+			System.out.println("getBookData user_id : " + user_id);
+
+			
+			try {
+				List<FriendBookVO> vos = friendService.getFriendBook(user_id);
+				System.out.println("vos size : " + vos.size());
+				entity = new ResponseEntity<List<FriendBookVO>>(vos,HttpStatus.OK);
+			}catch(Exception e) {
+				e.printStackTrace();
+				entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}else {
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("insertBookData : " + entity);
+		return entity;
+	}
 	
 	//팔로우, 밴 단
 
+	// check Friend
+	@ResponseBody
+	@PostMapping(value="/isFriend")
+	
+	public ResponseEntity<String> isFriend(@RequestBody FollowVO vo){
+		System.out.println("isFriend vo : " + vo.toString());
+		
+		ResponseEntity<String> entity= null;
+
+		String favorite = "NO";
+		try {
+			if(followService.checkFavorite(vo)) {
+				favorite = "YES";
+			}
+			entity = new ResponseEntity<>(favorite,HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(favorite,HttpStatus.BAD_REQUEST);
+		}
+		System.out.println("countFollower : "+ entity);
+		return entity;
+	}
+	
+	
 
 	// count follower
 	@GetMapping(value="/countFollower/{user_id}",produces= {MediaType.APPLICATION_XML_VALUE,
@@ -568,7 +762,6 @@ public class UserController {
 		
 		// response의 nickname값 파싱
 		String id = (String) response_obj.get("id");
-		String email = (String) response_obj.get("email");
 		String userName = (String) response_obj.get("nickname");
 		
 		UserVO user = new UserVO();
@@ -652,8 +845,29 @@ public class UserController {
 	
 	
 	
+	// 채팅목록 (쪽지 주고 받은 유저 리스트)
+	@GetMapping(value="/chatList/{login_id}")
+	public String chatList(@PathVariable("login_id") String login_id, Model model) {
+		List<String> chatList = noteService.noteUserList(login_id);
+		model.addAttribute("chatList", chatList);
+		log.warn("?????? : " + chatList);
+		return "user/chatList";
+	}
 	
-	
+	// 특정 유저와 주고받은 쪽지 중 최신내용
+	@ResponseBody
+	@PostMapping(value="/chatRecent", consumes="application/json",
+			produces = "application/text; charset=utf8")
+	public ResponseEntity<String> recent(@RequestBody NoteVO vo){
+		ResponseEntity<String> entity = null;
+		try {
+			entity = new ResponseEntity<>(noteService.recent(vo), HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace(); // 이게 있어야 에러를 콘솔에 찍을수 있음
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
 	
 	
 	
@@ -683,12 +897,7 @@ public class UserController {
 	}
 		
 
-	
-	
-	
-	
-	
-	// 주고받은 쪽지 리스트
+	// 특정 유저와 주고받은 쪽지 리스트
 	@GetMapping(value="/noteList/{note_sender}/{note_recipient}",
 			produces= {MediaType.APPLICATION_XML_VALUE,
 					 MediaType.APPLICATION_JSON_UTF8_VALUE})
@@ -717,7 +926,6 @@ public class UserController {
 		return entity;
 	}
 	
-		
-	}
-	
 
+		
+}

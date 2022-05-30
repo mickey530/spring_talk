@@ -10,7 +10,7 @@ public interface ReportReplyMapper {
 	
 	public void insert(ReportReplyVO vo);
 	
-	public void delete(long report_reply_num);
+	public void delete(long report_rnum);
 	
 	public ReportReplyVO select(long report_rnum);
 

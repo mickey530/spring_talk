@@ -17,5 +17,5 @@ public interface FileService {
 	
 	public void insert(List<ImageFileVO> vos);
 	
-	public void delete(String post_num);
+	public void deleteAll(long post_num);
 }

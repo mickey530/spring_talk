@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.talk.gall.domain.GallDogVO;
+import com.talk.gall.domain.GallListVO;
 import com.talk.gall.domain.SearchCriteria;
 import com.talk.gall.mapper.GallDogMapper;
 import com.talk.gall.mapper.GallDogReplyMapper;
@@ -20,6 +21,11 @@ public class GallDogServiceImpl implements GallDogService {
 	@Autowired
 	private GallDogReplyMapper gallDogReplyMapper;
 
+	@Override
+	public List<GallListVO> gallList() {
+		return gallDogMapper.gallList();
+	}
+	
 	@Override
 	public void insert(GallDogVO vo) {
 		gallDogMapper.insert(vo);

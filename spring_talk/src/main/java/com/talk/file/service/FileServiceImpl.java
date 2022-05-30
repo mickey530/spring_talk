@@ -1,5 +1,6 @@
 package com.talk.file.service;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,11 +51,18 @@ public class FileServiceImpl implements FileService{
 		
 		
 	}
-
+	
 	@Override
-	public void delete(String post_num) {
-		// TODO Auto-generated method stub
+	public void deleteAll(long post_num) {
 		
+		for(ImageFileVO file : select(post_num)) {
+
+			File destFile = new File(file.getFile_name());
+			if(destFile.exists()) {
+				destFile.delete();
+			}
+		}
+		ifMapper.deleteAll(post_num);
 	}
 
 	@Override

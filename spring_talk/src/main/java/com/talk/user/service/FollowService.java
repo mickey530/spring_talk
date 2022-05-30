@@ -37,6 +37,9 @@ public interface FollowService {
 	
 	//모든 사람들 조회
 	public List<FollowVO> selectAll();
+
+	//맞팔인지 판단
+	public boolean checkFavorite(FollowVO vo);
 	
 	//넣고
 	public void insert(FollowVO vo);

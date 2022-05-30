@@ -77,8 +77,38 @@ public class ReportController {
 		return "report/reportPostForm";
 	}
 	@PostMapping("/post")
-	public String postForm(ReportPostVO vo) {
+	public String postForm(ReportPostVO vo, int eu) {
+	    System.out.println(eu);
+	    
+	    
+	    switch (eu) {
+		case 1:
+			vo.setReport_reason("스팸홍보/도배글입니다.");
+			break;
+		case 2:
+			vo.setReport_reason("음란물입니다.");
+			break;
+		case 3:
+			vo.setReport_reason("불법정보를 포함하고 있습니다.");
+			break;
+		case 4:
+			vo.setReport_reason("청소년에게 유해한 내용입니다.");
+			break;
+		case 5:
+			vo.setReport_reason("욕설/생명경시/혐오/차별적 표현입니다.");
+			break;
+		case 6:
+			vo.setReport_reason("개인정보 노출 게시물입니다.");
+			break;
+		case 7:
+			vo.setReport_reason("불쾌한 표현이 있습니다.");
+			break;
+
+		default:
+			break;
+		}
 	    reportPostService.addReport(vo);
+	    
 		return "redirect:/report/reportPostList";		
 	}
 	// 댓글 신고하기
@@ -88,8 +118,37 @@ public class ReportController {
 		return "report/reportReplyForm";
 	}
 	@PostMapping("/reply")
-	public String replyForm(ReportReplyVO vo) {
-	    reportReplyService.addReport(vo);
+	public String replyForm(ReportReplyVO vo, int eu) {
+		
+		System.out.println("eu : " +eu);
+	    
+		  switch (eu) {
+			case 1:
+				vo.setReport_reason("스팸홍보/도배글입니다.");
+				break;
+			case 2:
+				vo.setReport_reason("음란물입니다.");
+				break;
+			case 3:
+				vo.setReport_reason("불법정보를 포함하고 있습니다.");
+				break;
+			case 4:
+				vo.setReport_reason("청소년에게 유해한 내용입니다.");
+				break;
+			case 5:
+				vo.setReport_reason("욕설/생명경시/혐오/차별적 표현입니다.");
+				break;
+			case 6:
+				vo.setReport_reason("개인정보 노출 게시물입니다.");
+				break;
+			case 7:
+				vo.setReport_reason("불쾌한 표현이 있습니다.");
+				break;
+
+			default:
+				break;
+			}
+		reportReplyService.addReport(vo);
 		return "redirect:/report/reportReplyList";		
 	}
 	

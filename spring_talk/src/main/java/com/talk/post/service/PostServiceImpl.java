@@ -16,6 +16,7 @@ import com.talk.post.domain.UserCriteria;
 import com.talk.post.mapper.PostLikeMapper;
 import com.talk.post.mapper.PostMapper;
 import com.talk.reply.mapper.ReplyMapper;
+import com.talk.report.service.ReportPostService;
 
 @Service
 public class PostServiceImpl implements PostService{
@@ -31,13 +32,16 @@ public class PostServiceImpl implements PostService{
 	
 	@Autowired
 	private FileService fileService;
+	
+	@Autowired
+	private ReportPostService reportPostService;
 
 	@Override
 	public void insert(PostVO vo,@PathVariable (value = "ifVOs" , required = false) List<ImageFileVO> ifVOs) {
 		postMapper.insert(vo);
 		System.out.println("postNum = "+vo.getPost_num());;
 		
-		if(ifVOs != null || ifVOs.size() > 0) {
+		if(ifVOs != null && ifVOs.size() > 0) {
 			ifVOs.forEach(imageFile -> {
 				imageFile.setPost_num(vo.getPost_num());
 			});
@@ -53,7 +57,7 @@ public class PostServiceImpl implements PostService{
 	@Transactional
 	@Override
 	public void delete(long post_num) {
-		replyMapper.deleteAllReplies(post_num);
+		reportPostService.removeReport(post_num);
 		postMapper.delete(post_num);
 	}
 
