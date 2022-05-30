@@ -9,26 +9,6 @@
 		(gall_num.nextval, #{gall_name}, #{table_name})
 	</insert>
 	
-<<<<<<< HEAD
-	<update id="createTbl" parameterType="com.talk.gall.domain.GallListVO">
-	    CREATE table ${table_name} (
-		    board_num number(10, 0),
-		    board_title varchar2 (20),
-		    board_content varchar2 (2000),
-		    writer VARCHAR2 (20),
-		    nameless  char(1)  default 'N' check(nameless in ('Y','N')),
-		    w_date date default sysdate,
-		    m_date date default sysdate,
-		    like_count number default 0,
-		    replycount number default 0,
-		    hit number default 0
-	    )
-    </update>
-    
-    <select id="getGallName" resultType="string">
-   		SELECT gall_name FROM gall_list WHERE table_name = #{table_name}
-    </select>
-=======
 	<select id="list" parameterType="String" resultType="com.talk.gall.domain.GallListVO">
 		SELECT * FROM  gall_list
 		ORDER BY gall_num DESC
@@ -67,6 +47,9 @@
 	<update id="deleteTbl" parameterType="string">
 		DROP TABLE ${gall_name}
 	</update>
+	
+	<select id="getGallName" resultType="string">
+   		SELECT gall_name FROM gall_list WHERE table_name = #{table_name}
+    </select>
     
->>>>>>> sangoh
 </mapper>

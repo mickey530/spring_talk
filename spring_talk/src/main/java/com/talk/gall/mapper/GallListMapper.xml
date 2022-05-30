@@ -47,5 +47,9 @@
 	<update id="deleteTbl" parameterType="string">
 		DROP TABLE ${gall_name}
 	</update>
+	
+	<select id="getGallName" resultType="string">
+   		SELECT gall_name FROM gall_list WHERE table_name = #{table_name}
+    </select>
     
 </mapper>

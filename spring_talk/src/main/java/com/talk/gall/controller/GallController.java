@@ -79,13 +79,13 @@ public class GallController {
 
 		model.addAttribute("gall", gall);
 		
-		/*
+		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		int countPage = service.countPageNum(cri);
 		pageMaker.setTotalBoard(countPage);
 		model.addAttribute("pageMaker", pageMaker);
-		*/
+		
 		return "gall/dogList";
 	}
 
