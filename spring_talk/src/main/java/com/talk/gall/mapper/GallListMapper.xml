@@ -29,4 +29,23 @@
     hit number default 0
     )
     </update>
+    
+    <update id="ReplyTbl" parameterType="string">
+    CREATE table ${gall_name}_reply 
+    (
+    reply_num number(10, 0),
+    board_num number (10, 0),
+    parent_num number null,
+    reply_content varchar2(200),
+    writer VARCHAR2 (20),
+    w_date date default sysdate,
+    m_date date default sysdate,
+    hit number default 0
+    )
+    </update>
+
+	<update id="deleteTbl" parameterType="string">
+		DROP TABLE ${gall_name}
+	</update>
+    
 </mapper>

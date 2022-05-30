@@ -12,4 +12,8 @@ public interface GallListMapper {
 	public void createTbl(String gall_name);
 	
 	public List<GallListVO> list(String gall_name);
+	
+	public void ReplyTbl(String gall_name);
+	
+	public void deleteTbl(String gall_name);
 }

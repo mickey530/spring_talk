@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div class="container">
-		<h1>멍 갤</h1>
+		<h1>${gall.gall_name } 커뮤니티</h1>
 		<table boarder="1" class="table table-hover">
 		      <thead>
 		        <tr>
@@ -40,7 +40,7 @@
 		    
 
 		    
-		    <!-- 이전 페이지 버튼 보일지 결정하는 부분 -->
+		    <!-- 이전 페이지 버튼 보일지 결정하는 부분 
 		    <ul class="pagination justify-content-center">		  
 		  	<c:if test="${pageMaker.prev }">
 		  		<li class="page-item">
@@ -48,7 +48,7 @@
 		  		</li>
 		  	</c:if>
 		  	
-		  	<!-- 밑에 깔아줄 버튼들 -->
+		  	<!-- 밑에 깔아줄 버튼들
 		  	<c:forEach var="idx" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">
     			<li class="page-item ${pageMaker.cri.pageNum eq idx ? 'active' : '' }">
     				<a class="page-link" href="/gall/list/gall_dog?pageNum=${idx }&searchType=${pageMaker.cri.searchType}&keyword=${pageMaker.cri.keyword}">${idx }</a>
@@ -60,14 +60,13 @@
 		  			<a class="page-link" href="/gall/list/gall_dog?pageNum=${pageMaker.endPage + 1}&searchType=${pageMaker.cri.searchType}&keyword=${pageMaker.cri.keyword}">다음</a>
 		  		</li>
 		  	</c:if>
-		  			  
+		  	-->
+		  	
+		  <!--
 		  </ul>
 		  <div class="row">
-		  	<!-- 검색창 부분 -->
 		  	<form action="/gall/list/gall_dog" method="get">
-		  		<!-- select태그를 이용해서 클릭해 검색조건을 선택하도록 처리 -->
 		  		<select name="searchType">		  		
-		  			<!-- 검색조건을 option태그를 이용해 만들기 -->
 		  			<option value="n">-</option>
 		  			<option value="t" ${pageMaker.cri.searchType eq 't' ? 'selected' : ''}>제목</option>
 		  			<option value="w" ${pageMaker.cri.searchType eq 'w' ? 'selected' : ''}>글쓴이</option>
@@ -77,6 +76,7 @@
 		  		<input type="submit" value="검색">
 		  	</form>
 		  </div>
+		   -->	
 	</div>
 </body>
 </html>

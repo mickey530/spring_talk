@@ -34,16 +34,20 @@ public class AdminController {
 	public String gallList(GallListVO vo, String gall_name, String table_name, Model model) {
 		listservice.create(vo);
         listservice.createTbl(table_name);
+        listservice.ReplyTbl(table_name);
 		return "redirect:/gall/gallList";
 	}
 
 	
-	// gall_??? 테이블 생성
-	@PostMapping("/create/{gall_name}")
-    public String createGall(@PathVariable("gall_name") String gall_name, Model model) {
-        log.info(gall_name);
-        model.addAttribute("gall_name", gall_name); 
-        return "redirect:/gall/gallList";
-    }
+	
+	// 테이블 삭제
+	@PostMapping("delete/{gall_name}/")
+	public String delete(@PathVariable("gall_name") String gall_name, String table_name) {
+		log.info(table_name);
+		log.info(gall_name);
+		listservice.deleteTbl(table_name);
+		return "redirect:/gall/gallList";
+	}
+	
 }
 

@@ -71,16 +71,19 @@ public class GallDogController {
 	
 	// 게시글 목록 http://localhost:8181/gall/list/gall_dog
 	@GetMapping("/list/{gall_name}")
-	public String dogList(@PathVariable("gall_name") String gall_name, SearchCriteria cri, Model model) {
+	public String dogList(@PathVariable("gall_name") String gall_name, GallListVO gall, SearchCriteria cri, Model model) {
 		List<GallDogVO> dogList = service.allList(gall_name);
 		model.addAttribute("dogList", dogList);
+
+		model.addAttribute("gall", gall);
 		
+		/*
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		int countPage = service.countPageNum(cri);
 		pageMaker.setTotalBoard(countPage);
 		model.addAttribute("pageMaker", pageMaker);
-		
+		*/
 		return "gall/dogList";
 	}
 
