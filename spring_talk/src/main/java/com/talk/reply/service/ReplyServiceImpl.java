@@ -42,6 +42,8 @@ public class ReplyServiceImpl implements ReplyService {
 	@Override
 	public void removeReply(Long reply_num) {
 		Long post_num = mapper.getPost_num(reply_num);
+		System.out.println(post_num);
+		System.out.println(reply_num);
 		mapper.delete(reply_num);
 		postmapper.updateReplyCount(post_num, -1);
 		

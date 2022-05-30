@@ -93,7 +93,12 @@ footer {
 		<h3>신고내역</h3><br/>
 		<div class="card">
 		  <div class="card-body">
-			<span>사유 : ${post.report_reason }</span>
+			<span>사유 : ${post.report_reason }
+			
+			</span>
+			
+			
+			
 			<span class="d-flex justify-content-end"><a href="/user/room/${post.report_id }">신고자 : ${post.report_id }</a></span>
 		  </div>
 		</div>

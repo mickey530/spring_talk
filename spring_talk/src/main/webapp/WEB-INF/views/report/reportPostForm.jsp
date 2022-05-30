@@ -86,13 +86,14 @@ footer {
 		<input type="hidden" name="report_post_num" value="${post_num }"><br/>
 		<input type="hidden" name="report_id" value="${login_id }"><br/>	
 			
-			<input type="radio" name="eu" value="1">스팸홍보/도배글입니다<br/>
+			<input type="radio" name="eu" value="1">스팸홍보/도배글입니다.<br/>
 			<input type="radio" name="eu" value="2">음란물입니다.<br/>
 			<input type="radio" name="eu" value="3">불법정보를 포함하고 있습니다.<br/>
 			<input type="radio" name="eu" value="4">청소년에게 유해한 내용입니다.<br/>
 			<input type="radio" name="eu" value="5">욕설/생명경시/혐오/차별적 표현입니다.<br/>
 			<input type="radio" name="eu" value="6">개인정보 노출 게시물입니다.<br/>
 			<input type="radio" name="eu" value="7">불쾌한 표현이 있습니다.	<br/>
+			<input type="radio" name="eu" value="8">기 타	<br/>
 			
 			<textarea class="form-control" name="report_reason" rows="4" placeholder="기타"></textarea><br/>	
 		

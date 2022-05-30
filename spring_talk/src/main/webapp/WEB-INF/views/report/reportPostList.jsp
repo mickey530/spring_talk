@@ -79,7 +79,7 @@ footer {
 	</header>
 <div class="container">
 		<h1>게시물 신고 목록</h1>
-		<table boarder="1" class="table table-hover">
+		<table border="1" class="table table-hover">
 	      <thead>
 	        <tr>
 	          <th>no</th>
