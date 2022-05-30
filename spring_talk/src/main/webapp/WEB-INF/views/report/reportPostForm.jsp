@@ -79,13 +79,23 @@ footer {
 	</header>
 <div class="container">
 	<br/>
-	<p>- 신고 내역을 자세히 작성 해주세요</p>
-	<p>- 허위 신고시 불이익이 어쩌구</p>
+	<p>※허위신고일 경우, 신고자의 서비스 활동이 제한될 수 있으니 유의하시어 신중하게 신고해 주세요. </p>
+	
 
 	<form action="/report/post" method="post">
 		<input type="hidden" name="report_post_num" value="${post_num }"><br/>
-		<input type="hidden" name="report_id" value="${login_id }"><br/>		
-		<textarea class="form-control" name="report_reason" rows="4" placeholder="신고 사유"></textarea><br/>
+		<input type="hidden" name="report_id" value="${login_id }"><br/>	
+			
+			<input type="radio" name="eu" value="1">스팸홍보/도배글입니다<br/>
+			<input type="radio" name="eu" value="2">음란물입니다.<br/>
+			<input type="radio" name="eu" value="3">불법정보를 포함하고 있습니다.<br/>
+			<input type="radio" name="eu" value="4">청소년에게 유해한 내용입니다.<br/>
+			<input type="radio" name="eu" value="5">욕설/생명경시/혐오/차별적 표현입니다.<br/>
+			<input type="radio" name="eu" value="6">개인정보 노출 게시물입니다.<br/>
+			<input type="radio" name="eu" value="7">불쾌한 표현이 있습니다.	<br/>
+			
+			<textarea class="form-control" name="report_reason" rows="4" placeholder="기타"></textarea><br/>	
+		
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<div class="d-flex justify-content-end">
 			<input type="submit" id="submitBtn" class="btn btn-outline-danger" value="제출">
