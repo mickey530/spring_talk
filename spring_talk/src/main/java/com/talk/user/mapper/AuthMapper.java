@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.talk.user.domain.AuthVO;
 import com.talk.user.domain.UserVO;
 
 public interface AuthMapper {
@@ -19,5 +20,5 @@ public interface AuthMapper {
 	public void delete(@Param("user_id") String user_id, @Param("user_auth") String user_auth);
 
 	
-	public void addAuth(@Param("user_id") String user_id, @Param("user_auth")String user_auth);
+	public void addAuth(AuthVO vo);
 }

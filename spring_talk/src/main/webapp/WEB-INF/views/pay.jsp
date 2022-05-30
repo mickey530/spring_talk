@@ -120,6 +120,12 @@ footer {
      <a href="/user/room/${login_id }" class="col-2">마이룸</a>
 </footer>	
 	<script>
+	
+	var _csrf = '${_csrf.token}';
+	var _csrf_header = '${_csrf.headerName}';
+	var user_id = '${login_id}';
+	
+	
 	// 미리 받아와야할 정보들 변수를 전역변수처럼 쓰기위해 선언해두기
 	var itemPrice = 0; // 가격
 	var itemTitle = ""; // 물건이름
@@ -153,17 +159,19 @@ footer {
 			if (rsp.success) { // 결제 성공시 ajax로 db에 데이터를 전송해 입력
 				$.ajax({
 					type: 'post',
-					url: '/order',
+					url: '/user/addAuth',
 					headers:{
 						"Content-Type":"application/json",
 						"X_HTTP-Method-Override":"POST"
 					},
 					dataType:"text",
 					data: JSON.stringify({
-						itemname : itemTitle,
-						amount:itemPrice,
-						merchant_uid:merchant_uid
+						user_id : user_id,
+						authority : "ROLE_MEMBER"
 					}),
+					beforeSend: function(xhr){
+		                xhr.setRequestHeader(_csrf_header, _csrf);
+		            },
 					success: function(){
 						alert(itemTitle + "결제완료!");
 					}

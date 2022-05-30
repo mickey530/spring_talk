@@ -68,9 +68,11 @@ public class AuthServiceImpl implements AuthService{
 	}
 
 	@Override
-	public void addAuth(String user_id, String authName) {
+	public void addAuth(AuthVO vo) {
 		// TODO Auto-generated method stub
-		mapper.addAuth(user_id,authName);
+
+
+		mapper.addAuth(vo);
 	}
 
 }

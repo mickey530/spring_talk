@@ -141,7 +141,7 @@ footer {
 
 	<sec:authorize access="hasRole('ROLE_MEMBER')">
 			<h1>
-				매니저의 권한
+				멤버십 사용자의 권한
 			</h1>
 	</sec:authorize>
 
