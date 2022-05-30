@@ -182,21 +182,18 @@ opacity : 0.95;
 	let gall_name_reply = '${gall_name}_reply';
 
 /* 여어어어어어기 */
-	 function getAllList(){
+	 function getReplyList(){
 		 
 		$.getJSON("/gallreplies/all/" + gall_name + "/" + board_num, function(data){
 
-			var str = "";
+			replyList = $("#replies").html();
 			console.log(data);
 			
 			$(data).each(
 				function() {
-					// 시간
-					
-					let timestamp = this.m_date;
-					
+					// 시간					
+					let timestamp = this.m_date;				
 					console.log("timestamp : " + timestamp);
-					
 					let date = new Date(timestamp);
 					console.log("date : " + date);
 					let formattedTime = " 게시일 : " + date.getFullYear()
@@ -207,28 +204,25 @@ opacity : 0.95;
 										+":" + date.getSeconds()
 										+ '&nbsp;&nbsp;&nbsp;';
 										
-										if(!(this.reply_id == login_id)){
-											formattedTime += "<a type='button'href='/report/reply/"+this.reply_num+"' >🚨</a>";
-										}
-					
-										
 										formattedTime += '&nbsp;';
 										+ "<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
 										
-					str += "<div class='replyLi p-2' data-reply_num='" + this.reply_num + "'><strong class='reply_id'>"
-						+ "<a href='/user/room/" + this.writer + "'>@"+this.writer + "</a></strong> : " /* + formattedTime */
-						+ "<span class='reply_content'>" + this.reply_content 
-						+ "</span>"
-						+ "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>"
-						+ "<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
-						
-						+ "</div>";												
+										replyList += "<div class='replyLi p-2 row' data-reply_num='" + this.reply_num + "'><div class='col-10'><strong class='reply_id'>"
+										+ "<a href='/user/room/" + this.reply_id + "'>@" + this.reply_id + "</a> </strong>" /* + formattedTime */
+										+ "<span class='reply_content modalBtn'>" + this.reply_content 
+										+ "</span></div><div class='col-2'>"
+										/* + "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>" */
+										+ "<button class='btn btn-outline-danger replyLike' id='replyNum_" + this.reply_num + "'>"+this.like_count+"♡</button>"
+										
+										+ "</div></div>";						
+										
+										isReplyLike(this.reply_num);
+										
 				});
-			console.log("str : " + str);
 			$("#replies").html(str);			
 		});
 	 }
-	 getAllList();
+	 getReplyList();
 	 
 	 /* 댓글 작성 후 댓글작성란 비우는 로직 */
 	 function refresh(){
@@ -284,18 +278,17 @@ opacity : 0.95;
 					
 				}),
 				success : function(result){
-					if(result == 'SUCCESS'){
+					if(result == 'OK'){
 						alert("등록되었습니다.");
-						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 반영 로직
+						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 + 반영 로직
 						$("#replies").prepend(
-								"<div class='replyLi p-2' data-reply_num='" + sequence + "'><strong class='reply_id'>@"
-								+ login_id + "</strong> : "
-								+ "<span class='reply_content'>" + reply_content 
-								+ "</span>"
-								+ "<button type='button' class='btn modalBtn modalArea'>메뉴</button>"
-								+"<button class='btn btn-outline-danger' id='boardLike'>좋아요</button>"
-								
-								+ "</div>"		
+								"<div class='replyLi p-2 row' data-reply_num='" + sequence + "'><div class='col-10'><strong class='reply_id'>"
+								+ "<a href='/user/room/" + login_id + "'>@" + login_id + "</a></strong> " /* + formattedTime */
+								+ "<span class='reply_content modalBtn'>" + reply_content
+								+ "</span></div><div class='col-2'>"
+								/* + "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>" */
+								+ "<button class='btn btn-outline-danger reply-like replyLike' id='replyNum_" + sequence + "'>"+0+"♡</button>"
+								+ "</div></div>"	
 					)
 						refresh();
 					}
@@ -453,57 +446,70 @@ opacity : 0.95;
        	            },
        				data : JSON.stringify({
        					board_num : board_num,
-       					user_id : login_id
-       				}),
+       					writer : login_id
+       				}),	
        				success : function(result){
+       					let thisBoard = $("#boardNum_"+ board_num);
+   					 	let likeNum = parseInt(thisBoard.html().substr(1, 1));
+   						thisBoard.html("♡" + likeNum);
+   					 
        					if(result != ""){
-        					$("#boardLike").addClass("board-liked");
-       						$("#boardLike").removeClass("board-like");
-       						$("#boardLike").addClass("btn-danger");
-       						$("#boardLike").removeClass("btn-outline-danger");
+       						thisBoard.addClass("board-liked");
+       						thisBoard.removeClass("board-like");
+       						thisBoard.addClass("btn-danger");
+       						thisBoard.removeClass("btn-outline-danger");
        					} else{
-       						$("#boardLike").addClass("board-like");
-       						$("#boardLike").removeClass("board-liked");
-       						$("#boardLike").addClass("btn-outline-danger");
-       						$("#boardLike").removeClass("btn-danger");
+       						thisBoard.addClass("board-like");
+       						thisBoard.removeClass("board-liked");
+       						thisBoard.addClass("btn-outline-danger");
+       						thisBoard.removeClass("btn-danger");
        					}
        					
        				}
        				/* error도 설정 가능 */
        			});
-       	 } isLike();
+       	 }
 
-       	// 좋아요 버튼 클릭 시 
-       	 $("#boardLike").on("click", function(){
-       	    	
-       			let likeCount = $("#likeCount").text();
-       			console.log(gall_name);
-       			console.log(login_id);
-       			if($("#boardLike").hasClass("board-like")){
-       				$("#likeCount").html(parseInt(likeCount)+1);
-       			} else{
-       				$("#likeCount").html(parseInt(likeCount)-1);
-       			}
-       			
-       			$.ajax({
-       				type : 'post',
-       				url : '/gall/'+gall_name+'/like',
-       				headers : {
-       					"Content-Type" : "application/json",
-       					"X-HTTP-Method-Override" : "POST"
-       				},
-       				dataType : 'text',
-       				beforeSend: function(xhr){
-       	                xhr.setRequestHeader(_csrf_header, _csrf);
-       	            },
-       				data : JSON.stringify({
-       					board_num : board_num,
-       					user_id : login_id
-       				}),
-       				success : function(result){
-       					if(result == 'OK'){
-       						console.log(result)
-       						isLike();
+      // 좋아요 버튼 클릭 시
+		 $("#boardLike").on("click", function(){
+			 if(login_id == ""){
+				 var result = confirm("로그인이 필요한 기능입니다. \n로그인 페이지로 이동하시겠습니까?")
+				 if(result){
+					 location.replace('/user/login')
+				 }
+			 } else{
+			 let board_num = $(this).attr("data-board_num");
+			 let thisBoard = $("#boardNum_"+ board_num);
+			 let likeNum = parseInt(thisBoard.html().substr(1, 1));
+/* 			 if(thisPost.hasClass("post-liked")){
+				 thisPost.html("♡" + (likeNum - 1))
+			 } if(thisPost.hasClass("post-like")){
+				 thisPost.html("♡" + (likeNum + 1))
+			 } */
+ 			 if($(this).hasClass("board-liked")){
+				 $(this).html("♡" + (likeNum - 1))
+			 } if($(this).hasClass("board-like")){
+				 $(this).html("♡" + (likeNum + 1))
+			 }
+			 console.log(board_num);
+				$.ajax({
+					type : 'post',
+					url : '/gall/' + gall_name + 'like',
+					headers : {
+						"Content-Type" : "application/json",
+						"X-HTTP-Method-Override" : "POST"
+					},
+					dataType : 'text',
+					beforeSend: function(xhr){
+		                xhr.setRequestHeader(_csrf_header, _csrf);
+		            },
+					data : JSON.stringify({
+						board_num : board_num,
+						writer : login_id
+					}),
+					success : function(result){
+						if(result == 'OK'){
+ 							isLike();
        					}
        				}
        			});

@@ -53,7 +53,8 @@
 		      <thead>
 		        <tr>
 		          <th>커뮤니티 이름</th>
-		          <th>테이블명</th>	
+		          <th>테이블명</th>
+		          <th>관리</th>
 		        </tr>
 		      </thead>
 		      <tbody>
@@ -61,6 +62,7 @@
 		          <tr>
 		          	<td><a href="/gall/list/${gall.table_name }">${gall.gall_name }</a></td>
 		          	<td>${gall.table_name }</td>  
+		          	<td><form action="/delete/${gall.table_name}" method="post"><input type="submit" value="삭제"><input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/></form></td>
 		          </tr>
 		        </c:forEach>
 		      </tbody>
