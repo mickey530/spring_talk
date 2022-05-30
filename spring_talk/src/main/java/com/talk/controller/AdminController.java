@@ -1,5 +1,7 @@
 package com.talk.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.ui.Model;
 
+import com.talk.gall.domain.GallDogVO;
 import com.talk.gall.domain.GallListVO;
 import com.talk.gall.service.GallListService;
 
@@ -28,11 +31,23 @@ public class AdminController {
 	}
 	// gallAdmin 폼에서 날라온 데이터
 	@PostMapping("gallList")
-	public String gallList(GallListVO vo, Model model) {
+	public String gallList(GallListVO vo, String gall_name, String table_name, Model model) {
 		listservice.create(vo);
-		log.info(vo);
-		model.addAttribute("vo", vo);
+        listservice.createTbl(table_name);
+        listservice.ReplyTbl(table_name);
 		return "redirect:/gall/gallList";
 	}
+
+	
+	
+	// 테이블 삭제
+	@PostMapping("delete/{gall_name}/")
+	public String delete(@PathVariable("gall_name") String gall_name, String table_name) {
+		log.info(table_name);
+		log.info(gall_name);
+		listservice.deleteTbl(table_name);
+		return "redirect:/gall/gallList";
+	}
+	
 }
 

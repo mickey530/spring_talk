@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.talk.user.mapper.BanMapper">
+	
+	
+	<select id="banList" resultType="com.talk.user.domain.BanVO">
+		select * from ban where user_id = #{user_id} 
+	</select>
+	
+	<select id="banedList" resultType="com.talk.user.domain.BanVO">
+		select * from ban where user_id = #{user_id} 
+	</select>
+	
+	<select id="ban" resultType="int">
+		select count(*) from ban where user_id = #{user_id} 
+	</select>
+	
+	<select id="baned" resultType="int">
+		select count(*) from ban where ban_id = #{user_id} 
+	</select>
+	
+	<select id="isBaned" resultType="int">
+	
+		select count(*) from ban
+			where (
+				ban_id = #{baned_user_id} and
+				user_id = #{ban_user_id}
+			)
+	</select>
+	
+	<select id="isBan" resultType="int">
+	
+		select count(*) from ban
+			where (
+				ban_id = #{ban_user_id} and
+				user_id = #{baned_user_id}
+			)
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ban 
+			VALUES(
+				#{user_id}, #{ban_id}
+			)
+	</insert>
+	
+	<delete id="delete">
+	
+		DELETE FROM ban
+		 WHERE (
+			 user_id = #{user_id} and
+			 ban_id = #{ban_id}
+		 )
+	</delete>
+	
+	<update id="update">
+		UPDATE ban 
+			SET 
+			user_id = #{ban_user_id}, 
+			ban_id = #{baned_user_id},
+				WHERE(
+					user_id = #{ban_user_id} and 
+					ban_id = #{baned_user_id}
+				)
+	</update>
+</mapper>

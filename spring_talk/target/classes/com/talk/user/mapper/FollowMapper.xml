@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.talk.user.mapper.FollowMapper">
+	
+	 
+	<select id="selectIdsByFollowed" resultType="com.talk.user.domain.FollowVO">
+		
+		SELECT * FROM follow
+			WHERE follower = #{user_id}
+	</select>
+	 
+	<select id="selectIdsByFollower" resultType="com.talk.user.domain.FollowVO">
+		
+		SELECT * FROM follow
+			WHERE followed = #{user_id}
+	</select>
+	 
+	 
+	<select id="getFollowerList" resultType="com.talk.user.domain.UserVO">
+		
+		
+		SELECT user_num,user_id,user_age,user_name,last_name FROM user_info
+			WHERE user_id in (
+				select follower from follow where followed = #{user_id})
+	</select>
+	 
+	<select id="getFollowedList" resultType="com.talk.user.domain.UserVO">
+		
+		
+		SELECT user_num,user_id,user_age,user_name,last_name FROM user_info
+			WHERE user_id in (
+				select followed from follow where follower = #{user_id})
+	</select>
+	
+	
+	<select id="getFriendList" resultType="com.talk.user.domain.UserVO">
+		
+		SELECT user_num,user_id,user_age,user_name,last_name from user_info
+        where user_id in
+			(select fed.follower
+				FROM
+					(select * from follow where followed = #{user_id}) fed inner JOIN 
+		            (select * from follow where follower = #{user_id}) fer 
+		            on fed.follower = fer.followed)
+	</select>
+	
+	<select id="getFavoriteList" resultType="com.talk.user.domain.UserVO">
+		SELECT user_num,user_id,user_age,user_name,last_name FROM user_info
+			WHERE user_id in (
+				select follower from follow where followed = #{user_id} and favorite = 'Y')
+	</select>
+	 
+	<select id="countFollower" resultType="int">
+		
+		SELECT count(*) FROM follow
+			WHERE follower = #{user_id}
+	</select>
+	 
+	<select id="countFollowed" resultType="int">
+		
+		SELECT count(*) FROM follow
+			WHERE followed = #{user_id}
+	</select>
+	 
+	<select id="selectAll" resultType="com.talk.user.domain.FollowVO">
+		SELECT * FROM follow
+	</select>
+	
+	<select id="checkFavorite" resultType="com.talk.user.domain.FollowVO">
+
+	
+	select a.* from (
+	    (select * from follow where follower = #{follower}) a inner join 
+	    (select * from follow where followed = #{follower}) b 
+	        on (a.follower = b.followed and a.followed = b.follower) )
+	        where a.followed = #{followed}
+	
+	</select>
+	
+	<delete id="delete">
+		delete from follow 
+			WHERE followed = #{followed} and
+			follower = #{follower}
+	</delete>
+	
+	<insert id="insert">
+		insert into follow values (
+		#{follower},#{followed},#{favorite})
+	</insert >
+	
+	<update id="update">
+		update follow set  
+			favorite =#{favorite} 
+			where (
+				follower = #{follower} and 
+				followed = #{followed}
+				)
+
+	</update>
+	
+</mapper>

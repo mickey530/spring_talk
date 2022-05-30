@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.talk.user.mapper.NoteMapper">
+
+<!-- <select id ="allList" resultType="com.talk.user.domain.NoteVO">
+	<![CDATA[
+	
+	]]>		
+</select> -->
+
+<select id ="getList" resultType="com.talk.user.domain.NoteVO">
+	<!-- SELECT * FROM note
+		WHERE note_recipient = #{note_recipient} and note_sender = #{note_sender}
+		or note_recipient = #{note_sender} and note_sender = #{note_recipient}
+		order by note_num  -->
+<!-- 	
+	<![CDATA[
+		
+	SELECT * FROM note
+		WHERE note_recipient = #{note_recipient} and note_sender = #{note_sender}
+		or note_recipient = #{note_sender} and note_sender = #{note_recipient}
+		order by note_num
+	]]>
+	 -->
+	 <![CDATA[
+		SELECT * FROM (SELECT * FROM 
+		(SELECT ROW_NUMBER() OVER(ORDER BY note.regdate desc) row_num, note.* FROM note WHERE
+		note_recipient = #{note_recipient} AND note_sender = #{note_sender} OR
+		note_sender = #{note_recipient} AND note_recipient = #{note_sender} ORDER BY note.REGDATE DESC)
+		where rownum <= 3*#{page_num}*#{number}) WHERE row_num > (#{page_num}-1)*#{number}
+	]]>
+</select>
+
+<insert id="insert"> <!-- 보류  -->
+	insert into note (note_num, note_content, note_sender, note_recipient)
+		VALUES
+	(note_num.nextval, #{note_content}, #{note_sender}, #{note_recipient})
+	
+</insert>
+
+<select id ="select" resultType="com.talk.user.domain.NoteVO">
+	SELECT * FROM note WHERE note_num =#{note_num}
+</select>
+
+<delete id ="delete">
+	delete from note where note_num = #{note_num}
+</delete>
+ 
+ 
+
+
+</mapper>
