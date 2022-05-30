@@ -199,7 +199,7 @@ footer {
 					follow += "<li class='w-100'><div class='d-flex justify-content-between' data-follower='"+this.followed+"'><p class='follower m-0'>"
 					+ "<a href='/user/room/" + this.followed + "'>"
 					+ this.followed +"</a></p>"
-					+ "<div class='d-flex'><button class='btn btn-sm btn-primary m-1'>팔로잉</button>";
+					+ "<div class='d-flex'><button class='btn btn-sm btn-primary m-1 following'>언팔로우</button>";
 					console.log("favorite "+this.followed+" : "+this.favorite);
 					
 					if(this.favorite == 'Y'){
@@ -235,19 +235,8 @@ footer {
 						follower += "<li class='w-100'><div class='d-flex justify-content-between' data-follower='"+this.follower+"'><p class='follower m-0'>"
 						+ "<a href='/user/room/" + this.follower + "'>"
 						+ this.follower +"</a></p>"
-						+ "<div class='d-flex'><button class='btn btn-sm btn-primary m-1'>팔로잉</button>";
-						console.log("favorite "+this.follower+" : "+this.favorite);
-						
-						if(this.favorite == 'Y'){
-
-							follower += "<button class='btn btn-sm btn-danger favorite m-1'>☆ 즐겨찾기</button>";
-						}
-						else{
-
-							follower += "<button class='btn btn-sm btn-outline-danger favorite m-1'>☆ 즐겨찾기</button>";
-						}
-						
-						follower += "</div></div></li>"
+						+ "<div class='d-flex'><button class='btn btn-sm btn-primary m-1 following'>언팔로우</button>"
+						+ "</div></div></li>"
 				});
 			$(".followerList > ul").html(follower);			
 		});
@@ -278,7 +267,7 @@ footer {
 			
 			var follower = "";
 
-			console.log("getFollowedList : ");
+			console.log("getFavoriteList : ");
 			console.log(data);
 			
 			$(data).each(
@@ -286,34 +275,59 @@ footer {
 						follower += "<li class='w-100'><div class='d-flex justify-content-between' data-follower='"+this.user_id+"'><p class='follower m-0'>"
 						+ "<a href='/user/room/" + this.user_id + "'>"
 						+ this.user_id +"</a></p>"
-						+ "<div class='d-flex'><button class='btn btn-sm btn-primary m-1'>팔로잉</button>";
-						console.log("favorite "+this.follower+" : "+this.favorite);
-						
-						if(this.favorite == 'Y'){
-	
-							follower += "<button class='btn btn-sm btn-danger favorite m-1'>☆ 즐겨찾기</button>";
-						}
-						else{
-	
-							follower += "<button class='btn btn-sm btn-outline-danger favorite m-1'>☆ 즐겨찾기</button>";
-						}
-						
-						follower += "</div></div></li>"
-
-					
-					
-					
-					
-						follower += "</div></div></li>"
+						+ "</div></div></li>"
 				});
 			$(".favoriteList > ul").html(follower);			
+			
+
+			 $(".following").on("click", function(){
+				 var button = $(this);
+				 followed = $(this).parent().parent()[0].dataset.follower
+				 console.log(followed)
+
+				  $.ajax({
+						type : 'post',
+						url : '/user/follow',
+						headers : {
+							"Content-Type" : "application/json",
+							"X-HTTP-Method-Override" : "POST"
+						},
+						dataType : 'text',
+						data : JSON.stringify({
+							follower : login_id, // 로그인 아이디
+							followed : followed, // 차단할 아이디
+							favorite : 'N'
+						}),
+						beforeSend: function(xhr){
+			                xhr.setRequestHeader(_csrf_header, _csrf);
+			            },
+						success : function(result){
+							console.log(result)
+							console.log(button)
+							if(result == "FOLLOW SUCCESS"){
+								console.log("FOLLOW")
+								 button.addClass( 'btn-primary' );
+								button.removeClass( 'btn-outline-primary' );
+								button.html("언팔로우")
+							}
+							else if(result == "UNFOLLOW SUCCESS"){
+
+								button.addClass( 'btn-outline-primary' );
+								button.removeClass( 'btn-primary' );
+								console.log("UNFOLLOW")
+								button.html("팔로우")
+							}
+
+						}
+					});  
+			 });
 		});
 	 }
 	 getFavoriteList();
 	 
 	 
-	 // 팔로우 기능
-	 $("#follow").on("click", function(){
+	 /* // 팔로우 기능
+	 function follow(){
 			$.ajax({
 				type : 'post',
 				url : '/user/follow',
@@ -324,7 +338,7 @@ footer {
 				dataType : 'text',
 				data : JSON.stringify({
 					follower : ${login_id}, // 로그인 아이디
-					followed : user_id, // 팔로우할 아이디
+					followed : , // 팔로우할 아이디
 					favorite : 'N'
 				}),
 	            beforeSend: function(xhr){
@@ -336,7 +350,7 @@ footer {
 				}
 			});
 			console.log(${login_id})
-		});
+		};
 	 // 밴 기능
 	 $("#ban").on("click", function(){
 			$.ajax({
@@ -359,16 +373,14 @@ footer {
 					}
 				}
 			});
-		});
+		}); */
 	 
 
 
-	 $(".followerList").on("click", ".favorite", function(){
-		 let follower = $(this).parent()[0].dataset.follower;
-		 
-		 
-		 
-		 let favorite = '';
+	 $(".followList").on("click", ".favorite", function(){
+		 let followed = $(this).parent().parent()[0].dataset.follower;
+
+		 let favorite = 'N';
 
 		 if($(this).hasClass('btn-danger') === true){
 
@@ -380,9 +392,6 @@ footer {
 		 $(this).toggleClass( 'btn-outline-danger' );
 		 $(this).toggleClass( 'btn-danger' );
 
-		 console.log("login_id : " + login_id);
-		 console.log("followed : " + follower);
-		 console.log("favorite : " + favorite);
 
 		 $.ajax({
 				type : 'post',
@@ -393,8 +402,49 @@ footer {
 				},
 				dataType : 'text',
 				data : JSON.stringify({
-					follower : follower, // 로그인 아이디
-					followed : login_id, // 차단할 아이디
+					follower : login_id, // 로그인 아이디
+					followed : followed, // 차단할 아이디
+					favorite : favorite
+				}),
+				beforeSend: function(xhr){
+	                xhr.setRequestHeader(_csrf_header, _csrf);
+	            },
+				success : function(result){
+					getFavoriteList();
+				}
+			});
+	 });
+
+	 $(".followerList").on("click", ".favorite", function(){
+		 let followed = $(this).parent().parent()[0].dataset.follower;
+
+		 let favorite = 'N';
+
+		 if($(this).hasClass('btn-danger') === true){
+
+			 favorite = 'N';
+		 }else{
+			 favorite = 'Y';
+		 }	
+
+		 console.log("login_id : " + login_id);
+		 console.log("login_id : " + login_id);
+		 console.log(followed);
+		 console.log("favorite : " + favorite);
+		 $(this).toggleClass( 'btn-outline-danger' );
+		 $(this).toggleClass( 'btn-danger' );
+
+		 $.ajax({
+				type : 'post',
+				url : '/user/checkFavorite',
+				headers : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "POST"
+				},
+				dataType : 'text',
+				data : JSON.stringify({
+					follower : login_id, // 차단할 아이디
+					followed : followed, // 로그인 아이디
 					favorite : favorite
 				}),
 				beforeSend: function(xhr){
@@ -418,6 +468,8 @@ footer {
 			}
 		});
 		 
+	 
+
 	 
 	 
 	 </script>

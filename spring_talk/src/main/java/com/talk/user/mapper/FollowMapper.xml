@@ -48,7 +48,7 @@
 	<select id="getFavoriteList" resultType="com.talk.user.domain.UserVO">
 		SELECT user_num,user_id,user_age,user_name,last_name FROM user_info
 			WHERE user_id in (
-				select follower from follow where followed = #{user_id} and favorite = 'Y')
+				select followed from follow where follower = #{user_id} and favorite = 'Y')
 	</select>
 	 
 	<select id="countFollower" resultType="int">
