@@ -22,10 +22,12 @@
 		<input type="submit" value="리스트 생성">
 	</form>
 	
+	<!--  
 	<form action="/create/{gall_name }" method="post">
 		<input type="text" name="gall_name"/>
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 		<input type="submit" value="테이블 생성">
 	</form>
+	-->
 </body>
 </html>

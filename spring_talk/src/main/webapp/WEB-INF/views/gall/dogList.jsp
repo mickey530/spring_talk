@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div class="container">
-		<h1>멍 갤</h1>
+		<h1>${gall.gall_name } 커뮤니티</h1>
 		<table boarder="1" class="table table-hover">
 		      <thead>
 		        <tr>
