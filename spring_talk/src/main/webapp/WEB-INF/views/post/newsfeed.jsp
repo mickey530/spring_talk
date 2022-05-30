@@ -187,7 +187,7 @@ footer {
 			$(data).each(
 				function() {
 					post += "<div><div class='py-2'>"
-			             + "<img src='https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj' alt='mdo' width='32' height='32' class='rounded-circle cardHeader'>"
+			             + "<img src='https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj' alt='mdo' width='32' height='32' class='rounded-circle cardHeader user_id_"+this.writer+"'>"
 			             + "<a href='/user/room/" + this.writer + "' class='nav-link px-2 link-dark fw-bold cardHeader'>" + this.writer + "</a>"
 			             + "</div>"
 			             + "<div id='img' href='/post/detail/" + this.post_num + "'></div>"
@@ -224,12 +224,48 @@ footer {
 				
 			
 			);
-			$("#postList").html(post+reply);			
+			$("#postList").html(post+reply);		
+
+
+			$(data).each(
+				function() {
+					var src = $(".user_id_"+this.writer).attr("src");
+					if(src == "https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj"){
+						load_blob_img(this.writer)
+					}
+				});
+				/*  */
+			
  			ad();
 
 		});
 	 }
 	 more();
+
+
+	 function setImage(data,user_id){
+		 $(".user_id_"+user_id).attr({ src: data });
+	 }
+	 function load_blob_img(user_id) {
+		 	
+		 		$.ajax({
+		 			url: '/user/getByte/'+user_id,
+		 			processData: false,
+		 			contentType: false,
+		 			type:"get",
+		 			beforeSend : function(xhr) {
+		 			 xhr.setRequestHeader(_csrf_header, _csrf);
+		 			},
+		 			success: function(result){
+			 			setImage(data.responseText,user_id)
+		 			},
+		 			
+		 		}).fail(function(data, textStatus, errorThrown){
+		 			setImage(data.responseText,user_id)
+		 		}); // ajax
+
+		 };
+		 
 	 
 	// 인피니티 스크롤
 	    $(window).scroll(function(){ 

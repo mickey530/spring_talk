@@ -137,7 +137,7 @@ opacity : 0.95;
 
 <div>
 	<div class="py-2">
-	<img src="https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj" alt="mdo" width="32" height="32" class="rounded-circle cardHeader"><a href="/user/room/1234" class="nav-link px-2 link-dark fw-bold postHeader">${post.writer }</a></div>
+	<img src="https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj" alt="mdo" width="32" height="32" class="rounded-circle cardHeader user_img"><a href="/user/room/1234" class="nav-link px-2 link-dark fw-bold postHeader">${post.writer }</a></div>
 	<div id="img"></div>
 	<div id="content">
 	<div class="btnBar py-2">
@@ -284,9 +284,37 @@ opacity : 0.95;
 	let page_num = 0;
 	let post_num = '${post.post_num}';
 	let replyList = "";
+	
+
+	 function setImage(data){
+		 $(".user_img").attr({ src: data });
+	 }
+	 function load_blob_img() {
+		 	
+		 		$.ajax({
+		 			url: '/user/getByte/${post.writer}',
+		 			processData: false,
+		 			contentType: false,
+		 			type:"get",
+		 			beforeSend : function(xhr) {
+		 			 xhr.setRequestHeader(_csrf_header, _csrf);
+		 			},
+		 			success: function(result){
+			 			setImage(data.responseText)
+		 			},
+		 			
+		 		}).fail(function(data, textStatus, errorThrown){
+		 			setImage(data.responseText)
+		 		}); // ajax
+
+		 };
+		 
+		 load_blob_img();
 
 	 function getReplyList(){
-		page_num += 1;
+		 console.log(${user.user_id});
+			
+		 page_num += 1;
 		$.getJSON("/replies/all/" + post_num + "?page_num=" + page_num, function(data){
 			replyList = $("#replies").html();
 			console.log(data);

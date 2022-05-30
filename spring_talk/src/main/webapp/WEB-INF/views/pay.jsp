@@ -83,6 +83,7 @@ footer {
 <body>
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal.user.user_id" var="login_id"/>
+	<script></script>
 </sec:authorize>
 
 <div id="wrapper">
@@ -101,7 +102,7 @@ footer {
 				<h4>월 4만원에 <br/> 광고 없는 인앤아웃을 즐겨보세요!</h4>
 			</div>
 			<div class="itemPrice">
-				<p data-price="40000" class="justify-content-end"></p>
+				<p data-price="1000" class="justify-content-end"></p>
 			</div>
 			<div class="itemButton d-flex justify-content-end">
 				<div class="btn">40,000원</div><button class="orderBtn btn btn-primary">결제하기</button>
@@ -120,10 +121,14 @@ footer {
      <a href="/user/room/${login_id }" class="col-2">마이룸</a>
 </footer>	
 	<script>
+	
+	var _csrf = '${_csrf.token}';
+	var _csrf_header = '${_csrf.headerName}';
 	// 미리 받아와야할 정보들 변수를 전역변수처럼 쓰기위해 선언해두기
 	var itemPrice = 0; // 가격
 	var itemTitle = ""; // 물건이름
 	var merchant_uid = ""; // 주문번호
+	var login_id = '${login_id}';
 	// 위임처리로 어떤 상품을 클릭했을때 그 상품에 대한
 	$(".itemSection").on("click", ".orderBtn", function(){
 		itemPrice = $(this).parent().siblings(".itemPrice").children().attr("data-price");
@@ -153,16 +158,17 @@ footer {
 			if (rsp.success) { // 결제 성공시 ajax로 db에 데이터를 전송해 입력
 				$.ajax({
 					type: 'post',
-					url: '/order',
-					headers:{
-						"Content-Type":"application/json",
-						"X_HTTP-Method-Override":"POST"
+					url: '/user/addAuth',
+					headers : {
+						"Content-Type" : "application/json",
+						"X-HTTP-Method-Override" : "POST"
 					},
+		            beforeSend: function(xhr){
+		                xhr.setRequestHeader(_csrf_header, _csrf);
+		            },
 					dataType:"text",
 					data: JSON.stringify({
-						itemname : itemTitle,
-						amount:itemPrice,
-						merchant_uid:merchant_uid
+						user_id : login_id
 					}),
 					success: function(){
 						alert(itemTitle + "결제완료!");
