@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http:/mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.talk.user.mapper.AuthMapper">
+	
+	
+	<resultMap type="com.talk.user.domain.UserVO" id="userMap">
+		<result property="user_num" column="user_num" />
+		<result property="user_id" column="user_id" />
+		<result property="user_pw" column="user_pw" />
+		<result property="user_name" column="user_name" />
+		<result property="last_name" column="last_name" />
+		<result property="user_age" column="user_age" />
+		<result property="phone_num" column="phone_num" />
+		<result property="user_comment" column="user_comment" />
+		
+		<collection property="avos" resultMap="authMap" javaType="ArrayList"></collection>
+	</resultMap>
+	
+	<resultMap type="com.talk.user.domain.AuthVO" id="authMap">
+		<result property="user_id" column="user_id"/>
+		<result property="authority" column="authority"/>
+	</resultMap>
+	
+	<select id="getUserAuth" resultMap="userMap">
+		SELECT u.*, a.authority
+				from
+				user_info u left outer join user_auth a on u.user_id = a.user_id
+				where u.user_id= #{userId}
+	</select>
+	
+	<select id="getAllUserAuth" resultMap="userMap">
+		SELECT u.user_id, a.authority
+				from
+				user_info u left outer join user_auth a on u.user_id = a.user_id
+	</select>
+	
+	<insert id="insert">
+		insert into user_auth
+			values (#{user_id}, #{authority})
+	</insert>
+	
+	<insert id="addAuth">
+		insert into user_auth
+			values (#{user_id}, #{authority})
+	</insert>
+	
+	<delete id="deleteAll">
+		delete from user_auth
+			where (user_id = #{user_id})
+	</delete>
+	
+	<delete id="delete">
+		delete from user_auth
+			where (user_id = #{user_id} and authority = #{authority})
+	</delete>
+	
+ 	<update id="insertAuth">
+		insert all
+			<foreach collection="avos" index="index" item="item" separator=" ">
+				into  user_auth values (#{item.user_id}, #{item.authority})
+			</foreach>
+		select * from dual
+	</update> 
+</mapper>
