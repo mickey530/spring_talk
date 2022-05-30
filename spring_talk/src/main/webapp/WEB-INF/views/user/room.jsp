@@ -50,10 +50,22 @@
   li{
   	list-style: none;
   }
-  #user_img{
+/*   #user_img{
   	width: 300px;
   	
-  }
+  } */
+#img{
+	position: relative;
+	width: 100%;
+	padding-bottom: 100%;
+	overflow: hidden;
+}
+.upload_img{
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
  #sideMenu > ul > li > a{
  	color: white;
  }
@@ -102,14 +114,14 @@ footer {
 
 	<div id="profile_img">
 	
-		<div>
+		<div id="img">
 			<c:if test="${login_id ne 'null' && login_id eq user.user_id}">
-				<a href="/user/update" title="프로필 사진 추가" >
-					<img alt="프로필 사진 추가" id="user_img" src="/resources/file.png">
+				<a href="/user/update" id="img" title="프로필 사진 추가" >
+					<img alt="프로필 사진 추가" class="upload_img w-100" id="user_img" src="/resources/file.png">
 				</a>
 			</c:if>
 			<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
-				<img alt="프로필 사진" id="user_img" src="/resources/file.png">
+				<img alt="프로필 사진" class="upload_img w-100" id="user_img" src="/resources/file.png">
 				<hr/>
 			</c:if>
 			<p>${user.user_comment }</p><br>
