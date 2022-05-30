@@ -29,6 +29,17 @@ public class GallListServiceImpl implements GallListService{
 	@Override
 	public List<GallListVO> list(String gall_name) {
 		return gallList.list(gall_name);
-	}	
+	}
 
+	@Override
+	public void ReplyTbl(String gall_name) {
+		gallList.ReplyTbl(gall_name);
+		
+	}
+
+	@Override
+	public void deleteTbl(String gall_name) {
+		gallList.deleteTbl(gall_name);
+		
+	}	
 }

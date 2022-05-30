@@ -87,7 +87,7 @@ public class GallDogController {
 		return "gall/dogList";
 	}
 
-
+	
 	// 게시글 상세 http://localhost:8181/gall/detail/gall_dog
 	@GetMapping("/detail/{gall_name}/{board_num}")
 	public String detail(@PathVariable("gall_name") String gall_name,
