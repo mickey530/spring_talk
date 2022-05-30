@@ -42,7 +42,7 @@
 	
 	<insert id="addAuth">
 		insert into user_auth
-			values (#{user_id}, #{user_auth})
+			values (#{user_id}, #{authority})
 	</insert>
 	
 	<delete id="deleteAll">
