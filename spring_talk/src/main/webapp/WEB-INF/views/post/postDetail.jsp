@@ -383,15 +383,14 @@ opacity : 0.95;
 						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 + 반영 로직
 						$("#replies").prepend(
 								"<div class='replyLi p-2 row' data-reply_num='" + sequence + "'><div class='col-10'><strong class='reply_id'>"
-								+ "<a href='/user/room/" + login_id + "'>@" + login_id + "</a></strong> " /* + formattedTime */
+								+ "<a href='/user/room/" + login_id + "'>@" + login_id + "</a></strong> "
 								+ "<span class='reply_content modalBtn'>" + reply_content
 								+ "</span></div><div class='col-2'>"
-								/* + "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>" */
 								+ "<button class='btn btn-outline-danger reply-like replyLike' id='replyNum_" + sequence + "'>"+0+"♡</button>"
 								+ "</div></div>"
 						
 						)
-						refresh();
+						refresh(); // 댓글 작성 후 댓글창 비우기
 					}
 					
 				},
