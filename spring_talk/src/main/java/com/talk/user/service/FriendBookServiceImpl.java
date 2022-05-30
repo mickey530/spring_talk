@@ -29,16 +29,16 @@ public class FriendBookServiceImpl implements FriendBookService {
 	}
 
 	@Override
-	public void update(FriendBookVO fbVO) {
+	public void update(FriendBookVO vo) {
 		// TODO Auto-generated method stub
 
-		mapper.update(fbVO);
+		mapper.update(vo);
 	}
 
 	@Override
-	public void delete(FriendBookVO fbVO) {
+	public void delete(long rownum) {
 		// TODO Auto-generated method stub
 
-		mapper.delete(fbVO);
+		mapper.delete(rownum);
 	}
 }

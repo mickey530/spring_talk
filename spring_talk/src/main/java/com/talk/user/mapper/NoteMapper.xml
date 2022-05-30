@@ -35,7 +35,25 @@
 <delete id ="delete">
 	delete from note where note_num = #{note_num}
 </delete>
- 
+
+<!-- 내가 보낸 유저 리스트 -->
+<select id ="left" resultType="string">
+	SELECT DISTINCT NOTE_SENDER FROM note WHERE note_recipient = #{login_id}
+</select>
+
+<!-- 내가 받은 유저 리스트 -->
+<select id ="right" resultType="string">
+	SELECT DISTINCT NOTE_RECIPIENT FROM note WHERE note_sender = #{login_id}
+</select>
+
+<select id ="recent" resultType="string">
+	SELECT note_content FROM
+	(SELECT * FROM note WHERE
+	(note_recipient = #{note_recipient} AND note_sender = #{note_sender} OR
+	note_sender = #{note_recipient} AND note_recipient = #{note_sender}) ORDER BY REGDATE DESC)
+	WHERE rownum = 1
+</select>
+
  
 
 

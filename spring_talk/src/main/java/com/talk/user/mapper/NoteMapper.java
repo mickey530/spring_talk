@@ -18,9 +18,11 @@ public interface NoteMapper {
 	// delete
 	public void delete(long note_num);
 	
+	public List<String> left(String login_id);
+
+	public List<String> right(String login_id);
 	
-	
-	
+	public String recent(NoteVO vo);
 	
 
 }

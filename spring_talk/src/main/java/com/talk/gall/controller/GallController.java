@@ -91,9 +91,12 @@ public class GallController {
 	@GetMapping("/detail/{gall_name}/{board_num}")
 	public String detail(@PathVariable("gall_name") String gall_name,
 							@PathVariable("board_num") Long board_num, Model model, GallDogVO vo) {
-		GallDogVO dog = service.select(vo);
+		GallDogVO board = service.select(vo);
 		service.upHit(vo);
-		model.addAttribute("dog", dog);
+		
+		String gall_title = listService.getGallName(gall_name);
+		model.addAttribute("gall_title", gall_title);
+		model.addAttribute("board", board);
 		model.addAttribute("gall_name", gall_name);
 		return "gall/dogDetail";
 	}

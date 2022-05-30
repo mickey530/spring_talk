@@ -47,6 +47,20 @@
 	  text-align:center;
 	  color: black;
   }
+  li{
+  	list-style: none;
+  }
+  #friend_book{
+  		border:1px black solid;
+       position: fixed;
+       top: 10%;
+       right: 10%;
+       width: 30%;
+       font-size: 15px;
+       align-items: center;
+       background-color: white;
+       z-index: 2;
+  }
   
   #user_img{
   	width: 300px;
@@ -63,6 +77,8 @@
  	#sideMenu > ul > li{
  		list-style: none;
  	}
+ 	
+ 	
  	
  	#modDiv{width: 100%;max-width: 600px;
 margin: 0 auto;
@@ -95,9 +111,22 @@ footer {
 </header>
 <div class="container">
 
-<button onclick="getBookComment()">asdf</button>
-
-
+	<div id="friend_book">
+		
+		<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
+		  		<textarea class="form-control" onkeyup="enterkey()" name="book_comment" 
+		  			id="exampleFormControlTextarea1" placeholder="방명록을 남겨주세요!"></textarea>
+				
+		</c:if>
+	
+	
+		<div class="uploadBookResult">
+			<ul>
+				<!-- 방명록 들어갈 자리 -->
+				
+			</ul>
+		</div>
+	</div>
 
 	<div id="profile_img">
 	
@@ -135,13 +164,18 @@ footer {
 
 </div>
 
+</div> <!-- container -->
+ 
+ 
+</div> <!-- wrapper -->
+
 <footer class="mx-0 py-2 w-100 border-top row justify-content-between">
 	<a href="/user/follow" class="col-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
           <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
         </svg>	
 	</a>
-	<a href="/chatting/chat" class="col-2">
+	<a href="/user/chatList/${login_id }" class="col-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chat" viewBox="0 0 16 16">
           <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
         </svg>	
@@ -176,32 +210,26 @@ footer {
 	/* 게시글 불러오는 로직 */
 	let page_num = 0;
 	let user_id = '${user.user_id}';
+	let uploadResult = $(".uploadBookResult ul");
 	var post = "";
-	
-	function getBookComment(){
-		$.ajax({
-			type : 'post',
-			url : '/user/ajaxBookData',
-			headers : {
-				"Content-Type" : "application/json",
-				"X-HTTP-Method-Override" : "POST"
-			},
-			dataType : 'text',
-			data : JSON.stringify({
-				book_owner : login_id, 
-				friend : user_id
-			}),
-            beforeSend: function(xhr){
-                xhr.setRequestHeader(_csrf_header, _csrf);
-            },
-			success : function(result){
-				console.log(result)
-				if(result == 'FOLLOW SUCCESS'){
-					
-				}
-			}
-		}) 
-	}
+	var isFriend = false;
+
+	 $("#insertBookComment").on("click", function(){
+
+		$.getJSON("/user/insertBookData/" + user_id , function(data){
+			console.log(data);
+		});
+			 
+	 });
+
+
+	 $("#getBookComment").on("click", function(){
+
+		$.getJSON("/user/bookData/" + user_id , function(data){
+			console.log(data);
+		});
+			 
+	 });
 
 	 function more(){
 		page_num += 1;
@@ -209,13 +237,7 @@ footer {
 
 			console.log(data);
 			
-			$(data).each(
-				function() {
-					post += "<div class='col-4'><p data-post_num='" + this.post_num + "' class='post'>"
-						+ "<a href='/post/detail/" + this.post_num + "'> "+ this.post_num +"</a> | <a href='/user/room/" + this.writer + "'>"+ this.writer +"</a><br/> " + this.title + " <br/> " + this.content
-						+ "</p></div>";
-
-				});
+			$(data).each();
 			$(".post").html(post);			
 		});
 	 }
@@ -227,7 +249,6 @@ footer {
 	 function followerNum(){
 			$.getJSON("/user/countFollowed/" + user_id, function(data){
 
-				console.log(data)
 			
 				$("#followNum").html(data);			
 			});
@@ -239,17 +260,12 @@ footer {
 		$.getJSON("/user/getFollowerList/" + user_id, function(data){
 			
 			var follower = "";
-
-			console.log("getFollowerList : ");
-			console.log(data);
 			
 			$(data).each(
 				function() {
 						follower += "<div class='col-2' data-follower='"+this.follower+"'><p class='follower'>"
 						+ "<a href='/user/room/" + this.follower + "'>"
 						+ this.follower +"</a></p>";
-
-						console.log("favorite "+this.follower+" : "+this.favorite);
 						
 						if(this.favorite == 'Y'){
 
@@ -271,9 +287,6 @@ footer {
 		$.getJSON("/user/getFreindList/" + user_id, function(data){
 			
 			var follower = "";
-
-			console.log("getFollowedList : ");
-			console.log(data);
 			
 			$(data).each(
 				function() {
@@ -300,9 +313,6 @@ footer {
 			
 			var follower = "";
 
-			console.log("getFollowedList : ");
-			console.log(data);
-			
 			$(data).each(
 				function() {
 						follower += "<div class='col-2'><p class='favorite'>"
@@ -394,10 +404,6 @@ footer {
 		 $(this).toggleClass( 'btn-outline-danger' );
 		 $(this).toggleClass( 'btn-danger' );
 
-		 console.log("login_id : " + login_id);
-		 console.log("followed : " + follower);
-		 console.log("favorite : " + favorite);
-
 		 $.ajax({
 				type : 'post',
 				url : '/user/checkFavorite',
@@ -420,6 +426,44 @@ footer {
 			});
 	 });
 
+		function getBook(){
+
+				$.getJSON("/user/bookData/" + ${user.user_id}, function(data){
+
+					$(data).each(
+						function() {
+							let str = "";
+							str += "<li>"+this.friend+" : "+this.book_comment+"<span data-rownum='"+this.rownum+"'> \tX </span></li>";
+
+							uploadResult.append(str);
+							$("#exampleFormControlTextarea1").val("");
+						});
+				});
+			};
+			getBook();
+			
+
+			$(".uploadBookResult").on("click", "span", function(e){
+				var rownum = $(this).data("rownum");
+
+				var thisLi = $(this).closest("li");
+				
+				$.ajax({
+					url: '/user/deleteBook',
+					beforeSend : function(xhr) {
+		                xhr.setRequestHeader(_csrf_header, _csrf);
+					},
+					data: {rownum: rownum},
+					dataType : 'text',
+					type: 'POST',
+					success : function(result){
+						alert(result);
+						thisLi.remove();
+					}
+				});// ajax
+			});	// click span
+		
+
 
 //	 유저 이미지 불러오는 함수
 	 
@@ -439,29 +483,110 @@ footer {
 		 			 xhr.setRequestHeader(_csrf_header, _csrf);
 		 			},
 		 			success: function(result){
-			 			console.log("success")
-			 			console.log("result")
-			 			console.log(result)
-			 			console.log("data")
-			 			console.log(data.responseText)
 			 			setImage(data.responseText)
 		 			},
 		 			
 		 		}).fail(function(data, textStatus, errorThrown){
-		 			console.log("fail")
-		 			console.log("data")
-		 			console.log(data.responseText)
-		 			setImage(data.responseText)
-		 		}).done(function(data, textStatus, errorThrown){
-		 			console.log("done")
-		 			console.log("data")
-		 			console.log(data.responseText)
 		 			setImage(data.responseText)
 		 		}); // ajax
 
 		 };
 		 
 	load_blob_img();
+	
+	 function checkfriend() {
+		 	
+		 		$.ajax({
+		 			url: '/user/isFriend',
+		 			processData: false,
+		 			contentType: false,
+		 			type:"post",
+					headers : {
+						"Content-Type" : "application/json",
+						"X-HTTP-Method-Override" : "POST"
+					},
+		 			beforeSend : function(xhr) {
+		 			 xhr.setRequestHeader(_csrf_header, _csrf);
+		 			},
+					data : JSON.stringify({
+						follower : login_id, // 로그인 아이디
+						followed : user_id, // 팔로우 아이디
+						favorite : 'N'
+					}),
+		 			success: function(result){
+			 			console.log("isfriend success")
+			 			console.log("result")
+			 			console.log(result)
+			 			
+			 			if(result == "YES"){
+			 				isFriend = true;
+			 			}
+		 			},
+		 			
+		 		}).fail(function(data, textStatus, errorThrown){
+		 			console.log("isfriend fail")
+		 			console.log("data")
+		 			console.log(data)
+		 		}); // ajax
+
+		 };checkfriend();
+		 
+
+		 function enterkey() {
+	        if (window.event.keyCode == 13) {
+	        	console.log("enter")
+	        	console.log($("#exampleFormControlTextarea1").val())
+	        	if(isFriend){
+		        	console.log("isFriend")
+
+		 			insertBook($("#exampleFormControlTextarea1").val());
+	        	}
+	             // 엔터키가 눌렸을 때 실행할 내용
+	        }
+		}
+		 
+				
+				
+		function insertBook(content){
+					
+					
+
+					$.ajax({
+						type : 'post',
+						url : '/user/insertBookData',
+						headers : {
+							"Content-Type" : "application/json",
+							"X-HTTP-Method-Override" : "POST"
+						},
+						dataType : 'text',
+						beforeSend: function(xhr){
+				           xhr.setRequestHeader(_csrf_header, _csrf);
+				        },
+						data : JSON.stringify({
+							book_owner : ${user.user_id},
+							friend : login_id,
+							book_comment : content
+						}),
+						success : function(result){
+							alert("success")
+							console.log("result")
+							console.log(result)
+							if(result == 'OK'){
+								alert("방명록이 등록되었습니다.");
+								let str = "";
+								str += "<li>"+login_id+" : "+content+"</li>"
+
+								uploadResult.append(str);
+								$("#exampleFormControlTextarea1").val("");
+							}
+								
+						},
+						error: function(){
+							alert("error")
+						}
+							
+					});
+				};
 	 </script>
 	
 	
