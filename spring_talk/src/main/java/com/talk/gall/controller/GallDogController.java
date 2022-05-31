@@ -75,6 +75,7 @@ public class GallDogController {
 		int countPage = service.countPageNum(cri);
 		pageMaker.setTotalBoard(countPage);
 		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("gall_name", gall_name);
 		
 		return "gall/dogList";
 	}
