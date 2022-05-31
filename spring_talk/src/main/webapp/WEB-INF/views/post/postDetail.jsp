@@ -137,7 +137,7 @@ opacity : 0.95;
 
 <div>
 	<div class="py-2">
-	<img src="https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj" alt="mdo" width="32" height="32" class="rounded-circle cardHeader"><a href="/user/room/${post.writer}" class="nav-link px-2 link-dark fw-bold postHeader">${post.writer }</a></div>
+	<img src="https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj" alt="mdo" width="32" height="32" class="rounded-circle cardHeader user_img"><a href="/user/room/1234" class="nav-link px-2 link-dark fw-bold postHeader">${post.writer }</a></div>
 	<div id="img"></div>
 	<div id="content">
 	<div class="btnBar py-2">
@@ -228,7 +228,7 @@ opacity : 0.95;
           <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
         </svg>	
 	</a>
-	<a href="/user/chatList/${login_id }" class="col-2">
+	<a href="/chatting/chat" class="col-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chat" viewBox="0 0 16 16">
           <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
         </svg>	
@@ -284,9 +284,37 @@ opacity : 0.95;
 	let page_num = 0;
 	let post_num = '${post.post_num}';
 	let replyList = "";
+	
+
+	 function setImage(data){
+		 $(".user_img").attr({ src: data });
+	 }
+	 function load_blob_img() {
+		 	
+		 		$.ajax({
+		 			url: '/user/getByte/${post.writer}',
+		 			processData: false,
+		 			contentType: false,
+		 			type:"get",
+		 			beforeSend : function(xhr) {
+		 			 xhr.setRequestHeader(_csrf_header, _csrf);
+		 			},
+		 			success: function(result){
+			 			setImage(data.responseText)
+		 			},
+		 			
+		 		}).fail(function(data, textStatus, errorThrown){
+		 			setImage(data.responseText)
+		 		}); // ajax
+
+		 };
+		 
+		 load_blob_img();
 
 	 function getReplyList(){
-		page_num += 1;
+		 console.log(${user.user_id});
+			
+		 page_num += 1;
 		$.getJSON("/replies/all/" + post_num + "?page_num=" + page_num, function(data){
 			replyList = $("#replies").html();
 			console.log(data);
@@ -383,14 +411,15 @@ opacity : 0.95;
 						$("#replyCount").html(parseInt($("#replyCount").html())+1); // 댓글 개수 + 반영 로직
 						$("#replies").prepend(
 								"<div class='replyLi p-2 row' data-reply_num='" + sequence + "'><div class='col-10'><strong class='reply_id'>"
-								+ "<a href='/user/room/" + login_id + "'>@" + login_id + "</a></strong> "
+								+ "<a href='/user/room/" + login_id + "'>@" + login_id + "</a></strong> " /* + formattedTime */
 								+ "<span class='reply_content modalBtn'>" + reply_content
 								+ "</span></div><div class='col-2'>"
+								/* + "<button type='button' class='btn menu modalBtn modalArea'>메뉴</button>" */
 								+ "<button class='btn btn-outline-danger reply-like replyLike' id='replyNum_" + sequence + "'>"+0+"♡</button>"
 								+ "</div></div>"
 						
 						)
-						refresh(); // 댓글 작성 후 댓글창 비우기
+						refresh();
 					}
 					
 				},

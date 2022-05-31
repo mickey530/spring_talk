@@ -37,7 +37,7 @@
 	
 	<insert id="insert">
 		insert into user_auth
-			values (#{user_id}, #{user_auth})
+			values (#{user_id}, #{authority})
 	</insert>
 	
 	<insert id="addAuth">
@@ -52,7 +52,7 @@
 	
 	<delete id="delete">
 		delete from user_auth
-			where (user_id = #{user_id} and user_auth = #{user_auth})
+			where (user_id = #{user_id} and authority = #{authority})
 	</delete>
 	
  	<update id="insertAuth">

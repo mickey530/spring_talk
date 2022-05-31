@@ -50,22 +50,22 @@
   li{
   	list-style: none;
   }
-  #friend_book{
-  		border:1px black solid;
-       position: fixed;
-       top: 10%;
-       right: 10%;
-       width: 30%;
-       font-size: 15px;
-       align-items: center;
-       background-color: white;
-       z-index: 2;
-  }
-  
-  #user_img{
+/*   #user_img{
   	width: 300px;
   	
-  }
+  } */
+#img{
+	position: relative;
+	width: 100%;
+	padding-bottom: 100%;
+	overflow: hidden;
+}
+.upload_img{
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
  #sideMenu > ul > li > a{
  	color: white;
  }
@@ -111,33 +111,17 @@ footer {
 </header>
 <div class="container">
 
-	<div id="friend_book">
-		
-		<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
-		  		<textarea class="form-control" onkeyup="enterkey()" name="book_comment" 
-		  			id="exampleFormControlTextarea1" placeholder="방명록을 남겨주세요!"></textarea>
-				
-		</c:if>
-	
-	
-		<div class="uploadBookResult">
-			<ul>
-				<!-- 방명록 들어갈 자리 -->
-				
-			</ul>
-		</div>
-	</div>
 
 	<div id="profile_img">
 	
-		<div>
+		<div id="img">
 			<c:if test="${login_id ne 'null' && login_id eq user.user_id}">
-				<a href="/user/update" title="프로필 사진 추가" >
-					<img alt="프로필 사진 추가" id="user_img" src="/resources/file.png">
+				<a href="/user/update" id="img" title="프로필 사진 추가" >
+					<img alt="프로필 사진 추가" class="upload_img w-100" id="user_img" src="/resources/file.png">
 				</a>
 			</c:if>
 			<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
-				<img alt="프로필 사진" id="user_img" src="/resources/file.png">
+				<img alt="프로필 사진" class="upload_img w-100" id="user_img" src="/resources/file.png">
 				<hr/>
 			</c:if>
 			<p>${user.user_comment }</p><br>
@@ -158,7 +142,24 @@ footer {
 	
 	<hr/>
 	<button id="more" onclick="more()">more</button>
+		
 	
+	<div id="friend_book">
+		
+		<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
+		  		<textarea class="form-control" onkeyup="enterkey()" name="book_comment" 
+		  			id="exampleFormControlTextarea1" placeholder="방명록을 남겨주세요!"></textarea>
+				
+		</c:if>
+	
+	
+		<div class="uploadBookResult">
+			<ul>
+				<!-- 방명록 들어갈 자리 -->
+				
+			</ul>
+		</div>
+	</div>
 
 </div>
 
@@ -534,12 +535,15 @@ footer {
 
 		 function enterkey() {
 	        if (window.event.keyCode == 13) {
-	        	console.log("enter")
-	        	console.log($("#exampleFormControlTextarea1").val())
 	        	if(isFriend){
 		        	console.log("isFriend")
 
 		 			insertBook($("#exampleFormControlTextarea1").val());
+	        	}else{
+
+					alert("서로 팔로우 상태가 아닙니다!");
+
+					$("#exampleFormControlTextarea1").val("");
 	        	}
 	             // 엔터키가 눌렸을 때 실행할 내용
 	        }
