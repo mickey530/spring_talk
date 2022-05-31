@@ -45,8 +45,14 @@
     </update>
 
 	<update id="deleteTbl" parameterType="string">
-		DROP TABLE ${gall_name}
+		DROP TABLE ${table_name}
 	</update>
+	
+	<delete id="deleteTblList">
+		delete from gall_list where table_name = #{table_name}
+	</delete>
+	
+	
 	
 	<select id="getGallName" resultType="string">
    		SELECT gall_name FROM gall_list WHERE table_name = #{table_name}

@@ -5,25 +5,22 @@
 	
 	
 	<select id="getFriendBook" resultType="com.talk.user.domain.FriendBookVO">
-		SELECT rownum , book_owner,friend,book_comment
-				from
-				friend_book
-				where book_owner= #{user_id}
+		SELECT * from friend_book where book_owner= #{user_id}
 	</select>
 	
 	<insert id="insert">
-		insert into friend_book
-			values (#{book_owner}, #{friend}, #{book_comment})
+		insert into friend_book (book_owner, friend, book_comment, book_num)
+			values (#{book_owner}, #{friend}, #{book_comment}, book_num.nextval)
 	</insert>
 	
 	<delete id="delete">
 		delete from friend_book
-			where (rownum = #{rownum})
+			where (book_num = #{book_num})
 	</delete>
 	
 	<update id="update">
 		update friend_book 
 			set book_comment = #{book_comment}
-			where (rownum = #{rownum})
+			where (book_num = #{book_num})
 	</update>
 </mapper>

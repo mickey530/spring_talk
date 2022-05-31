@@ -85,8 +85,8 @@ footer {
 <h3 class="col-12 px-0">IN n OUT</h3>
 </header>
 <div class="container">
-
 	<form action="/user/logout" method="post" class="form-signin">
+		<h2>정말 로그아웃 하시겠습니까?</h2><br/>
 		<input type="submit" value="로그아웃" class="btn btn-lg btn-outline-danger w-100">
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 	</form>

@@ -51,21 +51,26 @@
   	list-style: none;
   }
   #friend_book{
-  		border:1px black solid;
-       position: fixed;
-       top: 10%;
-       right: 10%;
-       width: 30%;
-       font-size: 15px;
-       align-items: center;
-       background-color: white;
-       z-index: 2;
+
   }
+
+#profile_img{
+	width:100px;
+}
+  #img{
+	position: relative;
+	width: 100%;
+	padding-bottom: 100%;
+	overflow: hidden;
+}
+.upload_img{
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
   
-  #user_img{
-  	width: 300px;
-  	
-  }
+  
  #sideMenu > ul > li > a{
  	color: white;
  }
@@ -85,6 +90,10 @@ margin: 0 auto;
 padding:10px;
 box-sizing: border-box;
 background-color: blanchedalmond;}
+
+header{
+        background-color: white;
+}
 
 footer {
        display: flex !important;
@@ -106,61 +115,74 @@ footer {
 
 <div id="wrapper">
 <header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
-<h3 class="col-11 px-0">IN n OUT</h3>
+<h3 class="col-11 px-0">${user_id }'s Room</h3>
 <a href="/post/insert" class="col-1 text-left text-black">+</a>
 </header>
-<div class="container">
+<div class="container"><br/>
 
-	<div id="friend_book">
+
+<div class="profile-header row justify-content-between mx-0">
+	<div id="profile_img" class="col-3 align-items-center">
+	   <div id="img" class="rounded-circle">
+			<c:if test="${login_id ne 'null' && login_id eq user.user_id}">
+				<img class="upload_img w-100" alt="프로필 사진 추가" id="user_img" src="/resources/file.png" onclick="location.href='/user/update'">
+			</c:if>
+			<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
+				<img class="upload_img w-100" alt="프로필 사진" id="user_img" src="/resources/file.png">
+			</c:if>    		 
+		</div>
+		
+	</div>
+		<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
+			<div class="row col-9">
+				<button class="col-4 text-center btn align-self-center" id="follow"><span id="followNum"></span><br/>팔로우</button>
+				<button class="col-4 text-center btn align-self-center" onclick="location.href='/user/noteDetail/${login_id}/${user.user_id }'"><br/>쪽지</button>
+				<button class="col-4 text-center btn align-self-center" onclick="callNumber('${user.phone_num}')"><br/>전화</button>
+			</div>
+		</c:if>
+		<c:if test="${login_id ne 'null' && login_id eq user.user_id}">
+			<div class="row col-9">
+				<button class="col-4 text-center btn align-self-center" id="follow"><span id="followNum"></span><br/>팔로우</button>
+				<button class="col-4 text-center btn align-self-center" onclick="location.href='/user/update'"><br/>정보수정</button>
+				<button class="col-4 text-center btn align-self-center" onclick="location.href='/user/logout'"><br/>로그아웃</button>
+			</div>
+		</c:if>
+	
+	
+	<div class="col-12 text-start align-self-center p-3">${user.user_comment }</div><br>
+
+</div>
+	
+	<hr/>
+	
+	
+	
+	<button onclick='bookToggle()' class="form-control toggleBtn">방명록</button><br/>
+	<div id="friend_book" class="visually-hidden">
 		
 		<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
-		  		<textarea class="form-control" onkeyup="enterkey()" name="book_comment" 
-		  			id="exampleFormControlTextarea1" placeholder="방명록을 남겨주세요!"></textarea>
-				
+			<br/>
+	  		<textarea class="form-control" onkeyup="enterkey()" name="book_comment" 
+	  			id="exampleFormControlTextarea1" placeholder="방명록을 남겨주세요!"></textarea><br/>
 		</c:if>
 	
 	
 		<div class="uploadBookResult">
-			<ul>
+			<ul class="p-0 justify-content-between">
 				<!-- 방명록 들어갈 자리 -->
 				
 			</ul>
 		</div>
 	</div>
-
-	<div id="profile_img">
 	
-		<div>
-			<c:if test="${login_id ne 'null' && login_id eq user.user_id}">
-				<a href="/user/update" title="프로필 사진 추가" >
-					<img alt="프로필 사진 추가" id="user_img" src="/resources/file.png">
-				</a>
-			</c:if>
-			<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
-				<img alt="프로필 사진" id="user_img" src="/resources/file.png">
-				<hr/>
-			</c:if>
-			<p>${user.user_comment }</p><br>
-		       		 
-		</div>
-	</div>
 	
-	<c:if test="${login_id ne 'null' && login_id ne user.user_id}">
-		팔로워 : <span id="followNum"></span>명<button id="follow">팔로</button>
-		<button id="ban">응 차단~</button>
-	</c:if>
+	
+	<div id="postList" class="d-flex row p-2"></div>
 	
 	<hr/>
-	<div class="container">
-		<div class="post row">
-	
-		</div>
-	
-	<hr/>
-	<button id="more" onclick="more()">more</button>
+	<button id="more" class="btn btn-sm btn-outline-secondary" onclick="more()">와! 게시물 ! 더보기</button>
 	
 
-</div>
 
 </div>
 
@@ -225,7 +247,7 @@ footer {
 
 	 $("#getBookComment").on("click", function(){
 
-		$.getJSON("/user/bookData/" + user_id , function(data){
+		$.getJSON("/user/bookData/${user.user_id}" + user_id , function(data){
 			console.log(data);
 		});
 			 
@@ -234,13 +256,23 @@ footer {
 	 function more(){
 		page_num += 1;
 		$.getJSON("/post/userfeed/" + user_id + "?page_num=" + page_num, function(data){
-
+			post = $("#postList").html();			
+			
 			console.log(data);
 			
-			$(data).each();
-			$(".post").html(post);			
+			$(data).each(
+				function() {
+					post += "<div id='postNum_"+this.post_num+"' class='col-4 p-1'>"
+						 + this.title + "</div>";
+					
+					
+					getImages(this.post_num)
+				}		
+			);
+			$("#postList").html(post);			
 		});
 	 }
+	 more();
 	 more();
 	 
 	 // 팔로우 숫자
@@ -428,12 +460,12 @@ footer {
 
 		function getBook(){
 
-				$.getJSON("/user/bookData/" + ${user.user_id}, function(data){
+				$.getJSON("/user/bookData/" + user_id, function(data){
 
 					$(data).each(
 						function() {
 							let str = "";
-							str += "<li>"+this.friend+" : "+this.book_comment+"<span data-rownum='"+this.rownum+"'> \tX </span></li>";
+							str += "<li class='d-flex p-2 justify-content-between'>"+this.friend+" : "+this.book_comment+"<span class='d-flex text-end' data-book_num='"+this.book_num+"'> X </span></li>";
 
 							uploadResult.append(str);
 							$("#exampleFormControlTextarea1").val("");
@@ -444,7 +476,7 @@ footer {
 			
 
 			$(".uploadBookResult").on("click", "span", function(e){
-				var rownum = $(this).data("rownum");
+				var book_num = $(this).data("book_num");
 
 				var thisLi = $(this).closest("li");
 				
@@ -453,7 +485,7 @@ footer {
 					beforeSend : function(xhr) {
 		                xhr.setRequestHeader(_csrf_header, _csrf);
 					},
-					data: {rownum: rownum},
+					data: {book_num : book_num},
 					dataType : 'text',
 					type: 'POST',
 					success : function(result){
@@ -548,8 +580,6 @@ footer {
 				
 				
 		function insertBook(content){
-					
-					
 
 					$.ajax({
 						type : 'post',
@@ -563,20 +593,18 @@ footer {
 				           xhr.setRequestHeader(_csrf_header, _csrf);
 				        },
 						data : JSON.stringify({
-							book_owner : ${user.user_id},
+							book_owner : user_id,
 							friend : login_id,
 							book_comment : content
 						}),
 						success : function(result){
-							alert("success")
 							console.log("result")
 							console.log(result)
 							if(result == 'OK'){
 								alert("방명록이 등록되었습니다.");
 								let str = "";
-								str += "<li>"+login_id+" : "+content+"</li>"
-
-								uploadResult.append(str);
+								str += "<li class='d-flex p-2 justify-content-between'>"+login_id+" : "+content+"<span class='d-flex text-end'> X </span></li>";
+								uploadResult.prepend(str);
 								$("#exampleFormControlTextarea1").val("");
 							}
 								
@@ -587,6 +615,63 @@ footer {
 							
 					});
 				};
+				
+				function callNumber(num){
+				    location.href = "tel:" + num;
+				}			
+			
+				
+				function getImages(post_num){
+					  console.log("post_num");
+					  console.log(post_num);
+					  
+
+						$.getJSON("/post/getImages/" + post_num, function(data){
+							
+							if(data != ""){
+							
+							console.log(data);
+							
+							var imgData = "";
+
+							$(data).each(
+								function() {
+
+									var fileCallPath = this.upload_path + "/" + this.uuid + "_" + this.file_name;
+									
+									fileCallPath = encodeURIComponent(this.upload_path + "/s_" + this.uuid + "_" + this.file_name);
+									console.log("fileCallPath2");
+									console.log(fileCallPath);
+									imgData += "<div><a href='/post/detail/"+post_num+"'>"
+									   		+ "<div id='img'>"
+									   		+ "<img class='upload_img w-100' src='/post/display?fileName="+ fileCallPath + "'>"
+											+ "</div></a></div>"
+										
+								});
+							$("#postNum_"+post_num).html(imgData);	
+							
+							} else{
+								
+								
+							$("#postNum_"+post_num).remove();
+								
+							} 
+							
+						});
+				 };
+				 
+				 function bookToggle(){
+					 $("#friend_book").toggleClass("visually-hidden");
+					 $("#postList").toggleClass("visually-hidden");
+					 
+					 if ($(".toggleBtn").html() == '방명록'){
+						 $(".toggleBtn").html("게시물");
+						 $("#more").hide()
+					 } else{
+						 $(".toggleBtn").html("방명록");
+						 $("#more").show()
+					 }
+				 }
 	 </script>
 	
 	

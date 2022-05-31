@@ -207,6 +207,7 @@ opacity : 0.95;
 
     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
 		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 " id="reReplyBtn" >답글달기</button>	
+		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 " id="reportBtn" >신고</button>	
 		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 auth visually-hidden" id="btn">수정</button>
 		<button type="button" class="btn btn-lg btn-outline-dark border-bottom w-100 mx-0 modalArea auth visually-hidden" id="replyDelBtn">삭제</button>
 		<button type="button" class="btn btn-lg btn-outline-dark w-100 mx-0 modalArea" onclick="closeModal()">닫기</button>
@@ -540,6 +541,15 @@ opacity : 0.95;
 			}
 		});
 	 };
+	 // 신고 페이지 이동
+	 $("#reportBtn").click(function(){
+		closeModal();
+		let reply_num = select.parent().parent().attr("data-reply_num");
+		window.location.href = '/report/reply/'+reply_num;
+	 })
+	 
+
+	 
 		// 댓글 좋아요 유무 확인	
 	  function isReplyLike(reply_num){
 		 $.ajax({

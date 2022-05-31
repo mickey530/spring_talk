@@ -36,9 +36,9 @@ public class FriendBookServiceImpl implements FriendBookService {
 	}
 
 	@Override
-	public void delete(long rownum) {
+	public void delete(long book_num) {
 		// TODO Auto-generated method stub
 
-		mapper.delete(rownum);
+		mapper.delete(book_num);
 	}
 }

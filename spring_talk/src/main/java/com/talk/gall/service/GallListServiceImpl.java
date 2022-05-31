@@ -38,8 +38,9 @@ public class GallListServiceImpl implements GallListService{
 	}
 
 	@Override
-	public void deleteTbl(String gall_name) {
-		gallList.deleteTbl(gall_name);
+	public void deleteTbl(String table_name) {
+		gallList.deleteTbl(table_name);
+		gallList.deleteTblList(table_name);
 		
 	}
 	
@@ -47,4 +48,5 @@ public class GallListServiceImpl implements GallListService{
 	public String getGallName(String table_name) {
 		return gallList.getGallName(table_name);
 	}
+
 }
