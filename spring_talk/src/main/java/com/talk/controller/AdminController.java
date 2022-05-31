@@ -41,10 +41,9 @@ public class AdminController {
 	
 	
 	// 테이블 삭제
-	@PostMapping("delete/{gall_name}/")
-	public String delete(@PathVariable("gall_name") String gall_name, String table_name) {
+	@PostMapping("delete/{table_name}")
+	public String delete(@PathVariable("table_name")String table_name) {
 		log.info(table_name);
-		log.info(gall_name);
 		listservice.deleteTbl(table_name);
 		return "redirect:/gall/gallList";
 	}

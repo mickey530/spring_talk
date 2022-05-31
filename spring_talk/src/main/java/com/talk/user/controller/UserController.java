@@ -394,11 +394,11 @@ public class UserController {
 
 	@PostMapping("/deleteBook")
 	@ResponseBody
-	public ResponseEntity<String> deleteBook(long rownum){
+	public ResponseEntity<String> deleteBook(long book_num){
 		
 		
 		try {
-			friendService.delete(rownum);
+			friendService.delete(book_num);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);

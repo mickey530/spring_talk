@@ -85,19 +85,26 @@ footer {
 		      <thead>
 		        <tr>
 		          <th>갤러리 이름</th>
-		          <th>관리</th>
 		        </tr>
 		      </thead>
 		      <tbody>
 		        <c:forEach var="gall" items="${gallList }">
 		          <tr onclick="location.href='/gall/list/${gall.table_name }'"></td>
-		          <td>${gall.gall_name }</td>
-		          <td><form action="/delete/${gall.table_name}" method="post"><input type="submit" value="삭제"><input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/></form></td>
+		          <td>${gall.gall_name }
+		          	<sec:authorize access="hasRole('ROLE_ADMIN')">
+			          <form action="/delete/${gall.table_name}" method="post" class="d-inline">
+			          <input type="submit" class="btn btn-sm btn-outline-danger" value="삭제"><input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+			          </form>
+		          	</sec:authorize>		          
+		          </td>
 		          </tr>
 		        </c:forEach>
 		      </tbody>
 		    </table>
-		    <a href="/admin">생성하러가기</a>
+		    <sec:authorize access="hasRole('ROLE_ADMIN')">
+			    <a href="/admin">생성하러가기</a>
+		    </sec:authorize>
+		    
 	</div> <!-- container -->
 
 	</div> <!-- wrapper -->

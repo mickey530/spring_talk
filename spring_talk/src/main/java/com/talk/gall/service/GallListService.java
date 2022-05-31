@@ -15,8 +15,8 @@ public interface GallListService {
 	
 	public void ReplyTbl(String gall_name);
 	
-	public void deleteTbl(String gall_name);
-
+	public void deleteTbl(String table_name);
+	
 	public String getGallName(String table_name);
 
 }

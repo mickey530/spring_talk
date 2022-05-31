@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class FriendBookVO {
 
-	private long rownum;
+	private long book_num;
 	private String book_owner;
 	private String friend;
 	private String book_comment;

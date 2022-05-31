@@ -14,6 +14,6 @@ public interface FriendBookMapper {
 	
 	public void update(FriendBookVO vo);
 	
-	public void delete(long rownum);
+	public void delete(long book_num);
 
 }
