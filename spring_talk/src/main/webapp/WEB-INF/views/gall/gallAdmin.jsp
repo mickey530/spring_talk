@@ -76,11 +76,10 @@ footer {
 	<div id="wrapper">
 		<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
 			<h3 class="col-11 px-0">Community</h3>
-			<a href="/post/insert" class="col-1 text-left text-black">+</a>
 		</header>
 		
 	<div class="container">
-	<h1>운영자</h1>
+	<h1>갤러리 생성</h1>
 	<hr/>
 	
 	<div class="form-signin">

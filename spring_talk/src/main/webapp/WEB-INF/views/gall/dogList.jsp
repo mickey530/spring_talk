@@ -75,7 +75,7 @@ footer {
 </sec:authorize>
 	<div id="wrapper">
 		<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
-			<h3 class="col-11 px-0">${gall_name } 갤</h3>
+			<h3 class="col-11 px-0">${gall_title } 갤</h3>
 			
 			<a href="/chatting/chat/${gall_name}" class="col-1 text-left text-black">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chat" viewBox="0 0 16 16">

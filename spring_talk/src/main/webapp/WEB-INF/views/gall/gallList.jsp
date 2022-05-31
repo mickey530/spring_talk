@@ -76,7 +76,6 @@ footer {
 	<div id="wrapper">
 		<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
 			<h3 class="col-11 px-0">Community</h3>
-			<a href="/post/insert" class="col-1 text-left text-black">+</a>
 		</header>
 		
 	<div class="container">
@@ -89,7 +88,7 @@ footer {
 		      </thead>
 		      <tbody>
 		        <c:forEach var="gall" items="${gallList }">
-		          <tr onclick="location.href='/gall/list/${gall.table_name }'"></td>
+		          <tr onclick="location.href='/gall/list/${gall.table_name }'">
 		          <td>${gall.gall_name }
 		          	<sec:authorize access="hasRole('ROLE_ADMIN')">
 			          <form action="/delete/${gall.table_name}" method="post" class="d-inline">
