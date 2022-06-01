@@ -83,7 +83,9 @@ footer {
 		<h3 class="col-12 px-0">Sign up</h3>
 	</header>
 <div class="container">
-
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.user.user_id" var="login_id"/>
+</sec:authorize>
 	<sec:authorize access="isAnonymous()">	
 			
 			<script>
@@ -114,7 +116,8 @@ footer {
 		       		 
 						</div>
 					</div>
-		  
+		  		<input type="hidden" id="user_id" name="user_id" class="form-control" value="${login_id }">
+		  		
 		        <label for="inputPassword" class="sr-only">Password</label>
 		        <input type="password" id="user_pw" name="user_pw" class="form-control" placeholder="Password" required autofocus><br>
 		        

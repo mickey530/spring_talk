@@ -99,7 +99,7 @@ opacity : 0.95;
 <div id="wrapper">
 	<header class="sticky-top p-3 text-black border-bottom row" style="margin:0px;">
 		<h3 class="col-11 px-0">${gall_title } 갤</h3>
-		<a href="/post/insert" class="col-1 text-left text-black">+</a>
+		<a href="/gall/insert/${gall_name }" class="col-1 text-left text-black">+</a>
 	</header>
 
 <div class="container">

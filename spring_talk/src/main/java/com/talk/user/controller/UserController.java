@@ -216,7 +216,7 @@ public class UserController {
 
 	@PostMapping(value="/updateUser")
 	public String updateUser(UserVO vo,@RequestParam("file") MultipartFile[] file){
-
+		log.warn("???"+vo);
 		try { 
 			if(file[0].getBytes().length <= 0) {
 				byte[] user_img = userService.select(vo.getUser_num()).getUser_img();

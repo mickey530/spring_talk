@@ -43,7 +43,7 @@
 		phone_num = #{phone_num},
 		user_img = #{user_img},
 		user_comment = #{user_comment}
-		WHERE user_num=#{user_num}
+		WHERE user_id=#{user_id}
 	</update>
 </mapper>
 
