@@ -76,7 +76,7 @@ summary > p {
     font-size: 12px;
 }
 
-#img{
+.img{
 	position: relative;
 	width: 100%;
 	padding-bottom: 100%;
@@ -190,7 +190,7 @@ footer {
 			             + "<img src='https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj' alt='mdo' width='32' height='32' class='rounded-circle cardHeader user_id_"+this.writer+"'>"
 			             + "<a href='/user/room/" + this.writer + "' class='nav-link px-2 link-dark fw-bold cardHeader'>" + this.writer + "</a>"
 			             + "</div>"
-			             + "<div id='img' href='/post/detail/" + this.post_num + "'></div>"
+			             + "<div class='img' href='/post/detail/" + this.post_num + "'></div>"
 			          	 + "<div class='card-menu py-2' style='margin-left: 0px;'>"
 						 + "<button class='btn btn-sm postLike' id='postNum_" + this.post_num + "' data-post_num='" + this.post_num + "'>♡" + this.like_count + "</button><a href='/post/detail/" + this.post_num + "'> 댓글 <span class=replyCount>" + this.replycount + "</span>개</a><br/>"	
 			          	 + "</div>"
@@ -393,8 +393,47 @@ footer {
 				});
 			 }});
 	 
-
-	  
+	function dbclick(post_num){
+		 if(login_id == ""){
+			 var result = confirm("로그인이 필요한 기능입니다. \n로그인 페이지로 이동하시겠습니까?")
+			 if(result){
+				 location.replace('/user/login')
+			 }
+		 } else{
+			 
+		 let thisPost = $("#postNum_"+ post_num);
+		 let likeNum = parseInt(thisPost.html().substr(1, 1));
+		 
+		 if(thisPost.hasClass("post-liked")){
+			 thisPost.html("♡" + (likeNum - 1))
+		 } if(thisPost.hasClass("post-like")){
+			 thisPost.html("♡" + (likeNum + 1))
+		 }
+		 console.log(post_num);
+			$.ajax({
+				type : 'post',
+				url : '/post/like',
+				headers : {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "POST"
+				},
+				dataType : 'text',
+				beforeSend: function(xhr){
+	                xhr.setRequestHeader(_csrf_header, _csrf);
+	            },
+				data : JSON.stringify({
+					post_num : post_num,
+					user_id : login_id
+				}),
+				success : function(result){
+					if(result == 'OK'){
+							isLike(post_num);
+					}
+				}
+			});
+		 }  
+	}
+		
 	  // 댓글달기
 	 $("#postList").on("click", ".replyAddBtn", function(){
 		 if(login_id == ""){
@@ -553,15 +592,15 @@ footer {
 						fileCallPath = encodeURIComponent(this.upload_path + "/s_" + this.uuid + "_" + this.file_name);
 						console.log("fileCallPath2");
 						console.log(fileCallPath);
-						imgData += "<img class='upload_img w-100' src='/post/display?fileName="+ fileCallPath + "'>"
+						imgData += "<img class='upload_img w-100' ondblclick='dbclick("+post_num+")' src='/post/display?fileName="+ fileCallPath + "'>"
 							
 							
 							
 					});
-				$("#postNum_"+post_num).parent().siblings("#img").prepend(imgData);	
+				$("#postNum_"+post_num).parent().siblings(".img").prepend(imgData);	
 				
 				} else{
-					$("#postNum_"+post_num).parent().siblings("#img").remove();	
+					$("#postNum_"+post_num).parent().siblings(".img").remove();	
 					let cardMenu = $("#postNum_"+post_num).parent(); // 포스트 메뉴바
 					let insert = $("#postNum_"+post_num).parent().siblings(".card-body").children("details").children("summary"); // 들어갈 위치
 					insert.append(cardMenu); // 위치 변경
@@ -587,7 +626,7 @@ footer {
 			             + "<img src='https://yt3.ggpht.com/ytc/AKedOLTi6w4E6985-QdVBbovBSsnCeTETyj0WomjM5IY8Q=s88-c-k-c0x00ffffff-no-rj' alt='mdo' width='32' height='32' class='rounded-circle cardHeader'>"
 			             + "<a href='/user/room/" + this.company + "' class='nav-link px-2 link-dark fw-bold cardHeader'>" + this.company + "</a>"
 			             + "</div>"
-			             + "<div id='img'class='border-top border-bottom' href='/post/detail/" + this.ad_num + "'><a href='/pay'><img src='/resources/logo.png' class='upload_img w-100'></a></div>"
+			             + "<div class='img'class='border-top border-bottom' href='/post/detail/" + this.ad_num + "'><a href='/pay'><img src='/resources/logo.png' class='upload_img w-100'></a></div>"
 			          	 + "<div class='card-menu py-2' style='margin-left: 0px;'>"
 			          	 + "</div>"
 

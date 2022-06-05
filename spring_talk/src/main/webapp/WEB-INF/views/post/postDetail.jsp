@@ -740,7 +740,7 @@ opacity : 0.95;
 						fileCallPath = encodeURIComponent(this.upload_path + "/" + this.uuid + "_" + this.file_name);
 						console.log("fileCallPath2");
 						console.log(fileCallPath);
-						imgData += "<img class='upload_img w-100' src='/post/display?fileName="+ fileCallPath + "'>"
+						imgData += "<img class='upload_img w-100' ondblclick='dbclick("+post_num+")' src='/post/display?fileName="+ fileCallPath + "'>"
 							
 							
 							
@@ -761,8 +761,16 @@ opacity : 0.95;
 			let likeCount = $("#likeCount").text();
 			console.log(parseInt(likeCount));
 			if($("#postLike").hasClass("post-like")){
+				$("#postLike").removeClass("post-like")
+				$("#postLike").addClass("post-liked")
+				$("#postLike").removeClass("btn-outline-danger")
+				$("#postLike").addClass("btn-danger")
 				$("#likeCount").html(parseInt(likeCount)+1);
 			} else{
+				$("#postLike").removeClass("post-liked")
+				$("#postLike").addClass("post-like")
+				$("#postLike").removeClass("btn-danger")
+				$("#postLike").addClass("btn-outline-danger")
 				$("#likeCount").html(parseInt(likeCount)-1);
 			}
 			
@@ -784,11 +792,16 @@ opacity : 0.95;
 				success : function(result){
 					if(result == 'OK'){
 						console.log(result)
-						isLike();
+						
 					}
 				}
 			});
 		});
+	
+		function dbclick(post_num){
+			$("#postLike").click()
+		}
+
 </script>
 
 </body>
