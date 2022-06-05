@@ -57,7 +57,7 @@
 #profile_img{
 	width:100px;
 }
-  #img{
+  .img{
 	position: relative;
 	width: 100%;
 	padding-bottom: 100%;
@@ -123,7 +123,7 @@ footer {
 
 <div class="profile-header row justify-content-between mx-0">
 	<div id="profile_img" class="col-3 align-items-center">
-	   <div id="img" class="rounded-circle">
+	   <div class="img rounded-circle">
 			<c:if test="${login_id ne 'null' && login_id eq user.user_id}">
 				<img class="upload_img w-100" alt="프로필 사진 추가" id="user_img" src="/resources/file.png" onclick="location.href='/user/update'">
 			</c:if>
@@ -618,9 +618,9 @@ footer {
 				
 				function callNumber(num){
 				    location.href = "tel:" + num;
-				}			
+				}
 			
-				
+				// 이미지 불러오기
 				function getImages(post_num){
 					  console.log("post_num");
 					  console.log(post_num);
@@ -643,12 +643,13 @@ footer {
 									console.log("fileCallPath2");
 									console.log(fileCallPath);
 									imgData += "<div><a href='/post/detail/"+post_num+"'>"
-									   		+ "<div id='img'>"
-									   		+ "<img class='upload_img w-100' src='/post/display?fileName="+ fileCallPath + "'>"
+									   		+ "<div class='img'>"
+									   		+ "<img class='upload_img' src='/post/display?fileName="+ fileCallPath + "'>"
 											+ "</div></a></div>"
 										
 								});
 							$("#postNum_"+post_num).html(imgData);	
+							imglength(post_num);
 							
 							} else{
 								
@@ -659,6 +660,17 @@ footer {
 							
 						});
 				 };
+				 
+				 // 이미지 가로 세로 길이 체크 (가로가 길 경우 h-100, 세로가 길 경우 w-100 하면 네모칸에 딱 맞는데 이상하게 적용이 안됨;)
+				 function imglength(post_num){
+					 thisImg = $("#postNum_"+post_num+" > div > a > div > img")
+
+					 if(thisImg[0].width > thisImg[0].height){
+						 thisImg.addClass("h-100")
+					 } else {
+						 thisImg.addClass("w-100")
+					 }
+				 }
 				 
 				 function bookToggle(){
 					 $("#friend_book").toggleClass("visually-hidden");
