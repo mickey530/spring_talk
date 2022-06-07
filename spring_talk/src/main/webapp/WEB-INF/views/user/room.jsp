@@ -392,6 +392,7 @@ footer {
 					if(result == 'FOLLOW SUCCESS'){
 						
 					} followerNum() // 팔로우 수 재호출
+					  checkfriend() // 맞팔 확인
 				}
 			}) 
 		});
@@ -465,10 +466,15 @@ footer {
 					$(data).each(
 						function() {
 							let str = "";
-							str += "<li class='d-flex p-2 justify-content-between'>"+this.friend+" : "+this.book_comment+"<span class='d-flex text-end' data-book_num='"+this.book_num+"'> X </span></li>";
-
+							str += "<li class='d-flex p-2 justify-content-between'>"+this.friend+" : "+this.book_comment
+								
+								
+								if(login_id == this.book_owner || login_id == this.friend){
+									str += "<span class='d-flex text-end' data-book_num='"+this.book_num+"'> X </span></li>";
+								}
 							uploadResult.append(str);
 							$("#exampleFormControlTextarea1").val("");
+							
 						});
 				});
 			};
@@ -552,6 +558,10 @@ footer {
 			 			
 			 			if(result == "YES"){
 			 				isFriend = true;
+			 				$("#exampleFormControlTextarea1").removeClass("visually-hidden");
+			 			} else{
+			 				isFriend = false;
+			 				$("#exampleFormControlTextarea1").addClass("visually-hidden");
 			 			}
 		 			},
 		 			
@@ -572,7 +582,7 @@ footer {
 		        	console.log("isFriend")
 
 		 			insertBook($("#exampleFormControlTextarea1").val());
-	        	}
+	        	} 
 	             // 엔터키가 눌렸을 때 실행할 내용
 	        }
 		}
