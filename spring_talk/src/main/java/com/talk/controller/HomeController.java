@@ -47,6 +47,10 @@ import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.talk.file.domain.ImageFileVO;
 import com.talk.file.domain.ThumbnailVO;
 import com.talk.naver.NaverLoginBO;
+import com.talk.post.domain.Criteria;
+import com.talk.post.domain.PostVO;
+import com.talk.sns.domain.SnsVO;
+import com.talk.sns.service.SnsService;
 
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -66,6 +70,10 @@ public class HomeController {
 	
 	@Autowired
 	NaverLoginBO naverLoginBO;
+	
+	@Autowired
+	SnsService sns;
+	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	/**
@@ -84,6 +92,28 @@ public class HomeController {
 		
 		return "home";
 	}
+	@GetMapping("amchart")
+	public void amchart() {
+		
+	}
+	
+	@ResponseBody
+	@GetMapping(value="/amchartData", produces= {
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<List<SnsVO>>list(String addr){
+	
+	ResponseEntity<List<SnsVO>> entity= null;
+	
+	try {
+		entity = new ResponseEntity<>(sns.getAllData(addr),HttpStatus.OK);
+	}catch(Exception e) {
+		e.printStackTrace();
+		entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+		return entity;
+	}
+	
 	@GetMapping("pay")
 	public void pay( ) {
 		

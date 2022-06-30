@@ -52,6 +52,7 @@
 	<mybatis-spring:scan base-package="com.talk.gall.mapper"/>
 	<mybatis-spring:scan base-package="com.talk.pay.mapper"/>
 	<mybatis-spring:scan base-package="com.talk.file.mapper"/>
+	<mybatis-spring:scan base-package="com.talk.sns.mapper"/>
 	
 	<context:component-scan base-package="com.talk.user.service" />	
 	<context:component-scan base-package="com.talk.post.service" />	
@@ -60,6 +61,7 @@
 	<context:component-scan base-package="com.talk.gall.service" />	
 	<context:component-scan base-package="com.talk.pay.service" />	
 	<context:component-scan base-package="com.talk.file.service" />	
+	<context:component-scan base-package="com.talk.sns.service" />	
 
  	
 	
